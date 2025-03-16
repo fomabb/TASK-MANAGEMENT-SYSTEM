@@ -5,6 +5,8 @@ import com.iase24.test.entity.enumeration.TaskStatus;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class CreatedTaskResponse {
@@ -18,4 +20,8 @@ public class CreatedTaskResponse {
     private TaskStatus status;
 
     private TaskPriority priority;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

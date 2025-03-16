@@ -8,7 +8,7 @@ CREATE TABLE tasks
     author_id   BIGINT,
     assignee_id BIGINT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES users (id),
     FOREIGN KEY (assignee_id) REFERENCES users (id)
 );

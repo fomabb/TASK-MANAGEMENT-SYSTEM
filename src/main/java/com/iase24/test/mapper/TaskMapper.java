@@ -3,6 +3,7 @@ package com.iase24.test.mapper;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.entity.Task;
+import com.iase24.test.entity.enumeration.TaskPriority;
 import com.iase24.test.entity.enumeration.TaskStatus;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,9 @@ public class TaskMapper implements Mapper {
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .priority(task.getPriority())
+                .status(task.getStatus())
+                .createdAt(task.getCreatedAt())
+                .updatedAt(task.getUpdatedAt())
                 .build();
     }
 
@@ -29,6 +33,7 @@ public class TaskMapper implements Mapper {
                 .priority(request.getPriority())
                 .createdAt(now())
                 .status(TaskStatus.PENDING)
+                .updatedAt(null)
                 .build();
     }
 }
