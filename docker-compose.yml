@@ -1,0 +1,36 @@
+services:
+  task-management-system:
+    image: fomabb/task-management-system:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT}:8080"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB_URL: jdbc:postgresql://db-task-management-system/${POSTGRES_DB}
+      POSTGRES_DB_USERNAME: ${POSTGRES_USER}
+      POSTGRES_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_EXPIRATION_TIME: ${JWT_EXPIRATION_TIME}
+      SPRING_PROFILES_ACTIVE: dev
+      PORT: 8080
+    depends_on:
+      - db-task-management-system
+
+  db-task-management-system:
+    image: postgres:16.8-alpine3.20
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pg_data:
