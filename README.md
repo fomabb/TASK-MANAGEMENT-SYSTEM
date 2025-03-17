@@ -48,7 +48,7 @@ docker compose up
 
 ### Мои запросы к приложению в Postman
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](Путь к postman???)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21948648/2sAYkDMLRS)
 
 # Data model
 
