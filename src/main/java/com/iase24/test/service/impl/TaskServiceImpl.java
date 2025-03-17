@@ -22,7 +22,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TaskServiceImpl implements TaskService {
 
-    public static final String USER_WITH_ID_S_NOT_FOUND = "User with ID %s not found";
     public static final String TASK_WITH_ID_S_NOT_FOUND = "Task with ID %s not found";
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
@@ -52,6 +51,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDataDto getTaskById(Long id) {
         return taskMapper.entityTaskToTaskDto(taskRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND, id))));
+                .orElseThrow(() -> new EntityNotFoundException(String.format(TASK_WITH_ID_S_NOT_FOUND, id))));
+    }
+
+    @Override
+    @Transactional
+    public void removeTaskById(Long id) {
+        taskRepository.deleteById(id);
     }
 }
