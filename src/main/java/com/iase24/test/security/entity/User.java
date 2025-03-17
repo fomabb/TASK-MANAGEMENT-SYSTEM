@@ -1,6 +1,8 @@
 package com.iase24.test.security.entity;
 
 import com.iase24.test.security.entity.enumeration.Role;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,6 +31,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Schema(description = "Сущность пользователя приложением")
 public class User implements UserDetails {
 
     @Id
@@ -57,7 +60,6 @@ public class User implements UserDetails {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
