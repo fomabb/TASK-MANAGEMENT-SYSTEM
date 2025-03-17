@@ -29,14 +29,10 @@ public class TaskDataDto {
     @Schema(description = "Время обновления задачи")
     private LocalDateTime updatedAt;
 
-    @Schema(description = "Статус задачи", example = """
-            PENDING or IN_PROGRESS or COMPLETED
-            """)
+    @Schema(description = "Статус задачи", example = "PENDING or IN_PROGRESS or COMPLETED")
     private TaskStatus status;
 
-    @Schema(description = "Приоритет задачи", example = """
-            HIGH or MEDIUM or LOW
-            """)
+    @Schema(description = "Приоритет задачи", example = "HIGH or MEDIUM or LOW")
     private TaskPriority priority;
 
     @Schema(description = "Комментарии по задаче")
