@@ -1,11 +1,14 @@
 package com.iase24.test.mapper;
 
+import com.iase24.test.dto.TaskDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.entity.Task;
-import com.iase24.test.entity.enumeration.TaskPriority;
 import com.iase24.test.entity.enumeration.TaskStatus;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -35,5 +38,23 @@ public class TaskMapper implements Mapper {
                 .status(TaskStatus.PENDING)
                 .updatedAt(null)
                 .build();
+    }
+
+    @Override
+    public List<TaskDataDto> listEntittyToListDto(List<Task> tasks) {
+        return tasks.stream()
+                .map(task -> TaskDataDto.builder()
+                        .id(task.getId())
+                        .title(task.getTitle())
+                        .description(task.getDescription())
+                        .priority(task.getPriority())
+                        .status(task.getStatus())
+                        .createdAt(task.getCreatedAt())
+                        .updatedAt(task.getUpdatedAt())
+                        .comments(new ArrayList<>())
+                        .assignee(task.getAssignee())
+                        .author(task.getAuthor())
+                        .build())
+                .toList();
     }
 }

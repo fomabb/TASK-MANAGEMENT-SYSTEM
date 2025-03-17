@@ -1,5 +1,6 @@
 package com.iase24.test.service.impl;
 
+import com.iase24.test.dto.TaskDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.mapper.TaskMapper;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -23,5 +26,10 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public CreatedTaskResponse createTask(CreateTaskRequest body) {
         return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.CreateRequestToEntity(body)));
+    }
+
+    @Override
+    public List<TaskDataDto> getAllTask() {
+        return taskMapper.listEntittyToListDto(taskRepository.findAll());
     }
 }
