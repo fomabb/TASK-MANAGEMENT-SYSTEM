@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +32,14 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<List<TaskDataDto>> getAllTask() {
         return ResponseEntity.ok(taskService.getAllTask());
+    }
+
+    @Operation(
+            summary = "Найти таску по ID.",
+            description = "`В путь необходимо добавить ID таски.`"
+    )
+    @GetMapping("/{taskId}")
+    public ResponseEntity<TaskDataDto> getTaskById(@PathVariable("taskId") Long taskId) {
+        return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 }
