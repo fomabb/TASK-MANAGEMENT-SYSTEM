@@ -7,6 +7,7 @@ import com.iase24.test.dto.response.CreatedTaskResponse;
 import java.util.List;
 
 public interface TaskService {
+
     CreatedTaskResponse createTask(CreateTaskRequest body);
 
     List<TaskDataDto> getAllTask();

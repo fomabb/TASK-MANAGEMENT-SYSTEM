@@ -8,6 +8,7 @@ import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.entity.Task;
 import com.iase24.test.entity.enumeration.TaskStatus;
+import com.iase24.test.security.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -35,6 +36,7 @@ public class TaskMapper implements Mapper {
     @Override
     public Task CreateRequestToEntity(CreateTaskRequest request) {
         return Task.builder()
+                .author(User.builder().id(request.getAuthorId()).build())
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .priority(request.getPriority())

@@ -45,13 +45,6 @@ public class SecurityConfiguration {
                 }))
                 // Настройка доступа к конечным точкам
                 .authorizeHttpRequests(request -> request
-                        /*
-                          Можно указать конкретный путь, * - 1 уровень вложенности, ** - любое количество уровней вложенности
-                          permitAll - Эндпоинт доступен всем пользователям, и авторизованным и нет
-                          authenticated - Только авторизованные пользователи
-                          hasRole - Пользователь должен иметь конкретную роль, и, соответственно быть авторизованным
-                          hasAnyRole - Должен иметь одну из перечисленных ролей (не представлено в коде)
-                         */
                         .requestMatchers("/auth/**", "/actuator/**", "/api/v1/user/**", "/api/v1/task/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/endpoint", "/api/v1/admin/**").hasRole("ADMIN")

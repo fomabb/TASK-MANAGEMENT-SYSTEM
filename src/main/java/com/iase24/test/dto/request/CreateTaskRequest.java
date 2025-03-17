@@ -10,6 +10,10 @@ import lombok.Getter;
 @Schema(description = "Тело запроса для создания задачи")
 public class CreateTaskRequest {
 
+
+    @Schema(description = "Идентификатор автора")
+    private Long authorId;
+
     @Schema(description = "Заголовок задачи")
     private String title;
 
