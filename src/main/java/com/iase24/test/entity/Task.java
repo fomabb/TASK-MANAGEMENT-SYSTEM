@@ -3,24 +3,11 @@ package com.iase24.test.entity;
 import com.iase24.test.entity.enumeration.TaskPriority;
 import com.iase24.test.entity.enumeration.TaskStatus;
 import com.iase24.test.security.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,8 +36,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
-    @ElementCollection
-    private List<String> comments;
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -63,4 +50,10 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User assignee;
+
+    public Task(List<Comment> comments) {
+        if (comments == null) {
+            this.comments = new ArrayList<>();
+        }
+    }
 }
