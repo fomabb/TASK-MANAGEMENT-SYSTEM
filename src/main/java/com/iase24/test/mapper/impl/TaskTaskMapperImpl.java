@@ -114,10 +114,11 @@ public class TaskTaskMapperImpl implements TaskMapper {
                 .author(existingTask.getAuthor())
                 .assignee(existingTask.getAssignee())
                 .comments(existingTask.getComments())
-                .title(updatedTask.getTitle())
-                .description(updatedTask.getDescription())
-                .status(updatedTask.getStatus())
-                .priority(updatedTask.getPriority())
+                .title(updatedTask.getTitle() != null ? updatedTask.getTitle() : existingTask.getTitle())
+                .description(updatedTask.getDescription() != null ? updatedTask.getDescription() : existingTask.getDescription())
+                .status(updatedTask.getStatus() != null ? updatedTask.getStatus() : existingTask.getStatus())
+                .priority(updatedTask.getPriority() != null ? updatedTask.getPriority() : existingTask.getPriority())
+                .updatedAt(now())
                 .build();
     }
 }
