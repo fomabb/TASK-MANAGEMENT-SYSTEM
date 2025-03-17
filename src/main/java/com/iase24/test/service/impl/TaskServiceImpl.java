@@ -33,7 +33,6 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.CreateRequestToEntity(body)));
     }
 
-
     @Override
     public List<TaskDataDto> getAllTask() {
         return taskMapper.listEntityToListDto(taskRepository.findAll());
