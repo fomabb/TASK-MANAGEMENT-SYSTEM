@@ -43,9 +43,12 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public UpdateTaskDataDto updateTask(UpdateTaskDataDto dataDtoRequest) {
         Task existingTask = taskRepository.findById(dataDtoRequest.getTaskId())
-                .orElseThrow(() -> new EntityNotFoundException(String.format(TASK_WITH_ID_S_NOT_FOUND, dataDtoRequest.getTaskId())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(TASK_WITH_ID_S_NOT_FOUND, dataDtoRequest.getTaskId()))
+                );
         Task updatedTask = taskMapper.updateDtoToEntity(dataDtoRequest);
-        return taskMapper.entityToUpdateDto(taskRepository.save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
+        return taskMapper.entityToUpdateDto(taskRepository
+                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
     }
 
     @Override
