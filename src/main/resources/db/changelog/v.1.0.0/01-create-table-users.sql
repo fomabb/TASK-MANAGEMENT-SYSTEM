@@ -13,7 +13,7 @@ CREATE TABLE users
 INSERT INTO users(first_name, last_name, username, password, role, created_at, updated_at)
 VALUES ('admin',
         'admin',
-        'admin',
+        'admin@gmail.com',
         '$2y$10$8iTw39LsZ6i4Fk/PPhnz6.PTPXpnlLZ4boeL7C2WkIz9FYohsWV16',
-        'ADMIN',
+        'ROLE_ADMIN',
         now(), null);

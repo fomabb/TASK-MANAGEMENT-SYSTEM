@@ -5,7 +5,9 @@ import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.mapper.TaskMapper;
 import com.iase24.test.repository.TaskRepository;
+import com.iase24.test.security.repository.UserRepository;
 import com.iase24.test.service.TaskService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,14 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
     public CreatedTaskResponse createTask(CreateTaskRequest body) {
+        userRepository.findById(body.getAuthorId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException(String.format("User with ID %s not found", body.getAuthorId())));
         return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.CreateRequestToEntity(body)));
     }
 
