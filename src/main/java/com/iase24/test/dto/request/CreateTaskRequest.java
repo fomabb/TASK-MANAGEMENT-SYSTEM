@@ -11,17 +11,15 @@ import lombok.Getter;
 public class CreateTaskRequest {
 
 
-    @Schema(description = "Идентификатор автора")
+    @Schema(description = "Идентификатор автора", example = "1")
     private Long authorId;
 
-    @Schema(description = "Заголовок задачи")
+    @Schema(description = "Заголовок задачи", example = "US-4.7.3 Закрытие карты")
     private String title;
 
-    @Schema(description = "Описание задачи")
+    @Schema(description = "Необходимо осуществить закрытие карты.")
     private String description;
 
-    @Schema(description = "Приоритет задачи", example = """
-            HIGH or MEDIUM or LOW
-            """)
+    @Schema(description = "Приоритет задачи", example = "HIGH or MEDIUM or LOW")
     private TaskPriority priority;
 }

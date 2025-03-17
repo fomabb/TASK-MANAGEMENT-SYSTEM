@@ -22,14 +22,10 @@ public class CreatedTaskResponse {
     @Schema(description = "Описание задачи")
     private String description;
 
-    @Schema(description = "Статус задачи", example = """
-            PENDING or IN_PROGRESS or COMPLETED
-            """)
+    @Schema(description = "Статус задачи", example = "PENDING or IN_PROGRESS or COMPLETED")
     private TaskStatus status;
 
-    @Schema(description = "Приоритет задачи", example = """
-            HIGH or MEDIUM or LOW
-            """)
+    @Schema(description = "Приоритет задачи", example = "HIGH or MEDIUM or LOW")
     private TaskPriority priority;
 
     @Schema(description = "Время создания задачи")

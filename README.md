@@ -49,3 +49,9 @@ docker compose up
 ### Мои запросы к приложению в Postman
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](Путь к postman???)
+
+# Data model
+
+## ER diagram for the data model
+
+![db_diagram.png](materials%2Fdb_diagram.png)

@@ -8,3 +8,10 @@ CREATE TABLE comments
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (author_id) REFERENCES users (id)
 );
+
+comment on table comments is 'Таблица для хранения комментариев';
+comment on column comments.id is 'Идентификационный номер комментария';
+comment on column comments.content is 'Контент комментария';
+comment on column comments.task_id is 'Идентификационный номер задачи';
+comment on column comments.author_id is 'Идентификационный номер автора';
+comment on column comments.created_at is 'Время создания комментария';
