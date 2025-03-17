@@ -1,5 +1,6 @@
 package com.iase24.test.controller;
 
+import com.iase24.test.dto.TaskDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.service.TaskService;
@@ -9,10 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/task")
@@ -30,5 +30,14 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<CreatedTaskResponse> createTask(@RequestBody CreateTaskRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(request));
+    }
+
+    @Operation(
+            summary = "Показать все задачи.",
+            description = "`Выводит все задачи, которые имеются в базе данных.`"
+    )
+    @GetMapping
+    public ResponseEntity<List<TaskDataDto>> getAllTask() {
+        return ResponseEntity.ok(taskService.getAllTask());
     }
 }
