@@ -17,9 +17,7 @@ public class CreateTaskRequest {
     private String description;
 
     @Schema(description = "Приоритет задачи", example = """
-            HIGH
-            MEDIUM
-            LOW
+            HIGH or MEDIUM or LOW
             """)
     private TaskPriority priority;
 }

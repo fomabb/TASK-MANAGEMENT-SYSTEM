@@ -1,9 +1,7 @@
 package com.iase24.test.dto;
 
-import com.iase24.test.entity.Comment;
 import com.iase24.test.entity.enumeration.TaskPriority;
 import com.iase24.test.entity.enumeration.TaskStatus;
-import com.iase24.test.security.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,16 +30,12 @@ public class TaskDataDto {
     private LocalDateTime updatedAt;
 
     @Schema(description = "Статус задачи", example = """
-            `PENDING`
-            `IN_PROGRESS`
-            `COMPLETED`
+            PENDING or IN_PROGRESS or COMPLETED
             """)
     private TaskStatus status;
 
     @Schema(description = "Приоритет задачи", example = """
-            HIGH
-            MEDIUM
-            LOW
+            HIGH or MEDIUM or LOW
             """)
     private TaskPriority priority;
 
