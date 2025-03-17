@@ -2,6 +2,7 @@ package com.iase24.test.mapper.impl;
 
 import com.iase24.test.dto.CommentsDataDto;
 import com.iase24.test.dto.TaskDataDto;
+import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.UserAssigneeDataDto;
 import com.iase24.test.dto.UserAuthorDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
@@ -78,6 +79,45 @@ public class TaskTaskMapperImpl implements TaskMapper {
                 .assignee(task.getAssignee() != null ?
                         UserAssigneeDataDto.builder().assigneeId(task.getAssignee().getId()).build() : null)
                 .author(UserAuthorDataDto.builder().authorId(task.getAuthor().getId()).build())
+                .build();
+    }
+
+    @Override
+    public UpdateTaskDataDto entityToUpdateDto(Task task) {
+        return UpdateTaskDataDto.builder()
+                .taskId(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .status(task.getStatus())
+                .priority(task.getPriority())
+                .updatedAt(task.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public Task updateDtoToEntity(UpdateTaskDataDto request) {
+        return Task.builder()
+                .id(request.getTaskId())
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .status(request.getStatus())
+                .priority(request.getPriority())
+                .updatedAt(now())
+                .build();
+    }
+
+    @Override
+    public Task buildUpdateTaskForSave(Task existingTask, Task updatedTask) {
+        return Task.builder()
+                .id(existingTask.getId())
+                .createdAt(existingTask.getCreatedAt())
+                .author(existingTask.getAuthor())
+                .assignee(existingTask.getAssignee())
+                .comments(existingTask.getComments())
+                .title(updatedTask.getTitle())
+                .description(updatedTask.getDescription())
+                .status(updatedTask.getStatus())
+                .priority(updatedTask.getPriority())
                 .build();
     }
 }

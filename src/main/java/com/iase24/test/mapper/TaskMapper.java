@@ -1,6 +1,7 @@
 package com.iase24.test.mapper;
 
 import com.iase24.test.dto.TaskDataDto;
+import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.entity.Task;
@@ -16,4 +17,10 @@ public interface TaskMapper {
     List<TaskDataDto> listEntityToListDto(List<Task> tasks);
 
     TaskDataDto entityTaskToTaskDto(Task task);
+
+    UpdateTaskDataDto entityToUpdateDto(Task task);
+
+    Task updateDtoToEntity(UpdateTaskDataDto request);
+
+    Task buildUpdateTaskForSave(Task existingTask, Task updatedTask);
 }

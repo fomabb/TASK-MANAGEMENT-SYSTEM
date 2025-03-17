@@ -1,13 +1,12 @@
 package com.iase24.test.service.impl;
 
 import com.iase24.test.dto.TaskDataDto;
+import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
-import com.iase24.test.dto.request.UpdateTaskDataDtoRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
-import com.iase24.test.dto.response.UpdateTaskDataDtoResponse;
+import com.iase24.test.entity.Task;
 import com.iase24.test.mapper.TaskMapper;
 import com.iase24.test.repository.TaskRepository;
-import com.iase24.test.security.repository.UserRepository;
 import com.iase24.test.service.TaskService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +23,14 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     public static final String USER_WITH_ID_S_NOT_FOUND = "User with ID %s not found";
+    public static final String TASK_WITH_ID_S_NOT_FOUND = "Task with ID %s not found";
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
 
     @Override
     @Transactional
     public CreatedTaskResponse createTask(CreateTaskRequest body) {
-        userRepository.findById(body.getAuthorId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND, body.getAuthorId())));
+        getTaskById(body.getAuthorId());
         return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.CreateRequestToEntity(body)));
     }
 
@@ -45,8 +42,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public UpdateTaskDataDtoResponse updateTask(UpdateTaskDataDtoRequest dataDtoRequest) {
-        return null;
+    public UpdateTaskDataDto updateTask(UpdateTaskDataDto dataDtoRequest) {
+        Task existingTask = taskRepository.findById(dataDtoRequest.getTaskId())
+                .orElseThrow(() -> new EntityNotFoundException(String.format(TASK_WITH_ID_S_NOT_FOUND, dataDtoRequest.getTaskId())));
+        Task updatedTask = taskMapper.updateDtoToEntity(dataDtoRequest);
+        return taskMapper.entityToUpdateDto(taskRepository.save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
     }
 
     @Override

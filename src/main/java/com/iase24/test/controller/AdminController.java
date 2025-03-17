@@ -1,9 +1,8 @@
 package com.iase24.test.controller;
 
+import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.request.CreateTaskRequest;
-import com.iase24.test.dto.request.UpdateTaskDataDtoRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
-import com.iase24.test.dto.response.UpdateTaskDataDtoResponse;
 import com.iase24.test.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -42,7 +41,7 @@ public class AdminController {
             description = "`В теле запроса необходимо прописать ID таски для ее редактирования.`"
     )
     @PatchMapping
-    public ResponseEntity<UpdateTaskDataDtoResponse> updateTask(UpdateTaskDataDtoRequest request) {
+    public ResponseEntity<UpdateTaskDataDto> updateTask(UpdateTaskDataDto request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTask(request));
     }
 }
