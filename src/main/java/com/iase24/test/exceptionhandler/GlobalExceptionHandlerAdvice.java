@@ -4,6 +4,7 @@ import com.iase24.test.dto.exception.CommonExceptionResponse;
 import com.iase24.test.exceptionhandler.exeption.BusinessException;
 import com.iase24.test.exceptionhandler.exeption.ValidationException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.ServletException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,12 @@ public class GlobalExceptionHandlerAdvice extends ResponseEntityExceptionHandler
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<CommonExceptionResponse> handleAuthenticationException(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(buildResponseBody(e.getMessage(), e.getClass().getSimpleName()));
+    }
+
+    @ExceptionHandler(ServletException.class)
+    public ResponseEntity<CommonExceptionResponse> handleServletException(ServletException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(buildResponseBody(e.getMessage(), e.getClass().getSimpleName()));
     }
 

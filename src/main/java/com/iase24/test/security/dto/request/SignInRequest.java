@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Запрос на аутентификацию")
 public class SignInRequest {
 
-    @Schema(description = "Адрес электронной почты", example = "vikabb123@gmail.com")
+    @Schema(description = "Адрес электронной почты", example = "ivan123@gmail.com")
     @Size(min = 5, max = 100, message = "Адрес электронной почты должен содержать от 5 до 100 символов")
     @NotBlank(message = "Адрес электронной почты не может быть пустым")
     @Email(message = "Адрес электронной почты должен быть в формате user@gmail.com")

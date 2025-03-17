@@ -5,15 +5,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.3</version>
+        <version>3.3.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.iase24</groupId>
-    <artifactId>TaskManagementSystm</artifactId>
+    <artifactId>TaskManagementSystem</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>TaskManagementSystm</name>
-    <description>TaskManagementSystm</description>
+    <name>TaskManagementSystem</name>
+    <description>TaskManagementSystem</description>
 
     <properties>
         <java.version>21</java.version>
