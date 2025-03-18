@@ -18,7 +18,7 @@ public class CommentMapperImpl implements CommentMapper {
                 .content(dto.getContent())
                 .task(taskExist)
                 .author(userExist)
-                .updateAt(now())
+                .createdAt(now())
                 .build();
     }
 

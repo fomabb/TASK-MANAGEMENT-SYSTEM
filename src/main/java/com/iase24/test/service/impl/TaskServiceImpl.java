@@ -5,8 +5,11 @@ import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.request.AssigneeTaskForUserRequest;
 import com.iase24.test.dto.request.CommentAddToTaskDataDtoRequest;
 import com.iase24.test.dto.request.CreateTaskRequest;
+import com.iase24.test.dto.request.UpdateCommentRequest;
 import com.iase24.test.dto.response.CommentAddedResponse;
 import com.iase24.test.dto.response.CreatedTaskResponse;
+import com.iase24.test.dto.response.UpdateCommentResponse;
+import com.iase24.test.entity.Comment;
 import com.iase24.test.entity.Task;
 import com.iase24.test.mapper.CommentMapper;
 import com.iase24.test.mapper.TaskMapper;
@@ -24,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.iase24.test.util.TaskConstant.COMMENT_WITH_ID_S_NOT_FOUND;
+import static java.time.LocalDateTime.now;
 
 @Service
 @Slf4j
@@ -112,5 +118,18 @@ public class TaskServiceImpl implements TaskService {
         return commentMapper.entityCommentToCommentDto(commentRepository.save(
                 commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody))
         );
+    }
+
+    @Override
+    @Transactional
+    public UpdateCommentResponse updateComment(UpdateCommentRequest requestBody) {
+        Comment comment = commentRepository.findById(requestBody.getCommentId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(COMMENT_WITH_ID_S_NOT_FOUND, requestBody.getCommentId())
+                ));
+        comment.setContent(requestBody.getNewContent());
+        comment.setUpdateAt(now());
+        commentRepository.save(comment);
+        return new UpdateCommentResponse(comment.getContent(), comment.getUpdateAt());
     }
 }
