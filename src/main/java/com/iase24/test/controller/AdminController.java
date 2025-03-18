@@ -3,7 +3,9 @@ package com.iase24.test.controller;
 import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.exception.CommonExceptionResponse;
 import com.iase24.test.dto.request.AssigneeTaskForUserRequest;
+import com.iase24.test.dto.request.CommentAddToTaskDataDtoRequest;
 import com.iase24.test.dto.request.CreateTaskRequest;
+import com.iase24.test.dto.response.CommentAddedResponse;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.facade.TaskFacade;
 import com.iase24.test.service.TaskService;
@@ -155,5 +157,37 @@ public class AdminController {
     public ResponseEntity<Void> removeTaskById(@PathVariable("taskId") Long taskId) {
         taskFacade.removeTaskById(taskId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Добавление комментария к задаче",
+            description = """
+                        `
+                        Добавляет комментарий к задаче по указанному ID.
+                        В теле запроса необходимо указать данные комментария, включая текст и ID задачи.
+                        `
+                    """,
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Комментарий успешно добавлен",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentAddedResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Задача не найдена",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Ошибка валидации данных комментария",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class)
+                            )
+                    )
+            }
+    )
+    @PostMapping("/add-comment-to-task")
+    public ResponseEntity<CommentAddedResponse> addCommentToTaskById(
+            @RequestBody CommentAddToTaskDataDtoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.addCommentToTaskById(request));
     }
 }

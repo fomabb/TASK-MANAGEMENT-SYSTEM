@@ -13,7 +13,7 @@ public interface TaskMapper {
 
     CreatedTaskResponse entityToCreateResponse(Task task);
 
-    Task CreateRequestToEntity(CreateTaskRequest dto);
+    Task createRequestToEntity(CreateTaskRequest dto);
 
     List<TaskDataDto> listEntityToListDto(List<Task> tasks);
 

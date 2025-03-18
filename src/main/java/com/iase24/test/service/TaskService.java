@@ -3,7 +3,9 @@ package com.iase24.test.service;
 import com.iase24.test.dto.TaskDataDto;
 import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.request.AssigneeTaskForUserRequest;
+import com.iase24.test.dto.request.CommentAddToTaskDataDtoRequest;
 import com.iase24.test.dto.request.CreateTaskRequest;
+import com.iase24.test.dto.response.CommentAddedResponse;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 
 import java.util.List;
@@ -23,4 +25,6 @@ public interface TaskService {
     void assignTaskPerformers(AssigneeTaskForUserRequest requestBody);
 
     boolean existsByTitle(String title);
+
+    CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody);
 }

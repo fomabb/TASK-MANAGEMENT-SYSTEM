@@ -37,7 +37,7 @@ public class TaskTaskMapperImpl implements TaskMapper {
     }
 
     @Override
-    public Task CreateRequestToEntity(CreateTaskRequest dto) {
+    public Task createRequestToEntity(CreateTaskRequest dto) {
         return Task.builder()
                 .author(User.builder().id(dto.getAuthorId()).build())
                 .title(dto.getTitle())

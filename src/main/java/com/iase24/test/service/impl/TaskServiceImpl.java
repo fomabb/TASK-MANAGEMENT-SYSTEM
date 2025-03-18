@@ -3,10 +3,14 @@ package com.iase24.test.service.impl;
 import com.iase24.test.dto.TaskDataDto;
 import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.request.AssigneeTaskForUserRequest;
+import com.iase24.test.dto.request.CommentAddToTaskDataDtoRequest;
 import com.iase24.test.dto.request.CreateTaskRequest;
+import com.iase24.test.dto.response.CommentAddedResponse;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.entity.Task;
+import com.iase24.test.mapper.CommentMapper;
 import com.iase24.test.mapper.TaskMapper;
+import com.iase24.test.repository.CommentRepository;
 import com.iase24.test.repository.TaskRepository;
 import com.iase24.test.security.entity.User;
 import com.iase24.test.security.repository.UserRepository;
@@ -28,8 +32,10 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
+    private final CommentMapper commentMapper;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional
@@ -37,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
         Optional<User> user = userRepository.findById(requestBody.getAuthorId());
 
         if (user.isPresent()) {
-            return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.CreateRequestToEntity(requestBody)));
+            return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.createRequestToEntity(requestBody)));
         }
         throw new EntityNotFoundException(String.format(
                 TaskConstant.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId()));
@@ -90,5 +96,21 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean existsByTitle(String title) {
         return taskRepository.existsByTitle(title);
+    }
+
+    @Override
+    @Transactional
+    public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
+        User userExist = userRepository.findById(requestBody.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(TaskConstant.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId())
+                ));
+        Task taskExist = taskRepository.findById(requestBody.getTaskId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(TaskConstant.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
+                ));
+        return commentMapper.entityCommentToCommentDto(commentRepository.save(
+                commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody))
+        );
     }
 }
