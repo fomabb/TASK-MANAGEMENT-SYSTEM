@@ -5,11 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
-import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
-import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
-import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
-import org.fomabb.taskmanagement.dto.request.UpdateCommentRequest;
-import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
+import org.fomabb.taskmanagement.dto.request.*;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
@@ -23,8 +19,10 @@ import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.fomabb.taskmanagement.util.ConstantProject;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -158,8 +156,10 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.equals(user.getId(), currentUserId)) {
             taskToSave.setStatus(requestBody.getTaskStatus());
             taskToSave.setUpdatedAt(now());
+            return taskMapper.entityToUpdateDto(taskRepository.save(taskToSave));
+        } else {
+            throw new AccessDeniedException("User does not have permission to update this task.");
         }
-        return taskMapper.entityToUpdateDto(taskRepository.save(taskToSave));
     }
 
     /**
@@ -169,6 +169,9 @@ public class TaskServiceImpl implements TaskService {
      */
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (Long) authentication.getPrincipal(); // user_id из JWT
+        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return ((User) userDetails).getId();
+        }
+        throw new IllegalArgumentException("Authentication principal is not of type UserDetails");
     }
 }
