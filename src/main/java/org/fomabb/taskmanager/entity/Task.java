@@ -1,8 +1,5 @@
 package org.fomabb.taskmanager.entity;
 
-import org.fomabb.taskmanager.entity.enumeration.TaskPriority;
-import org.fomabb.taskmanager.entity.enumeration.TaskStatus;
-import org.fomabb.taskmanager.security.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +17,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.fomabb.taskmanager.entity.enumeration.TaskPriority;
+import org.fomabb.taskmanager.entity.enumeration.TaskStatus;
+import org.fomabb.taskmanager.security.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

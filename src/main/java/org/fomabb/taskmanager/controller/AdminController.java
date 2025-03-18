@@ -1,5 +1,15 @@
 package org.fomabb.taskmanager.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanager.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanager.dto.exception.CommonExceptionResponse;
 import org.fomabb.taskmanager.dto.request.AssigneeTaskForUserRequest;
@@ -11,23 +21,12 @@ import org.fomabb.taskmanager.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanager.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanager.facade.TaskFacade;
 import org.fomabb.taskmanager.service.TaskService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,7 +60,7 @@ public class AdminController {
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
                             })
             })
-    @PostMapping
+    @PostMapping("/create-task")
     public ResponseEntity<CreatedTaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskFacade.createTask(request));
     }
@@ -100,7 +99,7 @@ public class AdminController {
                             })
             }
     )
-    @PatchMapping
+    @PatchMapping("update-task")
     public ResponseEntity<UpdateTaskDataDto> updateTask(UpdateTaskDataDto request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTask(request));
     }
@@ -119,8 +118,8 @@ public class AdminController {
                     @ApiResponse(
                             responseCode = "400",
                             description = """
-                                   `Неверный запрос. Проверьте, что ID задачи и ID пользователя указаны корректно.`
-                                   """,
+                                    `Неверный запрос. Проверьте, что ID задачи и ID пользователя указаны корректно.`
+                                    """,
                             content = {@Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
                             }
@@ -141,8 +140,8 @@ public class AdminController {
     }
 
     @Operation(
-            summary = "Удаление таски по ID.",
-            description = "`Необходимо в путь прописать ID таски для ее удаления.`",
+            summary = "Удаление задачи по ID.",
+            description = "`Необходимо в путь прописать ID задачи для ее удаления.`",
             parameters = {
                     @Parameter(
                             name = "taskId",
@@ -171,10 +170,10 @@ public class AdminController {
     @Operation(
             summary = "Добавление комментария к задаче",
             description = """
-                        `
-                        Добавляет комментарий к задаче по указанному ID.
-                        В теле запроса необходимо указать данные комментария, включая текст и ID задачи.
-                        `
+                    `
+                    Добавляет комментарий к задаче по указанному ID. В теле запроса необходимо указать данные
+                    комментария, включая текст и ID задачи.
+                    `
                     """,
             responses = {
                     @ApiResponse(responseCode = "201", description = "`Комментарий успешно добавлен`",
@@ -222,7 +221,7 @@ public class AdminController {
                     )
             }
     )
-    @PutMapping("/update-comment")
+    @PatchMapping("/update-comment")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateComment(request));
     }

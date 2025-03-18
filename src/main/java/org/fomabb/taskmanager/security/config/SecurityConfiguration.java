@@ -1,7 +1,7 @@
 package org.fomabb.taskmanager.security.config;
 
-import org.fomabb.taskmanager.security.service.UserServiceSecurity;
 import lombok.RequiredArgsConstructor;
+import org.fomabb.taskmanager.security.service.UserServiceSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

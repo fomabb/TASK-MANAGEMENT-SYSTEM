@@ -1,6 +1,5 @@
 package org.fomabb.taskmanager.entity;
 
-import org.fomabb.taskmanager.security.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.fomabb.taskmanager.security.entity.User;
 
 import java.time.LocalDateTime;
 

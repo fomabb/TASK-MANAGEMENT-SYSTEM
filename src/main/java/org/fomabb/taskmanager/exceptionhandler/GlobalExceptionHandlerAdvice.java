@@ -1,12 +1,12 @@
 package org.fomabb.taskmanager.exceptionhandler;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.ServletException;
+import lombok.AllArgsConstructor;
 import org.fomabb.taskmanager.dto.exception.CommonExceptionResponse;
 import org.fomabb.taskmanager.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanager.exceptionhandler.exeption.DuplicateTitleException;
 import org.fomabb.taskmanager.exceptionhandler.exeption.ValidationException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.ServletException;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

@@ -1,10 +1,10 @@
 package org.fomabb.taskmanager.dto.response;
 
-import org.fomabb.taskmanager.entity.enumeration.TaskPriority;
-import org.fomabb.taskmanager.entity.enumeration.TaskStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import org.fomabb.taskmanager.entity.enumeration.TaskPriority;
+import org.fomabb.taskmanager.entity.enumeration.TaskStatus;
 
 import java.time.LocalDateTime;
 

@@ -1,13 +1,13 @@
 package org.fomabb.taskmanager.security.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanager.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanager.security.dto.request.SignInRequest;
 import org.fomabb.taskmanager.security.dto.request.SignUpRequest;
 import org.fomabb.taskmanager.security.dto.response.JwtAuthenticationResponse;
 import org.fomabb.taskmanager.security.entity.User;
 import org.fomabb.taskmanager.security.entity.enumeration.Role;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;

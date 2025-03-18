@@ -1,5 +1,8 @@
 package org.fomabb.taskmanager.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanager.dto.TaskDataDto;
 import org.fomabb.taskmanager.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanager.dto.request.AssigneeTaskForUserRequest;
@@ -18,18 +21,15 @@ import org.fomabb.taskmanager.repository.TaskRepository;
 import org.fomabb.taskmanager.security.entity.User;
 import org.fomabb.taskmanager.security.repository.UserRepository;
 import org.fomabb.taskmanager.service.TaskService;
-import org.fomabb.taskmanager.util.TaskConstant;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.fomabb.taskmanager.util.ConstantProject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.fomabb.taskmanager.util.TaskConstant.COMMENT_WITH_ID_S_NOT_FOUND;
 import static java.time.LocalDateTime.now;
+import static org.fomabb.taskmanager.util.ConstantProject.COMMENT_WITH_ID_S_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -52,7 +52,7 @@ public class TaskServiceImpl implements TaskService {
             return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.createRequestToEntity(requestBody)));
         }
         throw new EntityNotFoundException(String.format(
-                TaskConstant.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId()));
+                ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId()));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
     public UpdateTaskDataDto updateTask(UpdateTaskDataDto requestBody) {
         Task existingTask = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TaskConstant.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
+                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
                 );
         Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
         return taskMapper.entityToUpdateDto(taskRepository
@@ -76,7 +76,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDataDto getTaskById(Long id) {
         return taskMapper.entityTaskToTaskDto(taskRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException(String.format(TaskConstant.TASK_WITH_ID_S_NOT_FOUND, id))));
+                        new EntityNotFoundException(String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, id))));
     }
 
     @Override
@@ -90,11 +90,11 @@ public class TaskServiceImpl implements TaskService {
     public void assignTaskPerformers(AssigneeTaskForUserRequest requestBody) {
         Task existingTask = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TaskConstant.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
+                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
                 );
         userRepository.findById(requestBody.getAssigneeId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format(
-                        TaskConstant.USER_WITH_ID_S_NOT_FOUND, requestBody.getAssigneeId()))
+                        ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAssigneeId()))
                 );
         taskRepository.save(taskMapper.buildAssigneeToSave(existingTask, taskMapper.assigneeDtoToEntity(requestBody)));
     }
@@ -109,11 +109,11 @@ public class TaskServiceImpl implements TaskService {
     public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
         User userExist = userRepository.findById(requestBody.getAuthorId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TaskConstant.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId())
+                        String.format(ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId())
                 ));
         Task taskExist = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TaskConstant.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
+                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
                 ));
         return commentMapper.entityCommentToCommentDto(commentRepository.save(
                 commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody))

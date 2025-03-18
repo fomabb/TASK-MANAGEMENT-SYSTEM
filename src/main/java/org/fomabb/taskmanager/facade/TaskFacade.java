@@ -1,12 +1,12 @@
 package org.fomabb.taskmanager.facade;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.fomabb.taskmanager.dto.TaskDataDto;
 import org.fomabb.taskmanager.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanager.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanager.exceptionhandler.exeption.DuplicateTitleException;
 import org.fomabb.taskmanager.service.TaskService;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component

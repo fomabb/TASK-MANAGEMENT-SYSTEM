@@ -1,15 +1,15 @@
 package org.fomabb.taskmanager.security.controller;
 
-import org.fomabb.taskmanager.security.dto.request.SignInRequest;
-import org.fomabb.taskmanager.security.dto.request.SignUpRequest;
-import org.fomabb.taskmanager.security.dto.response.JwtAuthenticationResponse;
-import org.fomabb.taskmanager.security.facade.AuthFacade;
-import org.fomabb.taskmanager.security.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fomabb.taskmanager.security.dto.request.SignInRequest;
+import org.fomabb.taskmanager.security.dto.request.SignUpRequest;
+import org.fomabb.taskmanager.security.dto.response.JwtAuthenticationResponse;
+import org.fomabb.taskmanager.security.facade.AuthFacade;
+import org.fomabb.taskmanager.security.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

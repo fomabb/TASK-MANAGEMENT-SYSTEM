@@ -1,11 +1,11 @@
 package org.fomabb.taskmanager.security.facade;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanager.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanager.security.dto.request.SignUpRequest;
 import org.fomabb.taskmanager.security.dto.response.JwtAuthenticationResponse;
 import org.fomabb.taskmanager.security.service.AuthenticationService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j

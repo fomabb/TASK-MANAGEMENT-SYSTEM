@@ -1,11 +1,11 @@
 package org.fomabb.taskmanager.dto.request;
 
-import org.fomabb.taskmanager.entity.enumeration.TaskPriority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
+import org.fomabb.taskmanager.entity.enumeration.TaskPriority;
 
 @Getter
 @Builder

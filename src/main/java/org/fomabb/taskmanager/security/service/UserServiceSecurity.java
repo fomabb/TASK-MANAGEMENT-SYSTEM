@@ -1,10 +1,10 @@
 package org.fomabb.taskmanager.security.service;
 
+import lombok.RequiredArgsConstructor;
 import org.fomabb.taskmanager.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanager.security.entity.User;
 import org.fomabb.taskmanager.security.entity.enumeration.Role;
 import org.fomabb.taskmanager.security.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
