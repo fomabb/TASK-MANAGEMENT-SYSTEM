@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@Schema(description = "Ответ данных о задаче")
+@Schema(description = "Объект передачи данных задачи")
 public class CreatedTaskResponse {
 
     @Schema(description = "Идентификатор задачи")

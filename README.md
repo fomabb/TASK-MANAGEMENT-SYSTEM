@@ -28,7 +28,7 @@
 
 ## Скачивание файла `docker-compose.yml`
 
-Для удобства вы можете скачать необходимые файлы `.env` и `docker-compose.yml`, который содержит необходимые настройки для запуска приложения.
+Для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые настройки для запуска приложения.
 
 [![Скачать docker-compose.yml](https://img.shields.io/badge/Скачать%20docker--compose.yml-blue)](https://drive.google.com/drive/folders/1ztmCCncx75RUAmWTNZv3hBcFH6u-fr1M?usp=drive_link)
 
@@ -48,7 +48,7 @@ docker compose up
 
 ### Мои запросы к приложению в Postman
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](Путь к postman???)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21948648/2sAYkDMLRS)
 
 # Data model
 

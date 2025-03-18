@@ -12,14 +12,14 @@ import io.swagger.v3.oas.annotations.servers.Server;
         info = @Info(
                 contact = @Contact(
                         name = "Nikolay Kirilyuk",
-                        email = "chaosbb@uandex.by",
+                        email = "kirabb123@gmail.com",
                         url = "https://test.iase24.com/"
                 ), description = "Open Api documentation",
                 title = "Open Api specification - Task Management System",
                 version = "1.0",
                 license = @License(
                         name = "Backend-developer",
-                        url = "https://www.linkedin.com/feed/"
+                        url = "https://www.linkedin.com/in/nikolay-k-a91635232/"
                 ),
                 termsOfService = "https://test.iase24.com/"
         ),
