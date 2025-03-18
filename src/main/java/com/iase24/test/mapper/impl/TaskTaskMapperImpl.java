@@ -5,6 +5,7 @@ import com.iase24.test.dto.TaskDataDto;
 import com.iase24.test.dto.UpdateTaskDataDto;
 import com.iase24.test.dto.UserAssigneeDataDto;
 import com.iase24.test.dto.UserAuthorDataDto;
+import com.iase24.test.dto.request.AssigneeTaskForUserRequest;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.entity.Task;
@@ -36,12 +37,12 @@ public class TaskTaskMapperImpl implements TaskMapper {
     }
 
     @Override
-    public Task CreateRequestToEntity(CreateTaskRequest request) {
+    public Task CreateRequestToEntity(CreateTaskRequest dto) {
         return Task.builder()
-                .author(User.builder().id(request.getAuthorId()).build())
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .priority(request.getPriority())
+                .author(User.builder().id(dto.getAuthorId()).build())
+                .title(dto.getTitle())
+                .description(dto.getDescription())
+                .priority(dto.getPriority())
                 .createdAt(now())
                 .status(TaskStatus.PENDING)
                 .updatedAt(null)
@@ -95,16 +96,25 @@ public class TaskTaskMapperImpl implements TaskMapper {
     }
 
     @Override
-    public Task updateDtoToEntity(UpdateTaskDataDto request) {
+    public Task updateDtoToEntity(UpdateTaskDataDto dto) {
         return Task.builder()
-                .id(request.getTaskId())
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .status(request.getStatus())
-                .priority(request.getPriority())
+                .id(dto.getTaskId())
+                .title(dto.getTitle())
+                .description(dto.getDescription())
+                .status(dto.getStatus())
+                .priority(dto.getPriority())
                 .updatedAt(now())
                 .build();
     }
+
+    @Override
+    public Task assigneeDtoToEntity(AssigneeTaskForUserRequest dto) {
+        return Task.builder()
+                .id(dto.getTaskId())
+                .assignee(User.builder().id(dto.getAssigneeId()).build())
+                .build();
+    }
+
 
     @Override
     public Task buildUpdateTaskForSave(Task existingTask, Task updatedTask) {
@@ -127,6 +137,22 @@ public class TaskTaskMapperImpl implements TaskMapper {
                         ? updatedTask.getPriority()
                         : existingTask.getPriority())
                 .updatedAt(now())
+                .build();
+    }
+
+    @Override
+    public Task buildAssigneeToSave(Task existingTask, Task assigneeTask) {
+        return Task.builder()
+                .id(existingTask.getId())
+                .title(existingTask.getTitle())
+                .description(existingTask.getDescription())
+                .author(existingTask.getAuthor())
+                .status(existingTask.getStatus())
+                .priority(existingTask.getPriority())
+                .createdAt(existingTask.getCreatedAt())
+                .updatedAt(now())
+                .author(existingTask.getAuthor())
+                .assignee(assigneeTask.getAssignee())
                 .build();
     }
 }

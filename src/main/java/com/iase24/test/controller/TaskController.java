@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/v1/task")
 @Slf4j
 @RequiredArgsConstructor
-@Tag(name = "Управление задачами", description = "API для управления задачами")
+@Tag(name = "Таск трекер задач", description = "API для управления задачами зарегистрированных пользователей")
 @SecurityRequirement(name = "bearerAuth")
 public class TaskController {
 

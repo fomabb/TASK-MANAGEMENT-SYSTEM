@@ -1,6 +1,7 @@
 package com.iase24.test.controller;
 
 import com.iase24.test.dto.UpdateTaskDataDto;
+import com.iase24.test.dto.request.AssigneeTaskForUserRequest;
 import com.iase24.test.dto.request.CreateTaskRequest;
 import com.iase24.test.dto.response.CreatedTaskResponse;
 import com.iase24.test.facade.TaskFacade;
@@ -47,6 +48,18 @@ public class AdminController {
     @PatchMapping
     public ResponseEntity<UpdateTaskDataDto> updateTask(UpdateTaskDataDto request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTask(request));
+    }
+
+    @Operation(
+            summary = "Установить исполнителя на задачу",
+            description = """
+                    `В тело запроса добавить ID задачи и ID пользователя, которого нужно сделать исполнителем.`
+                    """
+    )
+    @PatchMapping("/assignee-by-taskId")
+    public ResponseEntity<Void> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
+        taskService.assignTaskPerformers(request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @Operation(
