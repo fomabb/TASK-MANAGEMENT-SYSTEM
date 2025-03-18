@@ -86,4 +86,9 @@ public class TaskServiceImpl implements TaskService {
                 );
         taskRepository.save(taskMapper.buildAssigneeToSave(existingTask, taskMapper.assigneeDtoToEntity(requestBody)));
     }
+
+    @Override
+    public boolean existsByTitle(String title) {
+        return taskRepository.existsByTitle(title);
+    }
 }

@@ -2,6 +2,7 @@ package com.iase24.test.exceptionhandler;
 
 import com.iase24.test.dto.exception.CommonExceptionResponse;
 import com.iase24.test.exceptionhandler.exeption.BusinessException;
+import com.iase24.test.exceptionhandler.exeption.DuplicateTitleException;
 import com.iase24.test.exceptionhandler.exeption.ValidationException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletException;
@@ -64,6 +65,12 @@ public class GlobalExceptionHandlerAdvice extends ResponseEntityExceptionHandler
     @ExceptionHandler(ServletException.class)
     public ResponseEntity<CommonExceptionResponse> handleServletException(ServletException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildResponseBody(e.getMessage(), e.getClass().getSimpleName()));
+    }
+
+    @ExceptionHandler(DuplicateTitleException.class)
+    public ResponseEntity<CommonExceptionResponse> handleDuplicateTitleException(DuplicateTitleException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(buildResponseBody(e.getMessage(), e.getClass().getSimpleName()));
     }
 

@@ -91,7 +91,6 @@ public class TaskTaskMapperImpl implements TaskMapper {
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .priority(task.getPriority())
-                .updatedAt(task.getUpdatedAt())
                 .build();
     }
 

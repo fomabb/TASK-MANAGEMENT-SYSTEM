@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @Schema(description = "Объект передачи данных для обновления таски")
@@ -27,7 +25,4 @@ public class UpdateTaskDataDto {
 
     @Schema(description = "Приоритет задачи", example = "Приоритет обновлен")
     private TaskPriority priority;
-
-    @Schema(description = "Время обновления")
-    private LocalDateTime updatedAt;
 }

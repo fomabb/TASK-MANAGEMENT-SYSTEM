@@ -14,4 +14,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             select t.* from tasks t join comments c on t.id = c.task_id
             """, nativeQuery = true)
     List<Task> findAllWithComment();
+
+    boolean existsByTitle(String title);
 }

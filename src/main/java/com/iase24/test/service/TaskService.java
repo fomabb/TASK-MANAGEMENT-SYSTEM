@@ -21,4 +21,6 @@ public interface TaskService {
     void removeTaskById(Long id);
 
     void assignTaskPerformers(AssigneeTaskForUserRequest requestBody);
+
+    boolean existsByTitle(String title);
 }
