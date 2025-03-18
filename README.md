@@ -1,6 +1,6 @@
-# Task Management System
+# Система управления задачами
 
-# RESTful Web-application is written using the following technologies:
+# Полноценное веб-приложение REST написано с использованием следующих технологий:
 
 - Maven
 - Hibernate
@@ -9,11 +9,11 @@
 - Spring Boot
 - Spring security
 
-### Short description of the project
+### Краткое описание проекта
 
-- Standalone application providing REST API
+- Автономное приложение, предоставляющее REST API
 
-### Prerequisites:
+### Предварительные условия:
 
 - Java 21
 - PostgresSQL
