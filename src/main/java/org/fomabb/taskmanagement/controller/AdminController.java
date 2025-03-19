@@ -33,10 +33,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контроллер для управления административными функциями.
+ * Обрабатывает запросы, связанные с администрированием, такие как управление пользователями и настройками системы.
+ */
 @RestController
 @RequestMapping("/api/v1/admin")
 @Slf4j
-@Tag(name = "Администраторский API", description = "`Интерфейс для управления админкой`")
+@Tag(name = "Управления административными функциями", description = "`Интерфейс для управления админкой`")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminController {

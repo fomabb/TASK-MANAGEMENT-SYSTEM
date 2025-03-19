@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контроллер для управления задачами.
+ * Обрабатывает запросы, связанные с задачами, такие как создание, обновление, получение и удаление задач.
+ */
 @RestController
 @RequestMapping("/api/v1/tasks")
 @Slf4j

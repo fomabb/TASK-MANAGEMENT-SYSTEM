@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контроллер для управления пользователями.
+ * Обрабатывает запросы, связанные с пользователями, такие как получение и обновление данных.
+ */
 @RestController
 @RequestMapping("/api/v1/user")
 @Slf4j
