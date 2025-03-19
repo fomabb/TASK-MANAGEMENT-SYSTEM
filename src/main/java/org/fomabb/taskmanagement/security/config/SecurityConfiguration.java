@@ -43,10 +43,11 @@ public class SecurityConfiguration {
                     return corsConfiguration;
                 }))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/actuator/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/endpoint", "/api/v1/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+//                        .requestMatchers("/auth/**", "/actuator/**").permitAll()
+//                        .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+//                        .requestMatchers("/endpoint", "/api/v1/admin/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated())
+                        .requestMatchers("/**").permitAll()) // todo: local test
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

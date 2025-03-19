@@ -20,6 +20,7 @@ import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.facade.TaskFacade;
+import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,7 @@ public class AdminController {
 
     private final TaskService taskService;
     private final TaskFacade taskFacade;
+    private final CommentService commentService;
 
     @Operation(
             summary = "Создание новой задачи",
@@ -196,7 +198,7 @@ public class AdminController {
     @PostMapping("/add-comment-to-task")
     public ResponseEntity<CommentAddedResponse> addCommentToTaskById(
             @RequestBody CommentAddToTaskDataDtoRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.addCommentToTaskById(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.addCommentToTaskById(request));
     }
 
     @Operation(
@@ -223,6 +225,6 @@ public class AdminController {
     )
     @PatchMapping("/update-comment")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateComment(request));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
     }
 }

@@ -9,13 +9,20 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fomabb.taskmanagement.dto.CommentsDataDto;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.exception.CommonExceptionResponse;
+import org.fomabb.taskmanagement.dto.response.PaginCommentsResponse;
+import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,6 +36,9 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final CommentService commentService;
+
+//================================================SECTION~MANAGEMENT~Task=============================================//
 
     @Operation(
             summary = "Показать все задачи.",
@@ -80,5 +90,25 @@ public class TaskController {
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDataDto> getTaskById(@PathVariable("taskId") Long taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
+    }
+
+//================================================SECTION~COMMENT=====================================================//
+
+//    @GetMapping("/comments-by-taskId/{taskId}")
+//    public ResponseEntity<Slice<CommentsDataDto>> getCommentsById(
+//            @PathVariable("taskId") Long taskId,
+//            @RequestParam(defaultValue = "1") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ) {
+//        return ResponseEntity.ok(commentService.getCommentsById(taskId, PageRequest.of(page - 1, size)));
+//    }
+
+    @GetMapping("/comments-by-taskId/{taskId}")
+    public ResponseEntity<PaginCommentsResponse> getCommentsById(
+            @PathVariable("taskId") Long taskId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(commentService.getCommentsById(taskId, PageRequest.of(page - 1, size)));
     }
 }

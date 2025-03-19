@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
-import org.fomabb.taskmanagement.dto.request.*;
-import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
+import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
+import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
+import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
-import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
-import org.fomabb.taskmanagement.entity.Comment;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.CommentMapper;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
@@ -31,7 +30,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
-import static org.fomabb.taskmanagement.util.ConstantProject.COMMENT_WITH_ID_S_NOT_FOUND;
 
 @Service
 @Slf4j
@@ -108,35 +106,6 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.existsByTitle(title);
     }
 
-    @Override
-    @Transactional
-    public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
-        User userExist = userRepository.findById(requestBody.getAuthorId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId())
-                ));
-        Task taskExist = taskRepository.findById(requestBody.getTaskId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
-                ));
-        return commentMapper.entityCommentToCommentDto(commentRepository.save(
-                commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody))
-        );
-    }
-
-    @Override
-    @Transactional
-    public UpdateCommentResponse updateComment(UpdateCommentRequest requestBody) {
-        Comment comment = commentRepository.findById(requestBody.getCommentId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(COMMENT_WITH_ID_S_NOT_FOUND, requestBody.getCommentId())
-                ));
-        comment.setContent(requestBody.getNewContent());
-        comment.setUpdateAt(now());
-        commentRepository.save(comment);
-        return new UpdateCommentResponse(comment.getContent(), comment.getUpdateAt());
-    }
-
 //==================================SECTION~USER========================================================================
 
     @Override
@@ -163,9 +132,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * Проверка токена на валидность
+     * Извлечение ID пользователя из security context
      *
-     * @return true, если токен валиден
+     * @return userId
      */
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

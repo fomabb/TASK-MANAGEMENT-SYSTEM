@@ -1,6 +1,5 @@
 package org.fomabb.taskmanagement.mapper.impl;
 
-import org.fomabb.taskmanagement.dto.CommentsDataDto;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.UserAssigneeDataDto;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 
@@ -70,13 +68,6 @@ public class TaskTaskMapperImpl implements TaskMapper {
                 .status(task.getStatus())
                 .createdAt(task.getCreatedAt())
                 .updatedAt(task.getUpdatedAt())
-                .comments(task.getComments().stream()
-                        .map(comment -> CommentsDataDto.builder()
-                                .id(comment.getId())
-                                .text(comment.getContent())
-                                .author(UserAuthorDataDto.builder().authorId(comment.getAuthor().getId()).build())
-                                .build())
-                        .collect(Collectors.toList()))
                 .assignee(task.getAssignee() != null ?
                         UserAssigneeDataDto.builder().assigneeId(task.getAssignee().getId()).build() : null)
                 .author(UserAuthorDataDto.builder().authorId(task.getAuthor().getId()).build())
