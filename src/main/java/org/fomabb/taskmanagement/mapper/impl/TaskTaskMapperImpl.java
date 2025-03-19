@@ -145,22 +145,4 @@ public class TaskTaskMapperImpl implements TaskMapper {
                 .assignee(assigneeTask.getAssignee())
                 .build();
     }
-
-//    @Override
-//    public PaginTaskResponse buildPagingTaskResponse(List<TaskDataDto> TaskDataDto, Page<Task> taskPage) {
-//        PaginTaskResponse response = new PaginTaskResponse();
-//        response.setContent(TaskDataDto);
-//        response.setPageNumber(taskPage.getNumber() + 1); // Изменение номера страницы
-//        response.setPageSize(taskPage.getSize());
-//        response.setFirst(taskPage.isFirst());
-//        response.setLast(taskPage.isLast());
-//        response.setNumberOfElements(taskPage.getNumberOfElements());
-//        response.setEmpty(taskPage.isEmpty());
-//
-//        // Установка общего количества страниц и элементов
-//        response.setTotalPages(taskPage.getTotalPages());
-//        response.setTotalItems(taskPage.getTotalElements());
-//
-//        return response;
-//    }
 }

@@ -47,22 +47,4 @@ public class CommentMapperImpl implements CommentMapper {
                 .timeUpdated(comment.getUpdateAt())
                 .build();
     }
-
-//    @Override
-//    public PaginCommentsResponse buildPagingCommentResponse(List<CommentsDataDto> commentsDataDtos, Page<Comment> commentsPage) {
-//        PaginCommentsResponse response = new PaginCommentsResponse();
-//        response.setContent(commentsDataDtos);
-//        response.setPageNumber(commentsPage.getNumber() + 1); // Изменение номера страницы
-//        response.setPageSize(commentsPage.getSize());
-//        response.setFirst(commentsPage.isFirst());
-//        response.setLast(commentsPage.isLast());
-//        response.setNumberOfElements(commentsPage.getNumberOfElements());
-//        response.setEmpty(commentsPage.isEmpty());
-//
-//        // Установка общего количества страниц и элементов
-//        response.setTotalPages(commentsPage.getTotalPages());
-//        response.setTotalItems(commentsPage.getTotalElements());
-//
-//        return response;
-//    }
 }

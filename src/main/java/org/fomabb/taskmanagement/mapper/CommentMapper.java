@@ -14,6 +14,4 @@ public interface CommentMapper {
     CommentAddedResponse entityCommentToCommentAddedDto(Comment comment);
 
     CommentsDataDto entityCommentToCommentDto(Comment comment);
-
-//    PaginCommentsResponse buildPagingCommentResponse(List<CommentsDataDto> commentsDataDtos, Page<Comment> commentsPage);
 }

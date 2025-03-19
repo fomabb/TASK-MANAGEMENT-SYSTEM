@@ -28,6 +28,4 @@ public interface TaskMapper {
     Task assigneeDtoToEntity(AssigneeTaskForUserRequest dto);
 
     Task buildAssigneeToSave(Task exisitingTask, Task assigneeTask);
-
-//    PaginTaskResponse buildPagingTaskResponse(List<TaskDataDto> TaskDataDto, Page<Task> tasksPage);
 }
