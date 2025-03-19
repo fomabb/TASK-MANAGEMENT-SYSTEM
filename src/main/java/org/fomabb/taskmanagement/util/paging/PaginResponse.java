@@ -1,4 +1,4 @@
-package org.fomabb.taskmanagement.paging;
+package org.fomabb.taskmanagement.util.paging;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

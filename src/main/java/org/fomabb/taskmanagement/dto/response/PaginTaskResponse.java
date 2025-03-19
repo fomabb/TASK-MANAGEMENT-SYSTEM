@@ -3,7 +3,7 @@ package org.fomabb.taskmanagement.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
-import org.fomabb.taskmanagement.paging.PaginResponse;
+import org.fomabb.taskmanagement.util.paging.PaginResponse;
 
 import java.util.List;
 

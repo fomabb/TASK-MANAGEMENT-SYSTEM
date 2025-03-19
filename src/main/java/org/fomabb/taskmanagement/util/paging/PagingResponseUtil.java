@@ -1,4 +1,4 @@
-package org.fomabb.taskmanagement.paging;
+package org.fomabb.taskmanagement.util.paging;
 
 import org.springframework.data.domain.Page;
 

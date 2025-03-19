@@ -54,4 +54,6 @@ docker compose up
 
 ## ER diagram for the data model
 
-![db_diagram.png](materials%2Fdb_diagram.png)
+<a href="materials/db_diagram.png">
+    <img src="materials/db_diagram.png" alt="db_diagram" width="600"/>
+</a>
