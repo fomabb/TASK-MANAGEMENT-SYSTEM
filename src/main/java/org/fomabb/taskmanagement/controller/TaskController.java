@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.exception.CommonExceptionResponse;
 import org.fomabb.taskmanagement.dto.response.PaginCommentsResponse;
+import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -57,8 +56,11 @@ public class TaskController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<TaskDataDto>> getAllTask() {
-        return ResponseEntity.ok(taskService.getAllTasks());
+    public ResponseEntity<PaginTaskResponse> getAllTask(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(taskService.getAllTasks(PageRequest.of(page - 1, size)));
     }
 
     @Operation(

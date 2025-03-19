@@ -11,14 +11,15 @@ import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.entity.Comment;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.CommentMapper;
+import org.fomabb.taskmanagement.paging.PagingResponseUtil;
 import org.fomabb.taskmanagement.repository.CommentRepository;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.util.ConstantProject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,11 +68,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public PaginCommentsResponse getCommentsById(Long taskId, Pageable pageable) {
-        Slice<Comment> commentsSlice = commentRepository.findCommentsByTaskId(taskId, pageable);
-        List<CommentsDataDto> commentsDataDtos = commentsSlice.getContent()
+        Page<Comment> commentsPage = commentRepository.findCommentsByTaskId(taskId, pageable);
+        List<CommentsDataDto> commentsDataDtos = commentsPage.getContent()
                 .stream()
                 .map(commentMapper::entityCommentToCommentDto)
                 .toList();
-        return commentMapper.buildPagingCommentResponse(commentsDataDtos, commentsSlice);
+        return PagingResponseUtil.buildPagingResponse(commentsDataDtos, commentsPage, new PaginCommentsResponse());
     }
 }

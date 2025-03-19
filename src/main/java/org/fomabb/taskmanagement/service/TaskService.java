@@ -6,14 +6,14 @@ import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
-
-import java.util.List;
+import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface TaskService {
 
     CreatedTaskResponse createTask(CreateTaskRequest requestBody);
 
-    List<TaskDataDto> getAllTasks();
+    PaginTaskResponse getAllTasks(Pageable pageable);
 
     UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody);
 

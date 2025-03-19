@@ -9,14 +9,18 @@ import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
+import org.fomabb.taskmanagement.paging.PagingResponseUtil;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.fomabb.taskmanagement.util.ConstantProject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,8 +59,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDataDto> getAllTasks() {
-        return taskMapper.listEntityToListDto(taskRepository.findAll());
+    public PaginTaskResponse getAllTasks(Pageable pageable) {
+        Page<Task> taskPage = taskRepository.findAll(pageable);
+        List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
+        return PagingResponseUtil.buildPagingResponse(taskDataDtos, taskPage, new PaginTaskResponse());
     }
 
     @Override
