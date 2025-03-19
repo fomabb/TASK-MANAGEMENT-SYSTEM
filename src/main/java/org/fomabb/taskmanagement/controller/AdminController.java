@@ -78,7 +78,7 @@ public class AdminController {
                     )
             }
     )
-    @PostMapping("/create-task")
+    @PostMapping("/tasks/create-task")
     public ResponseEntity<CreatedTaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskFacade.createTask(request));
     }
@@ -120,7 +120,7 @@ public class AdminController {
                     )
             }
     )
-    @PatchMapping("update-task")
+    @PatchMapping("/tasks/update")
     public ResponseEntity<UpdateTaskDataDto> updateTask(UpdateTaskDataDto request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTaskForAdmin(request));
     }

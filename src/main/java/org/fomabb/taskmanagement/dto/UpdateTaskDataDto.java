@@ -22,7 +22,7 @@ public class UpdateTaskDataDto {
     @Schema(description = "Описание задачи", example = "Описание обновлено")
     private String description;
 
-    @Schema(description = "Статус задачи", example = "Статус обновлен")
+    @Schema(description = "Статус задачи", example = "COMPLETED")
     private TaskStatus status;
 
     @Schema(description = "Приоритет задачи", example = "Приоритет обновлен")

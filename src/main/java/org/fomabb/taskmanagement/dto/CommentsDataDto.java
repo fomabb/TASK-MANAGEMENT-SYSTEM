@@ -1,5 +1,6 @@
 package org.fomabb.taskmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,9 +21,11 @@ public class CommentsDataDto {
     @Schema(description = "Автор комментария", example = "1")
     private UserAuthorDataDto author;
 
-    @Schema(description = "Время создания комментария", example = "2025-03-19T17:06:20.120924")
+    @Schema(description = "Время создания комментария", example = "19-03-2025 19:22")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime timeCreated;
 
-    @Schema(description = "Время обновления комментария", example = "2025-03-19T17:06:20.120924")
+    @Schema(description = "Время обновления комментария", example = "19-03-2025 19:44")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime timeUpdated;
 }

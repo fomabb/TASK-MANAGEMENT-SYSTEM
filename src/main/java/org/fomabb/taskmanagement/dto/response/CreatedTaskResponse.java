@@ -1,5 +1,6 @@
 package org.fomabb.taskmanagement.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,9 +29,11 @@ public class CreatedTaskResponse {
     @Schema(description = "Приоритет задачи", example = "HIGH or MEDIUM or LOW")
     private TaskPriority priority;
 
-    @Schema(description = "Время создания задачи")
+    @Schema(description = "Время создания задачи", example = "19-03-2025 19:57")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime createdAt;
 
-    @Schema(description = "Время обновления задачи")
+    @Schema(description = "Время обновления задачи", example = "19-03-2025 20:01")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime updatedAt;
 }
