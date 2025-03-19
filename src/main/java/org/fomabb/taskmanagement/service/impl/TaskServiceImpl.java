@@ -10,9 +10,8 @@ import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.entity.Task;
-import org.fomabb.taskmanagement.mapper.CommentMapper;
+import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
-import org.fomabb.taskmanagement.repository.CommentRepository;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
@@ -38,10 +37,8 @@ import static java.time.LocalDateTime.now;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
-    private final CommentMapper commentMapper;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
 
 //==================================SECTION~ADMIN=======================================================================
 
@@ -110,19 +107,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public UpdateTaskDataDto updateTaskForUser(UpdateTaskForUserDataRequest requestBody) {
+    public UpdateTaskDataDto updateTaskStatusForUser(UpdateTaskForUserDataRequest requestBody) {
         Task taskToSave = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
                 ));
 
-        User user = userRepository.findById(requestBody.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getUserId())
-                ));
         Long currentUserId = getCurrentUserId();
 
-        if (Objects.equals(user.getId(), currentUserId)) {
+        // Проверка, является ли текущий пользователь исполнителем задачи
+        if (Objects.equals(taskToSave.getAssignee().getId(), currentUserId)) {
             taskToSave.setStatus(requestBody.getTaskStatus());
             taskToSave.setUpdatedAt(now());
             return taskMapper.entityToUpdateDto(taskRepository.save(taskToSave));
@@ -141,6 +135,6 @@ public class TaskServiceImpl implements TaskService {
         if (authentication.getPrincipal() instanceof UserDetails userDetails) {
             return ((User) userDetails).getId();
         }
-        throw new IllegalArgumentException("Authentication principal is not of type UserDetails");
+        throw new BusinessException("Authentication principal is not of type UserDetails");
     }
 }

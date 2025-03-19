@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/user")
 @Slf4j
-@Tag(name = "Пользовательский API", description = "Интерфейс для управления пользователями")
+@Tag(name = "Управление пользователями", description = "`Интерфейс для управления пользователями`")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class UserController {
@@ -61,8 +61,8 @@ public class UserController {
                     )
             }
     )
-    @PatchMapping("/update-task")
-    public ResponseEntity<UpdateTaskDataDto> updateTask(@RequestBody UpdateTaskForUserDataRequest request) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTaskForUser(request));
+    @PatchMapping("/tasks/update-status")
+    public ResponseEntity<UpdateTaskDataDto> updateTaskStatus(@RequestBody UpdateTaskForUserDataRequest request) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTaskStatusForUser(request));
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/admin")
 @Slf4j
-@Tag(name = "Администраторский API", description = "Интерфейс для управления админкой")
+@Tag(name = "Администраторский API", description = "`Интерфейс для управления админкой`")
 @SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminController {
@@ -45,60 +46,74 @@ public class AdminController {
     private final CommentService commentService;
 
     @Operation(
-            summary = "Создание новой задачи",
+            summary = "Создать новую задачу.",
             description = """
                     `
-                    Создает новую задачу. В теле запроса необходимо указать название, описание и приоритет задачи.
-                    Если приоритет не указан, будет применено значение по умолчанию.
+                    Создает новую задачу в системе.
+                    Используйте этот метод для добавления новой задачи, указывая необходимые параметры.
                     `
                     """,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные для создания задачи",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CreateTaskRequest.class))
+            ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "`Задача создана`",
-                            content = {@Content(mediaType = "application/json",
+                    @ApiResponse(responseCode = "201", description = "`Задача успешно создана`",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CreatedTaskResponse.class))
-                            }),
-                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
-                            content = {@Content(mediaType = "application/json",
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Некорректный запрос`",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
-                            })
-            })
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
     @PostMapping("/create-task")
     public ResponseEntity<CreatedTaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskFacade.createTask(request));
     }
 
     @Operation(
-            summary = "Редактирование задачи",
+            summary = "Обновить задачу.",
             description = """
                     `
-                    Обновляет существующую задачу. В теле запроса необходимо указать ID задачи и поля, которые вы хотите
-                    обновить. Например, можно изменить только заголовок или описание задачи. Если какое-либо из полей не
-                    указано, оно останется неизменным.
+                    Обновляет существующую задачу в системе.
+                    Используйте этот метод для изменения параметров задачи, таких как:
+                    - Название
+                    - Описание
+                    - Статус
+                    - Приоритет
                     `
                     """,
-            parameters = {
-                    @Parameter(
-                            name = "request",
-                            description = """
-                                    `DTO с данными для обновления задачи. Содержит ID задачи и обновляемые поля.`
-                                    """,
-                            required = true)
-            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные для обновления задачи",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UpdateTaskDataDto.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "202", description = "`Задача успешно обновлена`",
-                            content = {@Content(mediaType = "application/json",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UpdateTaskDataDto.class))
-                            }),
-                    @ApiResponse(responseCode = "400", description = """
-                            `Неверный запрос. Проверьте, что ID задачи указан и поля соответствуют требованиям.`
-                            """,
-                            content = {@Content(mediaType = "application/json",
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Некорректный запрос`",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
-                            }),
-                    @ApiResponse(responseCode = "404", description = "`Задача не найдена по указанному ID`",
-                            content = {@Content(mediaType = "application/json",
+                    ),
+                    @ApiResponse(responseCode = "404", description = "`Задача не найдена`",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
-                            })
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
             }
     )
     @PatchMapping("update-task")
@@ -107,32 +122,35 @@ public class AdminController {
     }
 
     @Operation(
-            summary = "Установить исполнителя на задачу",
+            summary = "Назначить исполнителей задачи по ID.",
             description = """
-                    `В тело запроса добавить ID задачи и ID пользователя, которого нужно сделать исполнителем.`
+                    `
+                    Назначает исполнителей для задачи по указанному ID.
+                    Используйте этот метод для обновления исполнителей задачи.
+                    `
                     """,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные для назначения исполнителей",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AssigneeTaskForUserRequest.class))
+            ),
             responses = {
-                    @ApiResponse(
-                            responseCode = "202",
-                            description = "Исполнитель успешно назначен"
-
+                    @ApiResponse(responseCode = "202", description = "`Исполнители успешно назначены`",
+                            content = @Content(mediaType = "application/json")
                     ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = """
-                                    `Неверный запрос. Проверьте, что ID задачи и ID пользователя указаны корректно.`
-                                    """,
-                            content = {@Content(mediaType = "application/json",
+                    @ApiResponse(responseCode = "400", description = "`Некорректный запрос`",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
-                            }
                     ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "`Задача или пользователь не найдены`",
-                            content = {@Content(mediaType = "application/json",
+                    @ApiResponse(responseCode = "404", description = "`Задача не найдена`",
+                            content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
-                            })
-
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
             }
     )
     @PatchMapping("/assignee-by-taskId")
@@ -170,32 +188,39 @@ public class AdminController {
     }
 
     @Operation(
-            summary = "Добавление комментария к задаче",
+            summary = "Добавить комментарий к задаче по ID.",
             description = """
                     `
-                    Добавляет комментарий к задаче по указанному ID. В теле запроса необходимо указать данные
-                    комментария, включая текст и ID задачи.
+                    Добавляет комментарий к задаче по указанному ID.
+                    Используйте этот метод для добавления комментариев к существующим задачам.
                     `
                     """,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные для добавления комментария",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CommentAddToTaskDataDtoRequest.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "`Комментарий успешно добавлен`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommentAddedResponse.class)
-                            )
+                                    schema = @Schema(implementation = CommentAddedResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Некорректный запрос`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "`Задача не найдена`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommonExceptionResponse.class)
-                            )
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "`Ошибка валидации данных комментария`",
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommonExceptionResponse.class)
-                            )
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
                     )
             }
     )
-    @PostMapping("/add-comment-to-task")
+    @PostMapping("/comments/add-to-task")
     public ResponseEntity<CommentAddedResponse> addCommentToTaskById(
             @RequestBody CommentAddToTaskDataDtoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.addCommentToTaskById(request));
@@ -223,7 +248,7 @@ public class AdminController {
                     )
             }
     )
-    @PatchMapping("/update-comment")
+    @PutMapping("/comments/update")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
     }

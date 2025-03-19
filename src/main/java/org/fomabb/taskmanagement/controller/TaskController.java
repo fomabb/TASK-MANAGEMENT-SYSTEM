@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/task")
+@RequestMapping("/api/v1/tasks")
 @Slf4j
 @RequiredArgsConstructor
-@Tag(name = "Таск трекер задач", description = "API для управления задачами зарегистрированных пользователей")
+@Tag(name = "Управление задачами", description = "`Интерфейс для управления задачами`")
 @SecurityRequirement(name = "bearerAuth")
 public class TaskController {
 
@@ -38,14 +38,18 @@ public class TaskController {
 //================================================SECTION~MANAGEMENT~Task=============================================//
 
     @Operation(
-            summary = "Показать все задачи.",
-            description = "`Выводит все задачи, которые имеются в базе данных.`",
+            summary = "Получить все задачи.",
+            description = """
+                    `
+                    Возвращает список всех задач в системе.
+                    Используйте этот метод для получения полной информации о всех доступных задачах.
+                    `
+                    """,
             responses = {
-                    @ApiResponse(responseCode = "200", description = "`Список задач успешно получен`",
+                    @ApiResponse(responseCode = "200", description = "`Задачи успешно найдены`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = List.class))
+                                    schema = @Schema(implementation = TaskDataDto.class))
                     ),
-                    @ApiResponse(responseCode = "204", description = "`Нет задач для отображения`"),
                     @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommonExceptionResponse.class))
@@ -91,16 +95,35 @@ public class TaskController {
 
 //================================================SECTION~COMMENT=====================================================//
 
-//    @GetMapping("/comments-by-taskId/{taskId}")
-//    public ResponseEntity<Slice<CommentsDataDto>> getCommentsById(
-//            @PathVariable("taskId") Long taskId,
-//            @RequestParam(defaultValue = "1") int page,
-//            @RequestParam(defaultValue = "10") int size
-//    ) {
-//        return ResponseEntity.ok(commentService.getCommentsById(taskId, PageRequest.of(page - 1, size)));
-//    }
 
-    @GetMapping("/comments-by-taskId/{taskId}")
+    @Operation(
+            summary = "Получить комментарии по ID задачи.",
+            description = """
+                    `
+                    Возвращает список комментариев для указанной задачи по её ID.
+                    Используйте этот метод для получения всех комментариев, связанных с конкретной задачей.
+                    `
+                    """,
+            parameters = {
+                    @Parameter(name = "taskId", description = "`ID задачи, для которой необходимо получить комментарии`",
+                            required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Комментарии успешно найдены`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = PaginCommentsResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "`Задача не найдена`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @GetMapping("/comments/by-taskId/{taskId}")
     public ResponseEntity<PaginCommentsResponse> getCommentsById(
             @PathVariable("taskId") Long taskId,
             @RequestParam(defaultValue = "1") int page,

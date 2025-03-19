@@ -25,5 +25,5 @@ public interface TaskService {
 
     boolean existsByTitle(String title);
 
-    UpdateTaskDataDto updateTaskForUser(UpdateTaskForUserDataRequest requestBody);
+    UpdateTaskDataDto updateTaskStatusForUser(UpdateTaskForUserDataRequest requestBody);
 }
