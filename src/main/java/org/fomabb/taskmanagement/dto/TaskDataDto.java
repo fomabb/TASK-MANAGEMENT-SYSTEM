@@ -7,7 +7,6 @@ import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder

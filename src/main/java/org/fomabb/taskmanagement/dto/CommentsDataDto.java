@@ -18,7 +18,7 @@ public class CommentsDataDto {
     private String text;
 
     @Schema(description = "Автор комментария", example = "1")
-        private UserAuthorDataDto author;
+    private UserAuthorDataDto author;
 
     @Schema(description = "Время создания комментария", example = "2025-03-19T17:06:20.120924")
     private LocalDateTime timeCreated;

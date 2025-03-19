@@ -17,12 +17,8 @@ import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.util.ConstantProject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,26 +67,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public PaginCommentsResponse getCommentsById(Long taskId, Pageable pageable) {
-        return buildPaginCommentsResponse(taskId, pageable);
-    }
-
-    private PaginCommentsResponse buildPaginCommentsResponse(Long taskId, Pageable pageable) {
         Slice<Comment> commentsSlice = commentRepository.findCommentsByTaskId(taskId, pageable);
-
         List<CommentsDataDto> commentsDataDtos = commentsSlice.getContent()
                 .stream()
                 .map(commentMapper::entityCommentToCommentDto)
                 .toList();
-
-        PaginCommentsResponse response = new PaginCommentsResponse();
-        response.setContent(commentsDataDtos);
-        response.setPageNumber(commentsSlice.getNumber() + 1); // Изменение номера страницы
-        response.setPageSize(commentsSlice.getSize());
-        response.setFirst(commentsSlice.isFirst());
-        response.setLast(commentsSlice.isLast());
-        response.setNumberOfElements(commentsSlice.getNumberOfElements());
-        response.setEmpty(commentsSlice.isEmpty());
-
-        return response;
+        return commentMapper.buildPagingCommentResponse(commentsDataDtos, commentsSlice);
     }
 }
