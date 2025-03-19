@@ -22,6 +22,10 @@ import java.util.List;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+/**
+ * Конфигурация безопасности приложения.
+ * Настраивает JWT аутентификацию, CORS и управление доступом к ресурсам.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -31,6 +35,13 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserServiceSecurity userService;
 
+    /**
+     * Настраивает цепочку фильтров безопасности.
+     *
+     * @param http объект {@link HttpSecurity} для настройки безопасности
+     * @return построенная цепочка фильтров безопасности
+     * @throws Exception если произошла ошибка при настройке
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -53,11 +64,21 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * Создает {@link PasswordEncoder} для шифрования паролей.
+     *
+     * @return объект {@link PasswordEncoder}, использующий BCrypt
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Создает {@link AuthenticationProvider} для аутентификации пользователей.
+     *
+     * @return объект {@link AuthenticationProvider}, использующий {@link UserServiceSecurity} и {@link PasswordEncoder}
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -66,6 +87,13 @@ public class SecurityConfiguration {
         return authProvider;
     }
 
+    /**
+     * Создает {@link AuthenticationManager} для управления аутентификацией.
+     *
+     * @param config объект {@link AuthenticationConfiguration} для настройки аутентификации
+     * @return объект {@link AuthenticationManager}
+     * @throws Exception если произошла ошибка при создании менеджера аутентификации
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {

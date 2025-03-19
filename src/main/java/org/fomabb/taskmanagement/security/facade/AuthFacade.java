@@ -8,6 +8,10 @@ import org.fomabb.taskmanagement.security.dto.response.JwtAuthenticationResponse
 import org.fomabb.taskmanagement.security.service.AuthenticationService;
 import org.springframework.stereotype.Component;
 
+/**
+ * Фасад для аутентификации пользователей.
+ * Обрабатывает логику регистрации пользователя, включая проверку пароля.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -15,7 +19,14 @@ public class AuthFacade {
 
     private final AuthenticationService authenticationService;
 
-
+    /**
+     * Обрабатывает запрос на регистрацию пользователя.
+     * Проверяет, совпадает ли пароль с его подтверждением.
+     *
+     * @param request объект {@link SignUpRequest}, содержащий данные для регистрации
+     * @return объект {@link JwtAuthenticationResponse}, содержащий информацию о JWT аутентификации
+     * @throws BusinessException если пароли не совпадают
+     */
     public JwtAuthenticationResponse signUpFacade(SignUpRequest request) {
         log.info("Начало проверки подтверждения пароля пользователя");
         if (request.getPassword().equals(request.getConfirmPassword())) {

@@ -1,19 +1,21 @@
-# Task Management System
+# Система управления задачами
 
-# RESTful Web-application is written using the following technologies:
+# Полноценное веб-приложение REST написано с использованием следующих технологий:
 
 - Maven
 - Hibernate
 - JPA
-- PostgresSQL DB
+- PostgresSQL
 - Spring Boot
 - Spring security
+- Docker container
+- Liquibase 
 
-### Short description of the project
+### Краткое описание проекта
 
-- Standalone application providing REST API
+- Автономное приложение, предоставляющее REST API
 
-### Prerequisites:
+### Предварительные условия:
 
 - Java 21
 - PostgresSQL
@@ -28,7 +30,9 @@
 
 ## Скачивание файла `docker-compose.yml`
 
-Для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые настройки для запуска приложения.
+Чтобы запустить приложение с помощью docker-compose, необходимо в корне папке создать файл `.env` или скачать его нажав 
+на кнопку ниже после чего поместить скаченный файл в корень проекта. Также для удобства вы можете скачать архив с 
+файлами `.env` и `docker-compose.yml`, который содержит необходимые настройки для запуска приложения. 
 
 [![Скачать docker-compose.yml](https://img.shields.io/badge/Скачать%20docker--compose.yml-blue)](https://drive.google.com/drive/folders/1ztmCCncx75RUAmWTNZv3hBcFH6u-fr1M?usp=drive_link)
 
@@ -36,7 +40,8 @@
 
 ### 1. Запуск приложения с помощью Docker Compose
 
-После скачивания папки с файлами `.env` и `docker-compose.yml`, запустите приложение с помощью следующей команды cd путь к папке куда были скачаны вышеуказанные файлы.
+После вышеуказанных действий, указанных в инструкции, в командной строке необходимо попасть в директорию, где находятся
+вышеуказанные файлы и прописать:
 
 ```bash
 docker compose up
@@ -54,4 +59,6 @@ docker compose up
 
 ## ER diagram for the data model
 
-![db_diagram.png](materials%2Fdb_diagram.png)
+<a href="materials/db_diagram.png">
+    <img src="materials/db_diagram.png" alt="db_diagram" width="600"/>
+</a>

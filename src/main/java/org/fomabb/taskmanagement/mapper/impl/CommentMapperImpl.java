@@ -1,5 +1,7 @@
 package org.fomabb.taskmanagement.mapper.impl;
 
+import org.fomabb.taskmanagement.dto.CommentsDataDto;
+import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.entity.Comment;
@@ -24,7 +26,7 @@ public class CommentMapperImpl implements CommentMapper {
 
 
     @Override
-    public CommentAddedResponse entityCommentToCommentDto(Comment comment) {
+    public CommentAddedResponse entityCommentToCommentAddedDto(Comment comment) {
         return CommentAddedResponse.builder()
                 .commentId(comment.getId())
                 .taskId(comment.getTask().getId())
@@ -32,6 +34,17 @@ public class CommentMapperImpl implements CommentMapper {
                 .authorFirstName(comment.getAuthor().getFirstName())
                 .authorLastName(comment.getAuthor().getLastName())
                 .updateComment(comment.getUpdateAt())
+                .build();
+    }
+
+    @Override
+    public CommentsDataDto entityCommentToCommentDto(Comment comment) {
+        return CommentsDataDto.builder()
+                .id(comment.getId())
+                .text(comment.getContent())
+                .author(UserAuthorDataDto.builder().authorId(comment.getId()).build())
+                .timeCreated(comment.getCreatedAt())
+                .timeUpdated(comment.getUpdateAt())
                 .build();
     }
 }
