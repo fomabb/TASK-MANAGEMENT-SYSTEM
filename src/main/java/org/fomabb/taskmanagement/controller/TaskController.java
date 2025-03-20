@@ -99,6 +99,56 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
+    @Operation(
+            summary = "Получить задачи по ID автора.",
+            description = """
+                    `
+                    Этот метод позволяет извлечь пагинированный список задач, созданных автором с указанным ID.
+                    Используйте его для получения всех задач, связанных с конкретным автором.
+                    Укажите номер страницы и размер страницы для управления результатами.
+                    `
+                    """,
+            parameters = {
+                    @Parameter(name = "authorId", description = "`ID автора, чьи задачи необходимо получить`",
+                            required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Успешно получены задачи`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = PageableTaskResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "`Автор не найден`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Неверный номер страницы или размер`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<PageableTaskResponse> getTaskByAuthorId(
+            @PathVariable("authorId") Long authorId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(taskService.getTaskByAuthorId(authorId, PageRequest.of(page - 1, size)));
+    }
+
+    @GetMapping("/comments/author/{authorId}")
+    public ResponseEntity<PageableCommentsResponse> getCommentsByAuthorId(
+            @PathVariable("authorId") Long authorId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(commentService.getCommentsByAuthorId(authorId, PageRequest.of(page - 1, size)));
+    }
+
 //================================================SECTION~COMMENT=====================================================//
 
 

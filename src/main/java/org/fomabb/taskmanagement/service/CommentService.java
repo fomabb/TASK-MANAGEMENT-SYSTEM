@@ -37,4 +37,6 @@ public interface CommentService {
      * @return объект {@link PageableCommentsResponse}, содержащий список комментариев и информацию о пагинации
      */
     PageableCommentsResponse getCommentsById(Long taskId, Pageable pageable);
+
+    PageableCommentsResponse getCommentsByAuthorId(Long authorId, Pageable pageable);
 }

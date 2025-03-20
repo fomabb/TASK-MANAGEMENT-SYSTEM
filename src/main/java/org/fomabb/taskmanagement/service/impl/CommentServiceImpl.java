@@ -43,21 +43,26 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
 
-//    @Override
-//    @Transactional
-//    public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
-//        User userExist = userRepository.findById(requestBody.getAuthorId())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        String.format(ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId())
-//                ));
-//        Task taskExist = taskRepository.findById(requestBody.getTaskId())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
-//                ));
-//        return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(
-//                commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody))
-//        );
-//    }
+    @Override
+    @Transactional
+    public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
+        User userExist = userRepository.findById(requestBody.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAuthorId())
+                ));
+        Task taskExist = taskRepository.findById(requestBody.getTaskId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
+                ));
+        boolean isAdmin = getCurrentUserRole().equals(Role.ROLE_ADMIN);
+
+        if (taskExist.getAssignee().getId().equals(userExist.getId()) || isAdmin) {
+            Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
+            return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
+        } else {
+            throw new BusinessException("You don't have the rights to add a comment to this task");
+        }
+    }
 
     @Override
     public PageableCommentsResponse getCommentsById(Long taskId, Pageable pageable) {
@@ -67,8 +72,18 @@ public class CommentServiceImpl implements CommentService {
                 .map(commentMapper::entityCommentToCommentDto)
                 .toList();
 
-
         return PageableResponseUtil.buildPageableResponse(commentsDataDtos, commentsPage, new PageableCommentsResponse());
+    }
+
+    @Override
+    public PageableCommentsResponse getCommentsByAuthorId(Long authorId, Pageable pageable) {
+        Page<Comment> pageComment = commentRepository.findAllByAuthorId(authorId, pageable);
+        List<CommentsDataDto> commentsDataDtos = pageComment.getContent()
+                .stream()
+                .map(commentMapper::entityCommentToCommentDto)
+                .toList();
+
+        return PageableResponseUtil.buildPageableResponse(commentsDataDtos, pageComment, new PageableCommentsResponse());
     }
 
     @Override
@@ -91,26 +106,5 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return new UpdateCommentResponse(comment.getContent(), comment.getUpdateAt());
-    }
-
-    @Override
-    @Transactional
-    public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
-        User userExist = userRepository.findById(requestBody.getAuthorId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAuthorId())
-                ));
-        Task taskExist = taskRepository.findById(requestBody.getTaskId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
-                ));
-        boolean isAdmin = getCurrentUserRole().equals(Role.ROLE_ADMIN);
-
-        if (taskExist.getAssignee().getId().equals(userExist.getId()) || isAdmin) {
-            Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
-            return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
-        } else {
-            throw new BusinessException("You don't have the rights to add a comment to this task");
-        }
     }
 }
