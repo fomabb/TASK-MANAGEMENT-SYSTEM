@@ -21,7 +21,6 @@ import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -197,7 +196,7 @@ public class UserController {
                     )
             }
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping("/comments/update")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
