@@ -33,20 +33,27 @@
 
 Чтобы запустить приложение с помощью docker-compose, необходимо клонировать проект к себе на компьютер, после чего
 создать
-в корне проекта файл `.env` после чего в нем прописать:
+в корне проекта файл `.env`, заполнить своими данными и указать с какой среды запускать `local` или `dev`:
 
 ```.dotenv
-JWT_SECRET_KEY="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
-JWT_EXPIRATION_TIME="60m"
+SPRING_PROFILES_ACTIVE="local"
 
-POSTGRES_DB="Yor database"
-POSTGRES_USER="Yor username database"
-POSTGRES_PASSWORD="Yor password database"
+JWT_SECRET_KEY="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
+JWT_SECRET_KEY_LOCAL="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
+
+POSTGRES_DB="Your database"
+POSTGRES_USER="Your username"
+POSTGRES_PASSWORD="Your password"
 
 PORT="8080"
-POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/Yor database"
-POSTGRES_DB_USERNAME="Yor username database"
-POSTGRES_DB_PASSWORD="Yor password database"
+POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
+POSTGRES_DB_USERNAME="postgres"
+POSTGRES_DB_PASSWORD="postgres"
+
+PORT_LOCAL="8181"
+POSTGRES_DB_URL_LOCAL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
+POSTGRES_DB_USERNAME_LOCAL="Your username"
+POSTGRES_DB_PASSWORD_LOCAL="Your password"
 ```
 
 Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые
