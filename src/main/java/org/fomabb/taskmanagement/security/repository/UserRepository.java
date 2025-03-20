@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Интерфейс для сервиса управления пользователями.
+ * Содержит методы для получения информации о пользователях.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

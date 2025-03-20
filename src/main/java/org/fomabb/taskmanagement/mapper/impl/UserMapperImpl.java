@@ -17,6 +17,7 @@ public class UserMapperImpl implements UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .createdAt(user.getCreatedAt())
+                .userRole(user.getRole())
                 .build();
     }
 

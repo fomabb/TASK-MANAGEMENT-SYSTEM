@@ -6,8 +6,6 @@ import lombok.Getter;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @Schema(description = "Объект передачи данных для обновления таски")
@@ -22,12 +20,9 @@ public class UpdateTaskDataDto {
     @Schema(description = "Описание задачи", example = "Описание обновлено")
     private String description;
 
-    @Schema(description = "Статус задачи", example = "Статус обновлен")
+    @Schema(description = "Статус задачи", example = "COMPLETED")
     private TaskStatus status;
 
-    @Schema(description = "Приоритет задачи", example = "Приоритет обновлен")
+    @Schema(description = "Приоритет задачи", example = "HIGH")
     private TaskPriority priority;
-
-    @Schema(description = "Дата и время обновления задачи", example = "2023-03-18T12:00:00")
-    private LocalDateTime updateTask;
 }

@@ -4,7 +4,6 @@ import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
-import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
 import org.springframework.data.domain.Pageable;
@@ -68,12 +67,4 @@ public interface TaskService {
      * @return true, если задача с таким заголовком существует, иначе false
      */
     boolean existsByTitle(String title);
-
-    /**
-     * Обновляет статус задачи для пользователя.
-     *
-     * @param requestBody объект {@link UpdateTaskForUserDataRequest}, содержащий данные для обновления статуса задачи
-     * @return объект {@link UpdateTaskDataDto}, содержащий обновленные данные задачи
-     */
-    UpdateTaskDataDto updateTaskStatusForUser(UpdateTaskForUserDataRequest requestBody);
 }

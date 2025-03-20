@@ -7,11 +7,9 @@ import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
-import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
 import org.fomabb.taskmanagement.entity.Task;
-import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
@@ -21,15 +19,10 @@ import org.fomabb.taskmanagement.util.ConstantProject;
 import org.fomabb.taskmanagement.util.paging.PagingResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -65,6 +58,18 @@ public class TaskServiceImpl implements TaskService {
         return PagingResponseUtil.buildPagingResponse(taskDataDtos, taskPage, new PaginTaskResponse());
     }
 
+//    @Override
+//    @Transactional
+//    public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
+//        Task existingTask = taskRepository.findById(requestBody.getTaskId())
+//                .orElseThrow(() -> new EntityNotFoundException(
+//                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
+//                );
+//        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
+//        return taskMapper.entityToUpdateDto(taskRepository
+//                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
+//    }
+
     @Override
     @Transactional
     public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
@@ -72,9 +77,25 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
                 );
-        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
-        return taskMapper.entityToUpdateDto(taskRepository
-                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
+
+        // Обновляем существующую задачу через сеттеры
+        if (requestBody.getTitle() != null) {
+            existingTask.setTitle(requestBody.getTitle());
+        }
+        if (requestBody.getDescription() != null) {
+            existingTask.setDescription(requestBody.getDescription());
+        }
+        if (requestBody.getStatus() != null) {
+            existingTask.setStatus(requestBody.getStatus());
+        }
+        if (requestBody.getPriority() != null) {
+            existingTask.setPriority(requestBody.getPriority());
+        }
+        existingTask.setUpdatedAt(now()); // Обновляем дату изменения
+
+        // Сохраняем обновленную задачу
+        Task savedTask = taskRepository.save(existingTask);
+        return taskMapper.entityToUpdateDto(savedTask);
     }
 
     @Override
@@ -107,40 +128,5 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean existsByTitle(String title) {
         return taskRepository.existsByTitle(title);
-    }
-
-//==================================SECTION~USER========================================================================
-
-    @Override
-    @Transactional
-    public UpdateTaskDataDto updateTaskStatusForUser(UpdateTaskForUserDataRequest requestBody) {
-        Task taskToSave = taskRepository.findById(requestBody.getTaskId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
-                ));
-
-        Long currentUserId = getCurrentUserId();
-
-        // Проверка, является ли текущий пользователь исполнителем задачи
-        if (Objects.equals(taskToSave.getAssignee().getId(), currentUserId)) {
-            taskToSave.setStatus(requestBody.getTaskStatus());
-            taskToSave.setUpdatedAt(now());
-            return taskMapper.entityToUpdateDto(taskRepository.save(taskToSave));
-        } else {
-            throw new AccessDeniedException("User does not have permission to update this task.");
-        }
-    }
-
-    /**
-     * Извлечение ID пользователя из security context
-     *
-     * @return userId
-     */
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
-            return ((User) userDetails).getId();
-        }
-        throw new BusinessException("Authentication principal is not of type UserDetails");
     }
 }
