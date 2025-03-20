@@ -5,7 +5,9 @@ import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.entity.enumeration.Role;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -49,7 +51,27 @@ public class UserServiceSecurity {
     public User getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
 
+    /**
+     * Извлечение ID пользователя из security context
+     *
+     * @return userId
+     */
+    public static Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return ((User) userDetails).getId();
+        }
+        throw new BusinessException("Authentication principal is not of type UserDetails");
+    }
+
+    public static Role getCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return ((User) userDetails).getRole();
+        }
+        throw new BusinessException("Authentication principal is not of type UserDetails");
     }
 
     /**
