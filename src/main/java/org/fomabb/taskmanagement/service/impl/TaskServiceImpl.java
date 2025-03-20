@@ -8,7 +8,7 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
-import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
+import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
@@ -16,7 +16,7 @@ import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.fomabb.taskmanagement.util.ConstantProject;
-import org.fomabb.taskmanagement.util.paging.PagingResponseUtil;
+import org.fomabb.taskmanagement.util.paging.PageableResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
-import static java.time.LocalDateTime.now;
 
 @Service
 @Slf4j
@@ -52,23 +50,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public PaginTaskResponse getAllTasks(Pageable pageable) {
+    public PageableTaskResponse getAllTasks(Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAll(pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
-        return PagingResponseUtil.buildPagingResponse(taskDataDtos, taskPage, new PaginTaskResponse());
+        return PageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
     }
-
-//    @Override
-//    @Transactional
-//    public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
-//        Task existingTask = taskRepository.findById(requestBody.getTaskId())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
-//                );
-//        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
-//        return taskMapper.entityToUpdateDto(taskRepository
-//                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
-//    }
 
     @Override
     @Transactional
@@ -77,25 +63,9 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
                 );
-
-        // Обновляем существующую задачу через сеттеры
-        if (requestBody.getTitle() != null) {
-            existingTask.setTitle(requestBody.getTitle());
-        }
-        if (requestBody.getDescription() != null) {
-            existingTask.setDescription(requestBody.getDescription());
-        }
-        if (requestBody.getStatus() != null) {
-            existingTask.setStatus(requestBody.getStatus());
-        }
-        if (requestBody.getPriority() != null) {
-            existingTask.setPriority(requestBody.getPriority());
-        }
-        existingTask.setUpdatedAt(now()); // Обновляем дату изменения
-
-        // Сохраняем обновленную задачу
-        Task savedTask = taskRepository.save(existingTask);
-        return taskMapper.entityToUpdateDto(savedTask);
+        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
+        return taskMapper.entityToUpdateDto(taskRepository
+                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
     }
 
     @Override

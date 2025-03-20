@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.exception.CommonExceptionResponse;
-import org.fomabb.taskmanagement.dto.response.PaginCommentsResponse;
-import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
+import org.fomabb.taskmanagement.dto.response.PageableCommentsResponse;
+import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.springframework.data.domain.PageRequest;
@@ -60,7 +60,7 @@ public class TaskController {
             }
     )
     @GetMapping
-    public ResponseEntity<PaginTaskResponse> getAllTask(
+    public ResponseEntity<PageableTaskResponse> getAllTask(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -117,7 +117,7 @@ public class TaskController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "`Комментарии успешно найдены`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = PaginCommentsResponse.class))
+                                    schema = @Schema(implementation = PageableCommentsResponse.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "`Задача не найдена`",
                             content = @Content(mediaType = "application/json",
@@ -130,7 +130,7 @@ public class TaskController {
             }
     )
     @GetMapping("/comments/by-taskId/{taskId}")
-    public ResponseEntity<PaginCommentsResponse> getCommentsById(
+    public ResponseEntity<PageableCommentsResponse> getCommentsById(
             @PathVariable("taskId") Long taskId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size

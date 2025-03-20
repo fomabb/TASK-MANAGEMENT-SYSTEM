@@ -121,7 +121,7 @@ public class AdminController {
             }
     )
     @PatchMapping("/tasks/update")
-    public ResponseEntity<UpdateTaskDataDto> updateTask(UpdateTaskDataDto request) {
+    public ResponseEntity<UpdateTaskDataDto> updateTask(@RequestBody UpdateTaskDataDto request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTaskForAdmin(request));
     }
 
