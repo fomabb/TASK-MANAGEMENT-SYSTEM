@@ -33,6 +33,7 @@ import static org.fomabb.taskmanagement.security.service.UserServiceSecurity.get
 import static org.fomabb.taskmanagement.util.ConstantProject.COMMENT_WITH_ID_S_NOT_FOUND_CONST;
 import static org.fomabb.taskmanagement.util.ConstantProject.TASK_WITH_ID_S_NOT_FOUND_CONST;
 import static org.fomabb.taskmanagement.util.ConstantProject.USER_WITH_ID_S_NOT_FOUND_CONST;
+import static org.fomabb.taskmanagement.util.ConstantProject.VALIDATION_REFERENCES_CONST;
 
 @Service
 @RequiredArgsConstructor
@@ -55,12 +56,18 @@ public class CommentServiceImpl implements CommentService {
                         String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
                 ));
         boolean isAdmin = getCurrentUserRole().equals(Role.ROLE_ADMIN);
+        Long currencyUserId = getCurrentUserId();
 
-        if (taskExist.getAssignee().getId().equals(userExist.getId()) || isAdmin) {
-            Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
-            return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
+        if (Objects.equals(userExist.getId(), taskExist.getAssignee().getId()) || isAdmin) {
+            if (Objects.equals(userExist.getId(), currencyUserId)) {
+                Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
+                return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
+            } else {
+                throw new BusinessException(VALIDATION_REFERENCES_CONST);
+            }
         } else {
-            throw new BusinessException("You don't have the rights to add a comment to this task");
+            throw new BusinessException(VALIDATION_REFERENCES_CONST);
+
         }
     }
 
@@ -94,7 +101,7 @@ public class CommentServiceImpl implements CommentService {
             comment.setUpdateAt(now());
             commentRepository.save(comment);
         } else {
-            throw new BusinessException("У вас нет прав для обновления этого комментария");
+            throw new BusinessException(VALIDATION_REFERENCES_CONST);
         }
 
         return new UpdateCommentResponse(comment.getContent(), comment.getUpdateAt());

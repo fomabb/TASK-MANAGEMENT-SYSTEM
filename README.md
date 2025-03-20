@@ -9,7 +9,7 @@
 - Spring Boot
 - Spring security
 - Docker container
-- Liquibase 
+- Liquibase
 
 ### Краткое описание проекта
 
@@ -26,11 +26,13 @@
 
 ## Предварительные требования
 
-1. **Docker**: Убедитесь, что Docker установлен на вашем компьютере. Вы можете скачать и установить его с [официального сайта Docker](https://www.docker.com/get-started).
+1. **Docker**: Убедитесь, что Docker установлен на вашем компьютере. Вы можете скачать и установить его
+   с [официального сайта Docker](https://www.docker.com/get-started).
 
 ## Запуск или скачивание файла `docker-compose.yml` и `.env`
 
-Чтобы запустить приложение с помощью docker-compose, необходимо клонировать проект к себе на компьютер, после чего создать
+Чтобы запустить приложение с помощью docker-compose, необходимо клонировать проект к себе на компьютер, после чего
+создать
 в корне проекта файл `.env` после чего в нем прописать:
 
 ```.dotenv
@@ -47,8 +49,8 @@ POSTGRES_DB_USERNAME="Yor username database"
 POSTGRES_DB_PASSWORD="Yor password database"
 ```
 
-Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые настройки 
-для запуска приложения. 
+Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые
+настройки для запуска приложения.
 
 [![Скачать docker-compose.yml](https://img.shields.io/badge/Скачать%20docker--compose.yml-blue)](https://drive.google.com/drive/folders/1ztmCCncx75RUAmWTNZv3hBcFH6u-fr1M?usp=drive_link)
 
@@ -70,10 +72,56 @@ docker compose up
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21948648/2sAYkDMLRS)
 
-# Data model
+# Модель данных
 
-## ER diagram for the data model
+## Диаграмма ER для модели данных
 
 <a href="materials/db_diagram.png">
     <img src="materials/db_diagram.png" alt="db_diagram" width="600"/>
 </a>
+
+## RESTful API
+
+**1. Описание API общих методов для аутентификации**
+
+| METHOD | PATH          | DESCRIPTION              |
+|--------|---------------|--------------------------|
+| POST   | /auth/sign-up | Регистрация пользователя |
+| POST   | /auth/sign-in | Авторизация пользователя |
+
+###
+
+**2. Описание API общих методов для управления задачами**
+
+| METHOD | PATH                                      | DESCRIPTION                       |
+|--------|-------------------------------------------|-----------------------------------|
+| GET    | /api/v1/tasks                             | Получить все задачи               |
+| GET    | /api/v1/tasks/{taskId}                    | Получить задачу по ее ID          |
+| GET    | /api/v1/tasks/comments/by-taskId/{taskId} | Получить комментарии ее ID        |
+| GET    | /api/v1/tasks/comments/author/{authorId}  | Получить комментарии по ID автора |
+| GET    | /api/v1/tasks/assignee/{assigneeId}       | Получить задачи по ID исполнителя |
+
+###
+
+**3. Описание API общих методов для управления пользователями**
+
+| METHOD | PATH                             | DESCRIPTION                                  |
+|--------|----------------------------------|----------------------------------------------|
+| POST   | /api/v1/user/comments/post       | Добавление комментарий к задаче по ID задачи |
+| PATCH  | /api/v1/user/comments/update     | Обновление содержимого комментария           |
+| PATCH  | /api/v1/user/tasks/update-status | Обновление задачи пользователя               |
+| GET    | /api/v1/user                     | Получить список всех пользователей           |
+| GET    | /api/v1/user/{userId}            | Получить информацию о пользователе по его ID |
+
+###
+
+**4. Описание API общих методов для управления административными функциями**
+
+| METHOD | PATH                             | DESCRIPTION                         |
+|--------|----------------------------------|-------------------------------------|
+| POST   | /api/v1/admin/tasks/create-task  | Создать новую задачу                |
+| POST   | /api/v1/admin/comments/post      | Добавить комментарий к задаче по ID |
+| PATCH  | /api/v1/admin/comments/update    | Обновление содержимого комментария  |
+| PATCH  | /api/v1/admin/tasks/update       | Обновить задачу                     |
+| PATCH  | /api/v1/admin/assignee-by-taskId | Назначить исполнителя задачи по ID  |
+| DELETE | /api/v1/admin/{taskId}           | Удаление задачи по ID               |
