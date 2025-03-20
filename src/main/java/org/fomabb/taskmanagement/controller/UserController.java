@@ -170,7 +170,6 @@ public class UserController {
                     )
             }
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/comments/post")
     public ResponseEntity<CommentAddedResponse> addCommentToTaskById(@RequestBody CommentAddToTaskDataDtoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.addCommentToTaskById(request));
