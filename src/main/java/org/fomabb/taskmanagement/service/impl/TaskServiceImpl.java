@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -56,6 +58,18 @@ public class TaskServiceImpl implements TaskService {
         return PagingResponseUtil.buildPagingResponse(taskDataDtos, taskPage, new PaginTaskResponse());
     }
 
+//    @Override
+//    @Transactional
+//    public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
+//        Task existingTask = taskRepository.findById(requestBody.getTaskId())
+//                .orElseThrow(() -> new EntityNotFoundException(
+//                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
+//                );
+//        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
+//        return taskMapper.entityToUpdateDto(taskRepository
+//                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
+//    }
+
     @Override
     @Transactional
     public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
@@ -63,9 +77,25 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
                 );
-        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
-        return taskMapper.entityToUpdateDto(taskRepository
-                .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
+
+        // Обновляем существующую задачу через сеттеры
+        if (requestBody.getTitle() != null) {
+            existingTask.setTitle(requestBody.getTitle());
+        }
+        if (requestBody.getDescription() != null) {
+            existingTask.setDescription(requestBody.getDescription());
+        }
+        if (requestBody.getStatus() != null) {
+            existingTask.setStatus(requestBody.getStatus());
+        }
+        if (requestBody.getPriority() != null) {
+            existingTask.setPriority(requestBody.getPriority());
+        }
+        existingTask.setUpdatedAt(now()); // Обновляем дату изменения
+
+        // Сохраняем обновленную задачу
+        Task savedTask = taskRepository.save(existingTask);
+        return taskMapper.entityToUpdateDto(savedTask);
     }
 
     @Override

@@ -26,6 +26,6 @@ public class UserDataDto {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime createdAt;
 
-    @Schema(description = "")
+    @Schema(description = "Роль пользователя", example = "ROLE_USER")
     private Role userRole;
 }

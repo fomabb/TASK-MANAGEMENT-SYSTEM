@@ -7,6 +7,7 @@ import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -31,11 +32,13 @@ public class TaskDataDto {
     @Schema(description = "Статус задачи", example = "PENDING or IN_PROGRESS or COMPLETED")
     private TaskStatus status;
 
-    @Schema(description = "Приоритет задачи", example = "HIGH or MEDIUM or LOW")
+    @Schema(description = "Приоритет задачи", example = "LOW")
     private TaskPriority priority;
 
     @Schema(description = "Автор задачи")
     private UserAuthorDataDto author;
+
+    private List<CommentsDataDto> commentsDataDtos;
 
     @Schema(description = "Исполнитель")
     private UserAssigneeDataDto assignee;
