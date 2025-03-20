@@ -13,4 +13,6 @@ public interface TaskRepository extends JpaRepository<Task, Long>, PagingAndSort
     boolean existsByTitle(String title);
 
     Page<Task> findAllByAuthorId(Long authorId, Pageable pageable);
+
+    Page<Task> findAllByAssigneeId(Long assigneeId, Pageable pageable);
 }

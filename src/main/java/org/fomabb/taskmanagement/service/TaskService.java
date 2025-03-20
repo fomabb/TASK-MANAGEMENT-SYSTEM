@@ -79,4 +79,15 @@ public interface TaskService {
      * @throws IllegalArgumentException если переданы неверные параметры пагинации.
      */
     PageableTaskResponse getTaskByAuthorId(Long authorId, Pageable pageable);
+
+    /**
+     * Получает список задач, назначенных исполнителю с указанным ID.
+     *
+     * @param assigneeId ID исполнителя, чьи задачи необходимо извлечь.
+     * @param pageable объект, содержащий информацию о пагинации, включая номер страницы и размер страницы.
+     * @return объект {@link PageableTaskResponse}, содержащий пагинированный список задач.
+     * @throws EntityNotFoundException если исполнитель с указанным ID не найден.
+     * @throws IllegalArgumentException если переданы неверные параметры пагинации.
+     */
+    PageableTaskResponse getTaskByAssigneeId(Long assigneeId, Pageable pageable);
 }

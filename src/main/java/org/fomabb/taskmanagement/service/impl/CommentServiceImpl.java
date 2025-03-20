@@ -2,7 +2,7 @@ package org.fomabb.taskmanagement.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.fomabb.taskmanagement.dto.CommentsDataDto;
+import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateCommentRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
@@ -67,23 +67,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public PageableCommentsResponse getCommentsById(Long taskId, Pageable pageable) {
         Page<Comment> commentsPage = commentRepository.findCommentsByTaskId(taskId, pageable);
-        List<CommentsDataDto> commentsDataDtos = commentsPage.getContent()
-                .stream()
-                .map(commentMapper::entityCommentToCommentDto)
-                .toList();
-
-        return PageableResponseUtil.buildPageableResponse(commentsDataDtos, commentsPage, new PageableCommentsResponse());
+        List<CommentDataDto> commentDataDtos = commentMapper.listCommentEntityToListCommentDto(commentsPage.getContent());
+        return PageableResponseUtil.buildPageableResponse(commentDataDtos, commentsPage, new PageableCommentsResponse());
     }
 
     @Override
     public PageableCommentsResponse getCommentsByAuthorId(Long authorId, Pageable pageable) {
         Page<Comment> pageComment = commentRepository.findAllByAuthorId(authorId, pageable);
-        List<CommentsDataDto> commentsDataDtos = pageComment.getContent()
-                .stream()
-                .map(commentMapper::entityCommentToCommentDto)
-                .toList();
-
-        return PageableResponseUtil.buildPageableResponse(commentsDataDtos, pageComment, new PageableCommentsResponse());
+        List<CommentDataDto> commentDataDtos = commentMapper.listCommentEntityToListCommentDto(pageComment.getContent());
+        return PageableResponseUtil.buildPageableResponse(commentDataDtos, pageComment, new PageableCommentsResponse());
     }
 
     @Override

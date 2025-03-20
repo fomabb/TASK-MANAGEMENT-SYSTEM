@@ -1,6 +1,6 @@
 package org.fomabb.taskmanagement.mapper.impl;
 
-import org.fomabb.taskmanagement.dto.CommentsDataDto;
+import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
@@ -9,6 +9,9 @@ import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.CommentMapper;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -38,13 +41,21 @@ public class CommentMapperImpl implements CommentMapper {
     }
 
     @Override
-    public CommentsDataDto entityCommentToCommentDto(Comment comment) {
-        return CommentsDataDto.builder()
+    public CommentDataDto entityCommentToCommentDto(Comment comment) {
+        return CommentDataDto.builder()
                 .id(comment.getId())
                 .text(comment.getContent())
                 .author(UserAuthorDataDto.builder().authorId(comment.getId()).build())
                 .timeCreated(comment.getCreatedAt())
                 .timeUpdated(comment.getUpdateAt())
                 .build();
+    }
+
+    @Override
+    public List<CommentDataDto> listCommentEntityToListCommentDto(List<Comment> comments) {
+        if (comments == null) {
+            return Collections.emptyList();
+        }
+        return comments.stream().map(this::entityCommentToCommentDto).toList();
     }
 }
