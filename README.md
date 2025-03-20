@@ -28,11 +28,27 @@
 
 1. **Docker**: Убедитесь, что Docker установлен на вашем компьютере. Вы можете скачать и установить его с [официального сайта Docker](https://www.docker.com/get-started).
 
-## Скачивание файла `docker-compose.yml`
+## Запуск или скачивание файла `docker-compose.yml` и `.env`
 
-Чтобы запустить приложение с помощью docker-compose, необходимо клонировать проект, после чего скачать файл `.env` нажав 
-на кнопку ниже, после чего поместить скаченный файл в корень проекта. Также для удобства вы можете скачать архив с 
-файлами `.env` и `docker-compose.yml`, который содержит необходимые настройки для запуска приложения. 
+Чтобы запустить приложение с помощью docker-compose, необходимо клонировать проект к себе на компьютер, после чего создать
+в корне проекта файл `.env` после чего в нем прописать:
+
+```.dotenv
+JWT_SECRET_KEY="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
+JWT_EXPIRATION_TIME="60m"
+
+POSTGRES_DB="Yor database"
+POSTGRES_USER="Yor username database"
+POSTGRES_PASSWORD="Yor password database"
+
+PORT="8080"
+POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/Yor database"
+POSTGRES_DB_USERNAME="Yor username database"
+POSTGRES_DB_PASSWORD="Yor password database"
+```
+
+Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые настройки 
+для запуска приложения. 
 
 [![Скачать docker-compose.yml](https://img.shields.io/badge/Скачать%20docker--compose.yml-blue)](https://drive.google.com/drive/folders/1ztmCCncx75RUAmWTNZv3hBcFH6u-fr1M?usp=drive_link)
 
@@ -40,8 +56,7 @@
 
 ### 1. Запуск приложения с помощью Docker Compose
 
-После вышеуказанных действий, указанных в инструкции, в командной строке необходимо попасть в директорию, где находятся
-вышеуказанные файлы и прописать:
+После вышеуказанных действий прописанных в инструкции, в директории где находятся файлы прописать команду:
 
 ```bash
 docker compose up
