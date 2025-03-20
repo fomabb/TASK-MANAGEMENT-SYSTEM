@@ -29,9 +29,21 @@ public class TaskResponseGenerator {
                 .build();
     }
 
+    public static Task generateTaskEntity() {
+        return Task.builder()
+                .id(1L)
+                .title("Task Title")
+                .description("Task Description")
+                .priority(TaskPriority.LOW)
+                .status(TaskStatus.IN_PROGRESS)
+                .createdAt(LocalDateTime.parse("20-03-2025 12:21"))
+                .updatedAt(LocalDateTime.parse("20-03-2025 15:12"))
+                .assignee(User.builder().id(2L).build())
+                .author(User.builder().id(1L).build())
+                .build();
+    }
+
     public static List<TaskDataDto> generateListTaskDataDto() {
-
-
         Task task1 = Task.builder()
                 .id(1L)
                 .title("Task-1 Title")
@@ -45,7 +57,7 @@ public class TaskResponseGenerator {
                 .build();
 
         Task task2 = Task.builder()
-                .id(1L)
+                .id(2L)
                 .title("Task-2 Title")
                 .description("Task-2 Description")
                 .priority(TaskPriority.LOW)

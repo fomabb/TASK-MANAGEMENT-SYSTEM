@@ -78,25 +78,50 @@ public class UserServiceImplTest {
 
     @Test
     void getAllUsers_ShouldReturnListUserDataDto() {
+        // Arrange
+
+        // Act
+
+        // Assert
+
     }
 
     @Test
     void updateTaskStatusForUser_ShouldReturnUpdateUpdateTaskDataDto() {
+        // Arrange
+
+        // Act
+
+        // Assert
 
     }
 
     @Test
     void getUserById_ShouldThrowEntityNotFoundException() {
+        // Arrange
+
+        // Act
+
+        // Assert
 
     }
 
     @Test
     void getAllUsers_ShouldReturnEmptyList() {
+        // Arrange
 
+        // Act
+
+        // Assert
     }
 
     @Test
     void updateTaskStatusForUser_ShouldThrowEntityNotFoundException() {
+        // Arrange
+
+        // Act
+
+        // Assert
 
     }
 

@@ -163,34 +163,6 @@ public class AdminController {
     }
 
     @Operation(
-            summary = "Удаление задачи по ID.",
-            description = "`Необходимо в путь прописать ID задачи для ее удаления.`",
-            parameters = {
-                    @Parameter(
-                            name = "taskId",
-                            description = "`ID задачи, которую необходимо удалить.`",
-                            required = true,
-                            example = "1"
-                    )
-            },
-            responses = {
-                    @ApiResponse(
-                            responseCode = "204",
-                            description = "`Задача успешно удалена`"
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "`Задача не найдена по указанному ID`"
-                    )
-            }
-    )
-    @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> removeTaskById(@PathVariable("taskId") Long taskId) {
-        taskFacade.removeTaskById(taskId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(
             summary = "Добавить комментарий к задаче по ID.",
             description = """
                     `
@@ -254,5 +226,39 @@ public class AdminController {
     @PatchMapping("/comments/update")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
+    }
+
+    @Operation(
+            summary = "Удаление задачи по ID.",
+            description = "`Необходимо в путь прописать ID задачи для ее удаления.`",
+            parameters = {
+                    @Parameter(
+                            name = "taskId",
+                            description = "`ID задачи, которую необходимо удалить.`",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "`Задача успешно удалена`"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "`Задача не найдена по указанному ID`"
+                    )
+            }
+    )
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> removeTaskById(@PathVariable("taskId") Long taskId) {
+        taskFacade.removeTaskById(taskId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> removeCommentById(@PathVariable("commentId") Long commentId) {
+        commentService.removeCommentById(commentId);
+        return ResponseEntity.noContent().build();
     }
 }

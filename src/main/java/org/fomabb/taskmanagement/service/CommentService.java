@@ -49,4 +49,16 @@ public interface CommentService {
      * @throws IllegalArgumentException если переданы неверные параметры пагинации.
      */
     PageableCommentsResponse getCommentsByAuthorId(Long authorId, Pageable pageable);
+
+    /**
+     * Удаляет комментарий по указанному идентификатору.
+     *
+     * Этот метод проверяет существование комментария с заданным идентификатором.
+     * Если комментарий существует, он будет удален из базы данных.
+     * Если комментарий не найден, будет выброшено исключение {@link EntityNotFoundException}.
+     *
+     * @param commentId идентификатор комментария, который необходимо удалить.
+     * @throws EntityNotFoundException если комментарий с указанным идентификатором не найден.
+     */
+    void removeCommentById(Long commentId);
 }
