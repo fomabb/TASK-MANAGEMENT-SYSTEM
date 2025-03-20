@@ -5,7 +5,7 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
-import org.fomabb.taskmanagement.dto.response.PaginTaskResponse;
+import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -26,9 +26,9 @@ public interface TaskService {
      * Получает список всех задач с пагинацией.
      *
      * @param pageable объект {@link Pageable}, содержащий параметры пагинации
-     * @return объект {@link PaginTaskResponse}, содержащий список задач и информацию о пагинации
+     * @return объект {@link PageableTaskResponse}, содержащий список задач и информацию о пагинации
      */
-    PaginTaskResponse getAllTasks(Pageable pageable);
+    PageableTaskResponse getAllTasks(Pageable pageable);
 
     /**
      * Обновляет данные задачи для администратора.
