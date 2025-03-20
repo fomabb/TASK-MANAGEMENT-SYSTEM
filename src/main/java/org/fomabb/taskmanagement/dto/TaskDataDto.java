@@ -1,5 +1,6 @@
 package org.fomabb.taskmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -22,10 +23,12 @@ public class TaskDataDto {
     @Schema(description = "Описание задачи")
     private String description;
 
-    @Schema(description = "Время создания задачи")
+    @Schema(description = "Время создания задачи", example = "19-03-2025 17:38")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime createdAt;
 
-    @Schema(description = "Время обновления задачи")
+    @Schema(description = "Время обновления задачи", example = "19-03-2025 19:38")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime updatedAt;
 
     @Schema(description = "Статус задачи", example = "PENDING or IN_PROGRESS or COMPLETED")
