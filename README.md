@@ -50,8 +50,7 @@ POSTGRES_DB_PASSWORD="Yor password database"
 ```
 
 Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые
-настройки
-для запуска приложения.
+настройки для запуска приложения.
 
 [![Скачать docker-compose.yml](https://img.shields.io/badge/Скачать%20docker--compose.yml-blue)](https://drive.google.com/drive/folders/1ztmCCncx75RUAmWTNZv3hBcFH6u-fr1M?usp=drive_link)
 
