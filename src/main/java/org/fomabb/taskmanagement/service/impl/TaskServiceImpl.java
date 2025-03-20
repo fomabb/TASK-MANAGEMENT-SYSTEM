@@ -15,7 +15,6 @@ import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
-import org.fomabb.taskmanagement.util.ConstantProject;
 import org.fomabb.taskmanagement.util.paging.PageableResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.fomabb.taskmanagement.util.ConstantProject.TASK_WITH_ID_S_NOT_FOUND_CONST;
+import static org.fomabb.taskmanagement.util.ConstantProject.USER_WITH_ID_S_NOT_FOUND_CONST;
 
 @Service
 @Slf4j
@@ -45,8 +47,7 @@ public class TaskServiceImpl implements TaskService {
         if (user.isPresent()) {
             return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.createRequestToEntity(requestBody)));
         }
-        throw new EntityNotFoundException(String.format(
-                ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAuthorId()));
+        throw new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAuthorId()));
     }
 
     @Override
@@ -61,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
         Task existingTask = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
+                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId()))
                 );
         Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
         return taskMapper.entityToUpdateDto(taskRepository
@@ -72,7 +73,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDataDto getTaskById(Long id) {
         return taskMapper.entityTaskToTaskDto(taskRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException(String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, id))));
+                        new EntityNotFoundException(String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, id))));
     }
 
     @Override
@@ -86,11 +87,11 @@ public class TaskServiceImpl implements TaskService {
     public void assignTaskPerformers(AssigneeTaskForUserRequest requestBody) {
         Task existingTask = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId()))
+                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId()))
                 );
         userRepository.findById(requestBody.getAssigneeId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format(
-                        ConstantProject.USER_WITH_ID_S_NOT_FOUND, requestBody.getAssigneeId()))
+                        USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAssigneeId()))
                 );
         taskRepository.save(taskMapper.buildAssigneeToSave(existingTask, taskMapper.assigneeDtoToEntity(requestBody)));
     }

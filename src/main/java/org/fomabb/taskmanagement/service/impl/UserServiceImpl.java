@@ -6,18 +6,12 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.UserDataDto;
 import org.fomabb.taskmanagement.dto.request.UpdateTaskForUserDataRequest;
 import org.fomabb.taskmanagement.entity.Task;
-import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.mapper.UserMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
-import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.UserService;
-import org.fomabb.taskmanagement.util.ConstantProject;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +19,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
+import static org.fomabb.taskmanagement.security.service.UserServiceSecurity.getCurrentUserId;
+import static org.fomabb.taskmanagement.util.ConstantProject.TASK_WITH_ID_S_NOT_FOUND_CONST;
+import static org.fomabb.taskmanagement.util.ConstantProject.USER_WITH_ID_S_NOT_FOUND_CONST;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public UserDataDto getUserById(Long userId) {
         return userMapper.entityUserToUserDto(userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.USER_WITH_ID_S_NOT_FOUND, userId)
+                        String.format(USER_WITH_ID_S_NOT_FOUND_CONST, userId)
                 )));
     }
 
@@ -53,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public UpdateTaskDataDto updateTaskStatusForUser(UpdateTaskForUserDataRequest requestBody) {
         Task taskToSave = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(ConstantProject.TASK_WITH_ID_S_NOT_FOUND, requestBody.getTaskId())
+                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
                 ));
 
         Long currentUserId = getCurrentUserId();
@@ -66,18 +63,5 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new AccessDeniedException("User does not have permission to update this task.");
         }
-    }
-
-    /**
-     * Извлечение ID пользователя из security context
-     *
-     * @return userId
-     */
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
-            return ((User) userDetails).getId();
-        }
-        throw new BusinessException("Authentication principal is not of type UserDetails");
     }
 }

@@ -224,7 +224,7 @@ public class AdminController {
                     )
             }
     )
-    @PostMapping("/comments/add-to-task")
+    @PostMapping("/comments/post")
     public ResponseEntity<CommentAddedResponse> addCommentToTaskById(
             @RequestBody CommentAddToTaskDataDtoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.addCommentToTaskById(request));
