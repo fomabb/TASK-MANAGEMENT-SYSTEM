@@ -25,7 +25,7 @@ public interface UserService {
      *
      * @return список объектов {@link UserDataDto}, содержащий данные всех пользователей
      */
-    List<UserDataDto> getAllUser();
+    List<UserDataDto> getAllUsers();
 
     /**
      * Обновляет статус задачи для пользователя.
