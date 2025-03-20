@@ -52,10 +52,7 @@ public class TaskTaskMapperImpl implements TaskMapper {
         if (tasks == null) {
             return Collections.emptyList();
         }
-
-        return tasks.stream()
-                .map(this::entityTaskToTaskDto)
-                .toList();
+        return tasks.stream().map(this::entityTaskToTaskDto).toList();
     }
 
     @Override

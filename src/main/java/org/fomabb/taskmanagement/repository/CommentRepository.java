@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepository extends JpaRepository<Comment, Long>, PagingAndSortingRepository<Comment, Long> {
 
     Page<Comment> findCommentsByTaskId(Long taskId, Pageable pageable);
+
+    Page<Comment> findAllByAuthorId(Long authorId, Pageable pageable);
 }

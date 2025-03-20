@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Schema(description = "Объект передачи данных комментариев к задаче")
-public class CommentsDataDto {
+public class CommentDataDto {
 
     @Schema(description = "Идентификатор комментария", example = "1")
     private Long id;

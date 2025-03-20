@@ -100,4 +100,20 @@ public class TaskServiceImpl implements TaskService {
     public boolean existsByTitle(String title) {
         return taskRepository.existsByTitle(title);
     }
+
+    @Override
+    public PageableTaskResponse getTaskByAuthorId(Long authorId, Pageable pageable) {
+        Page<Task> taskPage = taskRepository.findAllByAuthorId(authorId, pageable);
+        List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
+
+        return PageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+    }
+
+    @Override
+    public PageableTaskResponse getTaskByAssigneeId(Long assigneeId, Pageable pageable) {
+        Page<Task> taskPage = taskRepository.findAllByAssigneeId(assigneeId, pageable);
+        List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
+
+        return PageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+    }
 }

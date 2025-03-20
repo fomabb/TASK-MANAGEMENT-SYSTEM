@@ -1,11 +1,13 @@
 package org.fomabb.taskmanagement.mapper;
 
-import org.fomabb.taskmanagement.dto.CommentsDataDto;
+import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.entity.Comment;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.security.entity.User;
+
+import java.util.List;
 
 /**
  * Интерфейс для маппинга объектов комментариев.
@@ -35,7 +37,9 @@ public interface CommentMapper {
      * Преобразует сущность комментария в DTO для отображения данных комментария.
      *
      * @param comment объект {@link Comment}, который нужно преобразовать
-     * @return объект {@link CommentsDataDto}, содержащий данные комментария
+     * @return объект {@link CommentDataDto}, содержащий данные комментария
      */
-    CommentsDataDto entityCommentToCommentDto(Comment comment);
+    CommentDataDto entityCommentToCommentDto(Comment comment);
+
+    List<CommentDataDto> listCommentEntityToListCommentDto(List<Comment> comments);
 }

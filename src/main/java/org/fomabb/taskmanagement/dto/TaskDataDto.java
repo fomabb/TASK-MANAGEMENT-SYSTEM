@@ -7,7 +7,6 @@ import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -37,8 +36,6 @@ public class TaskDataDto {
 
     @Schema(description = "Автор задачи")
     private UserAuthorDataDto author;
-
-    private List<CommentsDataDto> commentsDataDtos;
 
     @Schema(description = "Исполнитель")
     private UserAssigneeDataDto assignee;
