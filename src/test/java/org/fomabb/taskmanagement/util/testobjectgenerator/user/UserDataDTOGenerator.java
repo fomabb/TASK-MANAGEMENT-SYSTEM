@@ -14,7 +14,7 @@ public class UserDataDTOGenerator {
                 .userId(1L)
                 .firstName("Ivan")
                 .lastName("Ivanov")
-                .createdAt(LocalDateTime.parse("20-03-2025 14:22"))
+                .createdAt(LocalDateTime.now())
                 .userRole(Role.ROLE_USER)
                 .build();
     }
