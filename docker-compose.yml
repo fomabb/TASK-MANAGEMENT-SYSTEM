@@ -1,12 +1,10 @@
 services:
   task-management-system:
-    image: fomabb/task-management-system:0.0.1
+    image: fomabb/task-management-system:0.0.2
     ports:
       - "8080:8080"
     env_file:
       - .env
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
     depends_on:
       db-task-management-system:
         condition: service_healthy
