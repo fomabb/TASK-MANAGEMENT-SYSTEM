@@ -18,7 +18,7 @@ import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.entity.enumeration.Role;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.CommentService;
-import org.fomabb.taskmanagement.util.paging.PageableResponseUtil;
+import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final PageableResponseUtil pageableResponseUtil;
 
     @Override
     @Transactional
@@ -75,14 +76,14 @@ public class CommentServiceImpl implements CommentService {
     public PageableCommentsResponse getCommentsById(Long taskId, Pageable pageable) {
         Page<Comment> commentsPage = commentRepository.findCommentsByTaskId(taskId, pageable);
         List<CommentDataDto> commentDataDtos = commentMapper.listCommentEntityToListCommentDto(commentsPage.getContent());
-        return PageableResponseUtil.buildPageableResponse(commentDataDtos, commentsPage, new PageableCommentsResponse());
+        return pageableResponseUtil.buildPageableResponse(commentDataDtos, commentsPage, new PageableCommentsResponse());
     }
 
     @Override
     public PageableCommentsResponse getCommentsByAuthorId(Long authorId, Pageable pageable) {
         Page<Comment> pageComment = commentRepository.findAllByAuthorId(authorId, pageable);
         List<CommentDataDto> commentDataDtos = commentMapper.listCommentEntityToListCommentDto(pageComment.getContent());
-        return PageableResponseUtil.buildPageableResponse(commentDataDtos, pageComment, new PageableCommentsResponse());
+        return pageableResponseUtil.buildPageableResponse(commentDataDtos, pageComment, new PageableCommentsResponse());
     }
 
     @Override

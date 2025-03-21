@@ -2,9 +2,10 @@ package org.fomabb.taskmanagement.util.testobjectgenerator.user;
 
 import lombok.experimental.UtilityClass;
 import org.fomabb.taskmanagement.dto.UserDataDto;
+import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.entity.enumeration.Role;
 
-import java.time.LocalDateTime;
+import static java.time.LocalDateTime.now;
 
 @UtilityClass
 public class UserDataDTOGenerator {
@@ -14,8 +15,18 @@ public class UserDataDTOGenerator {
                 .userId(1L)
                 .firstName("Ivan")
                 .lastName("Ivanov")
-                .createdAt(LocalDateTime.now())
+                .createdAt(now())
                 .userRole(Role.ROLE_USER)
+                .build();
+    }
+
+    public static User generateUserEntity() {
+        return User.builder()
+                .id(1L)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .createdAt(now())
+                .role(Role.ROLE_USER)
                 .build();
     }
 }

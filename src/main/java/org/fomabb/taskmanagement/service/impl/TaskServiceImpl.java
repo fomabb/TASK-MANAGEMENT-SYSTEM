@@ -9,13 +9,14 @@ import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
+import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
-import org.fomabb.taskmanagement.util.paging.PageableResponseUtil;
+import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,35 +37,36 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final PageableResponseUtil pageableResponseUtil;
 
 //==================================SECTION~ADMIN=======================================================================
 
     @Override
     @Transactional
-    public CreatedTaskResponse createTask(CreateTaskRequest requestBody) {
-        Optional<User> user = userRepository.findById(requestBody.getAuthorId());
+    public CreatedTaskResponse createTask(CreateTaskRequest dto) {
+        Optional<User> user = userRepository.findById(dto.getAuthorId());
 
         if (user.isPresent()) {
-            return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.createRequestToEntity(requestBody)));
+            return taskMapper.entityToCreateResponse(taskRepository.save(taskMapper.createRequestToEntity(dto)));
         }
-        throw new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAuthorId()));
+        throw new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND_CONST, dto.getAuthorId()));
     }
 
     @Override
     public PageableTaskResponse getAllTasks(Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAll(pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
-        return PageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
     }
 
     @Override
     @Transactional
-    public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto requestBody) {
-        Task existingTask = taskRepository.findById(requestBody.getTaskId())
+    public UpdateTaskDataDto updateTaskForAdmin(UpdateTaskDataDto dto) {
+        Task existingTask = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId()))
+                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, dto.getTaskId()))
                 );
-        Task updatedTask = taskMapper.updateDtoToEntity(requestBody);
+        Task updatedTask = taskMapper.updateDtoToEntity(dto);
         return taskMapper.entityToUpdateDto(taskRepository
                 .save(taskMapper.buildUpdateTaskForSave(existingTask, updatedTask)));
     }
@@ -84,16 +86,19 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public void assignTaskPerformers(AssigneeTaskForUserRequest requestBody) {
-        Task existingTask = taskRepository.findById(requestBody.getTaskId())
+    public UpdateAssigneeResponse assignTaskPerformers(AssigneeTaskForUserRequest dto) {
+        Task existingTask = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId()))
+                        String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, dto.getTaskId()))
                 );
-        userRepository.findById(requestBody.getAssigneeId())
+        userRepository.findById(dto.getAssigneeId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format(
-                        USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAssigneeId()))
+                        USER_WITH_ID_S_NOT_FOUND_CONST, dto.getAssigneeId()))
                 );
-        taskRepository.save(taskMapper.buildAssigneeToSave(existingTask, taskMapper.assigneeDtoToEntity(requestBody)));
+        return taskMapper.entityTaskToUpdateAssigneeDto(
+                taskRepository.save(
+                        taskMapper.buildAssigneeToSave(existingTask,
+                                taskMapper.assigneeDtoToEntity(dto))));
     }
 
     @Override
@@ -106,7 +111,7 @@ public class TaskServiceImpl implements TaskService {
         Page<Task> taskPage = taskRepository.findAllByAuthorId(authorId, pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
 
-        return PageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
     }
 
     @Override
@@ -114,6 +119,6 @@ public class TaskServiceImpl implements TaskService {
         Page<Task> taskPage = taskRepository.findAllByAssigneeId(assigneeId, pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
 
-        return PageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
     }
 }

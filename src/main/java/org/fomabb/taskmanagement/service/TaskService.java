@@ -7,6 +7,7 @@ import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
+import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -59,7 +60,7 @@ public interface TaskService {
      *
      * @param requestBody объект {@link AssigneeTaskForUserRequest}, содержащий данные для назначения исполнителей
      */
-    void assignTaskPerformers(AssigneeTaskForUserRequest requestBody);
+    UpdateAssigneeResponse assignTaskPerformers(AssigneeTaskForUserRequest requestBody);
 
     /**
      * Проверяет, существует ли задача с указанным заголовком.

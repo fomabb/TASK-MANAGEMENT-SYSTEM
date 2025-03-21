@@ -5,6 +5,7 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 
 import java.util.List;
@@ -54,6 +55,8 @@ public interface TaskMapper {
      * @return объект {@link UpdateTaskDataDto}, содержащий данные для обновления задачи
      */
     UpdateTaskDataDto entityToUpdateDto(Task task);
+
+    UpdateAssigneeResponse entityTaskToUpdateAssigneeDto(Task task);
 
     /**
      * Преобразует DTO для обновления задачи в сущность задачи.
