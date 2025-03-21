@@ -45,7 +45,9 @@ public class CommentMapperImpl implements CommentMapper {
         return CommentDataDto.builder()
                 .id(comment.getId())
                 .text(comment.getContent())
-                .author(UserAuthorDataDto.builder().authorId(comment.getId()).build())
+                .author(
+                        UserAuthorDataDto.builder().authorId(comment.getAuthor().getId()).build()
+                )
                 .timeCreated(comment.getCreatedAt())
                 .timeUpdated(comment.getUpdateAt())
                 .build();
