@@ -18,6 +18,7 @@ import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateCommentRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.facade.TaskFacade;
 import org.fomabb.taskmanagement.service.CommentService;
@@ -157,9 +158,8 @@ public class AdminController {
             }
     )
     @PatchMapping("/assignee-by-taskId")
-    public ResponseEntity<Void> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
-        taskService.assignTaskPerformers(request);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    public ResponseEntity<UpdateAssigneeResponse> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.assignTaskPerformers(request));
     }
 
     @Operation(

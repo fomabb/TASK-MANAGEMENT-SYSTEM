@@ -1,12 +1,14 @@
-package org.fomabb.taskmanagement.util.paging;
+package org.fomabb.taskmanagement.util.pagable;
 
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Утилитный класс для построения пагинированных ответов.
  */
+@Component
 public class PageableResponseUtil {
 
     /**
@@ -19,7 +21,7 @@ public class PageableResponseUtil {
      * @param <R> тип класса, наследующего {@link PageableResponse}
      * @return заполненный экземпляр пагинированного ответа
      */
-    public static <T, R extends PageableResponse<T>> R buildPageableResponse(List<T> content, Page<?> page, R response) {
+    public <T, R extends PageableResponse<T>> R buildPageableResponse(List<T> content, Page<?> page, R response) {
         response.setContent(content);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
