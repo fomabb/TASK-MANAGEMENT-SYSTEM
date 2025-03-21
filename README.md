@@ -35,11 +35,13 @@
 создать
 в корне проекта файл `.env`, заполнить своими данными и указать с какой среды запускать `local` или `dev`:
 
+[Генерация токена](https://openreplay.com/tools/token-generator/) : token length: `64`
+
 ```.dotenv
 SPRING_PROFILES_ACTIVE="local"
 
-JWT_SECRET_KEY="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
-JWT_SECRET_KEY_LOCAL="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
+JWT_SECRET_KEY="Your secret key generate token"
+JWT_SECRET_KEY_LOCAL="Your secret key generate token"
 
 POSTGRES_DB="Your database"
 POSTGRES_USER="Your username"
