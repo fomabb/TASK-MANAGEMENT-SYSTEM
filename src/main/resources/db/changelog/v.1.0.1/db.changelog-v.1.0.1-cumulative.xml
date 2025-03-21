@@ -11,4 +11,16 @@
 
     <include file="04-alter-table-comments-column.sql" relativeToChangelogFile="true"/>
 
+    <changeSet id="2025-03-21-insert-data-table-tasks-01" author="Nikolay Kirilyuk">
+        <tagDatabase tag="management_db"/>
+    </changeSet>
+
+    <include file="static-data/01-insert-into-tasks.sql" relativeToChangelogFile="true"/>
+
+    <changeSet id="2025-22-03-insert-table-comments-02" author="Nikolay Kirilyuk">
+        <tagDatabase tag="management_db"/>
+    </changeSet>
+
+    <include file="static-data/02-insert-into-comments.sql" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
