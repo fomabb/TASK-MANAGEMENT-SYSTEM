@@ -3,6 +3,7 @@ package org.fomabb.taskmanagement.service.impl;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.fomabb.taskmanagement.util.paging.PageableResponseUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,9 @@ public class TaskServiceImplTest {
     private TaskRepository taskRepository;
 
     @Mock
+    private PageableResponseUtil responseUtil;
+
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
@@ -28,12 +32,10 @@ public class TaskServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-
     }
 
     @BeforeAll
     public static void setUpBeforeAll() {
-
     }
 
     @Test

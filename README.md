@@ -35,7 +35,7 @@
 создать
 в корне проекта файл `.env`, заполнить своими данными и указать с какой среды запускать `local` или `dev`:
 
-[Генерация токена](https://openreplay.com/tools/token-generator/) : token length: `64`
+[Генерация токена](https://openreplay.com/tools/token-generator/) длинна token: `64`
 
 ```.dotenv
 SPRING_PROFILES_ACTIVE="local"

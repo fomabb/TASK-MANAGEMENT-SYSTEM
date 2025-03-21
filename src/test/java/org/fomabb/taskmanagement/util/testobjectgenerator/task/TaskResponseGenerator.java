@@ -84,4 +84,32 @@ public class TaskResponseGenerator {
                         .build())
                 .toList();
     }
+
+    public static List<Task> generateListTaskEntity() {
+        Task task1 = Task.builder()
+                .id(1L)
+                .title("Task-1 Title")
+                .description("Task-1 Description")
+                .priority(TaskPriority.LOW)
+                .status(TaskStatus.IN_PROGRESS)
+                .createdAt(LocalDateTime.parse("20-03-2025 12:21"))
+                .updatedAt(LocalDateTime.parse("20-03-2025 15:12"))
+                .assignee(User.builder().id(2L).build())
+                .author(User.builder().id(1L).build())
+                .build();
+
+        Task task2 = Task.builder()
+                .id(2L)
+                .title("Task-2 Title")
+                .description("Task-2 Description")
+                .priority(TaskPriority.LOW)
+                .status(TaskStatus.IN_PROGRESS)
+                .createdAt(LocalDateTime.parse("20-03-2025 13:21"))
+                .updatedAt(LocalDateTime.parse("20-03-2025 16:44"))
+                .assignee(User.builder().id(2L).build())
+                .author(User.builder().id(1L).build())
+                .build();
+
+        return List.of(task1, task2);
+    }
 }
