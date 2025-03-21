@@ -1,8 +1,11 @@
+
+
 spring:
   datasource:
     url: ${POSTGRES_DB_URL_LOCAL}
     username: ${POSTGRES_DB_USERNAME_LOCAL}
     password: ${POSTGRES_DB_PASSWORD_LOCAL}
+
 server:
   port: ${PORT_LOCAL}
 

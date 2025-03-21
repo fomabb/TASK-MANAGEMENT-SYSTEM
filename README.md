@@ -77,6 +77,7 @@ docker compose up
 
 [![swagger](https://img.shields.io/badge/Открыть%20swagger-ui-green)](http://localhost:8080/swagger-ui/index.html)
 
+
 ### Мои запросы к приложению в Postman
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21948648/2sAYkDMLRS)
@@ -126,11 +127,12 @@ docker compose up
 
 **4. Описание API общих методов для управления административными функциями**
 
-| METHOD | PATH                             | DESCRIPTION                         |
-|--------|----------------------------------|-------------------------------------|
-| POST   | /api/v1/admin/tasks/create-task  | Создать новую задачу                |
-| POST   | /api/v1/admin/comments/post      | Добавить комментарий к задаче по ID |
-| PATCH  | /api/v1/admin/comments/update    | Обновление содержимого комментария  |
-| PATCH  | /api/v1/admin/tasks/update       | Обновить задачу                     |
-| PATCH  | /api/v1/admin/assignee-by-taskId | Назначить исполнителя задачи по ID  |
-| DELETE | /api/v1/admin/{taskId}           | Удаление задачи по ID               |
+| METHOD | PATH                               | DESCRIPTION                         |
+|--------|------------------------------------|-------------------------------------|
+| POST   | /api/v1/admin/tasks/create-task    | Создать новую задачу                |
+| POST   | /api/v1/admin/comments/post        | Добавить комментарий к задаче по ID |
+| PATCH  | /api/v1/admin/comments/update      | Обновление содержимого комментария  |
+| PATCH  | /api/v1/admin/tasks/update         | Обновить задачу                     |
+| PATCH  | /api/v1/admin/assignee-by-taskId   | Назначить исполнителя задачи по ID  |
+| DELETE | /api/v1/admin/{taskId}             | Удаление задачи по ID               |
+| DELETE | /api/v1/admin/comments/{commentId} | Удаление комментария по ID          |

@@ -17,6 +17,7 @@ import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.entity.enumeration.Role;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.fomabb.taskmanagement.security.service.UserServiceSecurity;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.springframework.data.domain.Page;
@@ -28,8 +29,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
-import static org.fomabb.taskmanagement.security.service.UserServiceSecurity.getCurrentUserId;
-import static org.fomabb.taskmanagement.security.service.UserServiceSecurity.getCurrentUserRole;
 import static org.fomabb.taskmanagement.util.ConstantProject.COMMENT_WITH_ID_S_NOT_FOUND_CONST;
 import static org.fomabb.taskmanagement.util.ConstantProject.TASK_WITH_ID_S_NOT_FOUND_CONST;
 import static org.fomabb.taskmanagement.util.ConstantProject.USER_WITH_ID_S_NOT_FOUND_CONST;
@@ -44,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final PageableResponseUtil pageableResponseUtil;
+    private final UserServiceSecurity userServiceSecurity;
 
     @Override
     @Transactional
@@ -56,8 +56,8 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
                 ));
-        boolean isAdmin = getCurrentUserRole().equals(Role.ROLE_ADMIN);
-        Long currencyUserId = getCurrentUserId();
+        boolean isAdmin = userServiceSecurity.getCurrentUser().getRole().equals(Role.ROLE_ADMIN);
+        Long currencyUserId = userServiceSecurity.getCurrentUser().getId();
 
         if (Objects.equals(userExist.getId(), taskExist.getAssignee().getId()) || isAdmin) {
             if (Objects.equals(userExist.getId(), currencyUserId)) {
@@ -102,8 +102,10 @@ public class CommentServiceImpl implements CommentService {
                         String.format(COMMENT_WITH_ID_S_NOT_FOUND_CONST, requestBody.getCommentId())
                 ));
 
-        Long currentUserId = getCurrentUserId();
-        boolean isAdmin = getCurrentUserRole().equals(Role.ROLE_ADMIN);
+
+        Long currentUserId = userServiceSecurity.getCurrentUser().getId();
+        boolean isAdmin = userServiceSecurity.getCurrentUser().getRole().equals(Role.ROLE_ADMIN);
+
 
         if (Objects.equals(comment.getAuthor().getId(), currentUserId) || isAdmin) {
             comment.setContent(requestBody.getNewContent());
