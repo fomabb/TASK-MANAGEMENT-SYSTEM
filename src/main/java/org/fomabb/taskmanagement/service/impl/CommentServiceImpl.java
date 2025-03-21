@@ -113,6 +113,6 @@ public class CommentServiceImpl implements CommentService {
             throw new BusinessException(VALIDATION_REFERENCES_CONST);
         }
 
-        return new UpdateCommentResponse(comment.getContent(), comment.getUpdateAt());
+        return new UpdateCommentResponse(comment.getId(), comment.getContent(), comment.getUpdateAt());
     }
 }
