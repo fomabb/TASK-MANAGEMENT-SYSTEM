@@ -1,5 +1,6 @@
 package org.fomabb.taskmanagement.exceptionhandler;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletException;
 import lombok.AllArgsConstructor;
@@ -47,7 +48,13 @@ public class GlobalExceptionHandlerAdvice extends ResponseEntityExceptionHandler
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<CommonExceptionResponse> handleAccessDeniedException(AccessDeniedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(buildResponseBody(e.getMessage(), e.getClass().getSimpleName()));
+                .body(buildResponseBody(e.getMessage(), e.getLocalizedMessage()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<CommonExceptionResponse> handleExpiredJwtException(ExpiredJwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(buildResponseBody("JWT token has expired", e.getClass().getSimpleName()));
     }
 
     @ExceptionHandler(Exception.class)
