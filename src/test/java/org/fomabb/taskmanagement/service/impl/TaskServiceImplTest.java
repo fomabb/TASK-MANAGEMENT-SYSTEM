@@ -12,6 +12,7 @@ import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,13 +21,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateAssigneeTaskRequest;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateAssigneeTaskUpdate;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateEntityTaskToUpdateTaskDto;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateListTaskDataDto;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateListTaskEntity;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generatePageTaskResponse;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskDataDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskEntity;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.user.UserDataDTOGenerator.generateUserEntity;
@@ -73,37 +82,26 @@ public class TaskServiceImplTest {
     @Test
     void getAllTasks_ShouldReturnPageableTaskResponse() {
 
-//        // Arrange
-//        List<Task> taskList = generateListTaskEntity();
-//        List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
-//        Pageable pageable = PageRequest.of(1, 10);
-//        Page<Task> mockPage = new PageImpl<>(taskList, pageable, taskList.size());
-//
-//        PageableResponse<TaskDataDto> expectedResponse = PageableResponse.<TaskDataDto>builder()
-//                .content(taskDataDtoList)
-//                .pageNumber(1) // Если сервис конвертирует 0-based → 1-based
-//                .pageSize(10)
-//                .isFirst(true)
-//                .isLast(true)
-//                .numberOfElements(taskList.size())
-//                .isEmpty(false)
-//                .totalPages(1)
-//                .totalItems(taskList.size())
-//                .build();
-//
-//        PageableResponse<TaskDataDto> pageableResponse = responseUtil.buildPageableResponse(taskDataDtoList, mockPage, expectedResponse);
-//
-//        when(taskRepository.findAll(pageable)).thenReturn(mockPage);
-//        when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
-//        when(responseUtil.buildPageableResponse(taskDataDtoList, mockPage, expectedResponse)).thenReturn(pageableResponse);
-//
-//
-//        // Act
-//        PageableTaskResponse allTasks = taskService.getAllTasks(pageable);
-//
-//        // Assert
-//        assertEquals(taskDataDtoList.size(), allTasks.getContent().size());
-//        assertEquals(1, allTasks.getPageNumber());
+        // Arrange
+        List<Task> taskList = generateListTaskEntity();
+        List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
+        Pageable pageable = PageRequest.of(1, 10);
+        Page<Task> mockPage = new PageImpl<>(taskList, pageable, taskList.size());
+
+        PageableResponse<TaskDataDto> pageableResponse = generatePageTaskResponse(taskDataDtoList, taskList);
+
+
+        when(taskRepository.findAll(pageable)).thenReturn(mockPage);
+        when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
+        when(responseUtil.buildPageableResponse(any(), any(), any())).thenReturn(pageableResponse);
+
+
+        // Act
+        PageableResponse<TaskDataDto> allTasks = taskService.getAllTasks(pageable);
+
+        // Assert
+        assertEquals(taskDataDtoList.size(), allTasks.getContent().size());
+        assertEquals(1, allTasks.getPageNumber());
 
     }
 

@@ -11,6 +11,7 @@ import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.security.entity.User;
+import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,21 @@ import static java.time.LocalDateTime.now;
 
 @UtilityClass
 public class TaskResponseGenerator {
+
+    public static PageableResponse<TaskDataDto> generatePageTaskResponse(List<TaskDataDto> taskDataDtoList, List<Task> taskList) {
+        // Если сервис конвертирует 0-based → 1-based
+        return PageableResponse.<TaskDataDto>builder()
+                .content(taskDataDtoList)
+                .pageNumber(1) // Если сервис конвертирует 0-based → 1-based
+                .pageSize(10)
+                .isFirst(true)
+                .isLast(true)
+                .numberOfElements(taskList.size())
+                .isEmpty(false)
+                .totalPages(1)
+                .totalItems(taskList.size())
+                .build();
+    }
 
     public static TaskDataDto generateTaskDataDto() {
         return TaskDataDto.builder()

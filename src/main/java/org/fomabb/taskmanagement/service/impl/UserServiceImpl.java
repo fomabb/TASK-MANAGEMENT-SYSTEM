@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 
         Long currentUserId = userServiceSecurity.getCurrentUser().getId();
 
-        // Проверка, является ли текущий пользователь исполнителем задачи
         if (Objects.equals(taskToSave.getAssignee().getId(), currentUserId)) {
             taskToSave.setStatus(requestBody.getTaskStatus());
             taskToSave.setUpdatedAt(now());

@@ -10,7 +10,6 @@ import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.service.impl.CommentServiceImpl;
-import org.fomabb.taskmanagement.service.impl.TaskServiceImpl;
 import org.fomabb.taskmanagement.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,9 +44,6 @@ class UserControllerTest {
 
     @Mock
     private UserServiceImpl userService;
-
-    @Mock
-    private TaskServiceImpl taskService;
 
     @Mock
     private CommentServiceImpl commentService;
@@ -100,7 +96,7 @@ class UserControllerTest {
         UpdateTaskForUserDataRequest request = UpdateTaskForUserDataRequest.builder()
                 .userId(1L)
                 .taskId(1L)
-                .taskStatus(TaskStatus.COMPLETED) // Убедитесь, что статус установлен
+                .taskStatus(TaskStatus.COMPLETED)
                 .build();
 
         UpdateTaskDataDto updatedTaskDataDto = UpdateTaskDataDto.builder()
@@ -151,7 +147,6 @@ class UserControllerTest {
         when(commentService.addCommentToTaskById(any(CommentAddToTaskDataDtoRequest.class)))
                 .thenReturn(response);
 
-        // Act & Assert
         mockMvc.perform(post("/api/v1/user/comments/post")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"taskId\":101,\"authorId\":1,\"content\":\"Это мой комментарий к задаче.\"}"))
