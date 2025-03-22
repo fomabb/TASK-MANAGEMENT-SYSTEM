@@ -2,6 +2,7 @@ package org.fomabb.taskmanagement.util.testobjectgenerator.comment;
 
 import lombok.experimental.UtilityClass;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
+import org.fomabb.taskmanagement.dto.request.UpdateCommentRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.security.entity.User;
@@ -22,10 +23,12 @@ public class CommentResponseGenerator {
                 .build();
     }
 
-    public static UpdateCommentResponse generateUpdateCommentResponse() {
+
+    public static UpdateCommentResponse generateUpdateCommentResponse(UpdateCommentRequest request) {
         return UpdateCommentResponse.builder()
-                .content("Update comment")
-                .updateAt(null)
+                .content(request.getNewContent())
+                .commentId(request.getCommentId())
+                .updateAt(now())
                 .build();
     }
 

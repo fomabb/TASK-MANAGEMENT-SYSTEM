@@ -33,6 +33,7 @@ import static java.time.LocalDateTime.now;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateAssigneeTaskRequest;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateAssigneeTaskUpdate;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateCreateTaskRequest;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateCreateTaskResponse;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateEntityTaskToUpdateTaskDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateListTaskDataDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateListTaskEntity;
@@ -77,7 +78,7 @@ public class TaskServiceImplTest {
 
         Task taskToSave = generateTaskEntity();
 
-        CreatedTaskResponse expectedResponse = CreatedTaskResponse.builder().id(1L).title(request.getTitle()).description(request.getDescription()).status(TaskStatus.PENDING).priority(request.getPriority()).createdAt(now()).updatedAt(null).build();
+        CreatedTaskResponse expectedResponse = generateCreateTaskResponse(request);
 
         when(userRepository.findById(taskToSave.getAuthor().getId())).thenReturn(Optional.of(user));
         when(taskMapper.createRequestToEntity(request)).thenReturn(taskToSave);

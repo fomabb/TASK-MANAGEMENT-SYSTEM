@@ -7,6 +7,7 @@ import org.fomabb.taskmanagement.dto.UserAssigneeDataDto;
 import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
+import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
@@ -28,6 +29,18 @@ public class TaskResponseGenerator {
                 .title("US-4.7.3 Закрытие карты")
                 .description("Необходимо осуществить закрытие карты.")
                 .priority(TaskPriority.MEDIUM)
+                .build();
+    }
+
+    public static CreatedTaskResponse generateCreateTaskResponse(CreateTaskRequest request) {
+        return CreatedTaskResponse.builder()
+                .id(1L)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .status(TaskStatus.PENDING)
+                .priority(request.getPriority())
+                .createdAt(now())
+                .updatedAt(null)
                 .build();
     }
 
