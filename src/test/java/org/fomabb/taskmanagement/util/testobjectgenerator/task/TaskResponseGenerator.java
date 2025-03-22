@@ -6,6 +6,7 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.UserAssigneeDataDto;
 import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
+import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
@@ -21,8 +22,16 @@ import static java.time.LocalDateTime.now;
 @UtilityClass
 public class TaskResponseGenerator {
 
+    public static CreateTaskRequest generateCreateTaskRequest() {
+        return CreateTaskRequest.builder()
+                .authorId(1L)
+                .title("US-4.7.3 Закрытие карты")
+                .description("Необходимо осуществить закрытие карты.")
+                .priority(TaskPriority.MEDIUM)
+                .build();
+    }
+
     public static PageableResponse<TaskDataDto> generatePageTaskResponse(List<TaskDataDto> taskDataDtoList, List<Task> taskList) {
-        // Если сервис конвертирует 0-based → 1-based
         return PageableResponse.<TaskDataDto>builder()
                 .content(taskDataDtoList)
                 .pageNumber(1) // Если сервис конвертирует 0-based → 1-based

@@ -42,6 +42,28 @@ public class UserDataDTOGenerator {
                 .build();
     }
 
+    public static List<User> generateListUsers() {
+        User user1 = User.builder()
+                .id(1L)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .createdAt(now())
+                .role(Role.ROLE_USER)
+                .build();
+
+
+        User user2 = User.builder()
+                .id(2L)
+                .firstName("Petr}")
+                .lastName("Petrov")
+                .createdAt(now())
+                .role(Role.ROLE_USER)
+                .build();
+
+
+        return List.of(user1, user2);
+    }
+
     public static List<UserDataDto> generateListUserDto() {
 
         UserDataDto user1 = UserDataDto.builder()

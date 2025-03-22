@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
+import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
+import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
@@ -14,8 +16,6 @@ import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +32,7 @@ import java.util.Optional;
 import static java.time.LocalDateTime.now;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateAssigneeTaskRequest;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateAssigneeTaskUpdate;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateCreateTaskRequest;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateEntityTaskToUpdateTaskDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateListTaskDataDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateListTaskEntity;
@@ -69,6 +70,34 @@ public class TaskServiceImplTest {
     @Test
     void createTask_ShouldReturnCreatedTaskResponse() {
 
+        // Arrange
+        CreateTaskRequest request = generateCreateTaskRequest();
+
+        User user = generateUserEntity();
+
+        Task taskToSave = generateTaskEntity();
+
+        CreatedTaskResponse expectedResponse = CreatedTaskResponse.builder().id(1L).title(request.getTitle()).description(request.getDescription()).status(TaskStatus.PENDING).priority(request.getPriority()).createdAt(now()).updatedAt(null).build();
+
+        when(userRepository.findById(taskToSave.getAuthor().getId())).thenReturn(Optional.of(user));
+        when(taskMapper.createRequestToEntity(request)).thenReturn(taskToSave);
+        when(taskRepository.save(taskToSave)).thenReturn(taskToSave);
+        when(taskMapper.entityToCreateResponse(taskToSave)).thenReturn(expectedResponse);
+
+        // Act
+        CreatedTaskResponse response = taskService.createTask(request);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(expectedResponse.getId(), response.getId());
+        assertEquals(expectedResponse.getTitle(), response.getTitle());
+        assertEquals(expectedResponse.getDescription(), response.getDescription());
+        assertEquals(expectedResponse.getStatus(), response.getStatus());
+        assertEquals(expectedResponse.getPriority(), response.getPriority());
+        verify(userRepository, times(1)).findById(taskToSave.getAuthor().getId());
+        verify(taskMapper, times(1)).createRequestToEntity(request);
+        verify(taskRepository, times(1)).save(taskToSave);
+        verify(taskMapper, times(1)).entityToCreateResponse(taskToSave);
     }
 
     @Test
@@ -101,19 +130,9 @@ public class TaskServiceImplTest {
     void updateTaskForAdmin_ShouldReturnUpdateTaskDataDto() {
 
         // Arrange
-        Task existingTask = generateTaskEntity(); // Генерация существующей задачи
+        Task existingTask = generateTaskEntity();
 
-        Task updatedTask = Task.builder()
-                .id(1L)
-                .title("Task Title")
-                .description("Task Description")
-                .priority(TaskPriority.LOW)
-                .status(TaskStatus.COMPLETED)
-                .createdAt(now())
-                .updatedAt(now())
-                .assignee(User.builder().id(2L).build())
-                .author(User.builder().id(1L).build())
-                .build();
+        Task updatedTask = Task.builder().id(1L).title("Task Title").description("Task Description").priority(TaskPriority.LOW).status(TaskStatus.COMPLETED).createdAt(now()).updatedAt(now()).assignee(User.builder().id(2L).build()).author(User.builder().id(1L).build()).build();
 
         UpdateTaskDataDto updateTaskDataDto = generateEntityTaskToUpdateTaskDto(updatedTask);
 
@@ -182,10 +201,7 @@ public class TaskServiceImplTest {
 
         AssigneeTaskForUserRequest request = generateAssigneeTaskRequest(existingTask);
 
-        Task updatedTaskAssignee = Task.builder()
-                .id(existingTask.getId())
-                .assignee(user)
-                .build();
+        Task updatedTaskAssignee = Task.builder().id(existingTask.getId()).assignee(user).build();
 
         UpdateAssigneeResponse assigneeTaskUpdate = generateAssigneeTaskUpdate(existingTask);
 
@@ -194,7 +210,7 @@ public class TaskServiceImplTest {
         when(taskMapper.assigneeDtoToEntity(any(AssigneeTaskForUserRequest.class))).thenReturn(updatedTaskAssignee);
         when(taskMapper.buildAssigneeToSave(existingTask, updatedTaskAssignee)).thenReturn(updatedTaskAssignee);
         when(taskRepository.save(updatedTaskAssignee)).thenReturn(updatedTaskAssignee);
-        when(taskMapper.entityTaskToUpdateAssigneeDto(updatedTaskAssignee)).thenReturn(assigneeTaskUpdate); // Исправлено
+        when(taskMapper.entityTaskToUpdateAssigneeDto(updatedTaskAssignee)).thenReturn(assigneeTaskUpdate);
 
         // Act
         UpdateAssigneeResponse result = taskService.assignTaskPerformers(request);
@@ -220,7 +236,6 @@ public class TaskServiceImplTest {
 
         PageableResponse<TaskDataDto> pageableResponse = generatePageTaskResponse(taskDataDtoList, taskList);
 
-
         when(taskRepository.findAllByAuthorId(authorId, pageable)).thenReturn(mockPage);
         when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
         when(responseUtil.buildPageableResponse(any(), any(), any())).thenReturn(pageableResponse);
@@ -236,7 +251,7 @@ public class TaskServiceImplTest {
 
     @Test
     void getTaskByAssigneeId_ShouldReturnPageableTaskResponse() {
-// Arrange
+        // Arrange
         Long assignee = 1L;
         List<Task> taskList = generateListTaskEntity();
         List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
@@ -245,11 +260,9 @@ public class TaskServiceImplTest {
 
         PageableResponse<TaskDataDto> pageableResponse = generatePageTaskResponse(taskDataDtoList, taskList);
 
-
         when(taskRepository.findAllByAssigneeId(assignee, pageable)).thenReturn(mockPage);
         when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
         when(responseUtil.buildPageableResponse(any(), any(), any())).thenReturn(pageableResponse);
-
 
         // Act
         PageableResponse<TaskDataDto> allTasks = taskService.getTaskByAssigneeId(assignee, pageable);
