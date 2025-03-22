@@ -79,7 +79,7 @@ public class CommentServiceImplTest {
         CommentAddedResponse response = commentService.addCommentToTaskById(commentAddToTaskDataDtoRequest);
 
         // Assert
-        assertNotNull(response); // или другие проверки, которые вам нужны
+        assertNotNull(response);
         verify(commentRepository, times(1)).save(comment);
     }
 
@@ -95,14 +95,14 @@ public class CommentServiceImplTest {
 
         User currentUser = new User();
         currentUser.setId(2L);
-        currentUser.setRole(Role.ROLE_USER); // Обычный пользователь
+        currentUser.setRole(Role.ROLE_USER);
 
         Comment existingComment = new Comment();
         existingComment.setId(commentId);
         existingComment.setContent("Old comment");
 
         User commentAuthor = new User();
-        commentAuthor.setId(currentUser.getId()); // Автор комментария соответствует текущему пользователю
+        commentAuthor.setId(currentUser.getId());
         existingComment.setAuthor(commentAuthor);
 
         UpdateCommentResponse expectedResponse = UpdateCommentResponse.builder()
