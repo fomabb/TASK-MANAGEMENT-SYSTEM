@@ -8,7 +8,6 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
-import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
@@ -16,6 +15,7 @@ import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
+import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,10 +53,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public PageableTaskResponse getAllTasks(Pageable pageable) {
+    public PageableResponse<TaskDataDto> getAllTasks(Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAll(pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
-        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+
+        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableResponse<>());
     }
 
     @Override
@@ -107,18 +108,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public PageableTaskResponse getTaskByAuthorId(Long authorId, Pageable pageable) {
+    public PageableResponse<TaskDataDto> getTaskByAuthorId(Long authorId, Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAllByAuthorId(authorId, pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
 
-        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableResponse<>());
     }
 
     @Override
-    public PageableTaskResponse getTaskByAssigneeId(Long assigneeId, Pageable pageable) {
+    public PageableResponse<TaskDataDto> getTaskByAssigneeId(Long assigneeId, Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAllByAssigneeId(assigneeId, pageable);
         List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(taskPage.getContent());
 
-        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableTaskResponse());
+        return pageableResponseUtil.buildPageableResponse(taskDataDtos, taskPage, new PageableResponse<>());
     }
 }

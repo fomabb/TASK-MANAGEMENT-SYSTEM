@@ -6,7 +6,6 @@ import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateCommentRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
-import org.fomabb.taskmanagement.dto.response.PageableCommentsResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.entity.Comment;
 import org.fomabb.taskmanagement.entity.Task;
@@ -19,6 +18,7 @@ import org.fomabb.taskmanagement.security.entity.enumeration.Role;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.security.service.UserServiceSecurity;
 import org.fomabb.taskmanagement.service.CommentService;
+import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,17 +73,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public PageableCommentsResponse getCommentsById(Long taskId, Pageable pageable) {
+    public PageableResponse<CommentDataDto> getCommentsById(Long taskId, Pageable pageable) {
         Page<Comment> commentsPage = commentRepository.findCommentsByTaskId(taskId, pageable);
         List<CommentDataDto> commentDataDtos = commentMapper.listCommentEntityToListCommentDto(commentsPage.getContent());
-        return pageableResponseUtil.buildPageableResponse(commentDataDtos, commentsPage, new PageableCommentsResponse());
+        return pageableResponseUtil.buildPageableResponse(commentDataDtos, commentsPage, new PageableResponse<>());
     }
 
     @Override
-    public PageableCommentsResponse getCommentsByAuthorId(Long authorId, Pageable pageable) {
+    public PageableResponse<CommentDataDto> getCommentsByAuthorId(Long authorId, Pageable pageable) {
         Page<Comment> pageComment = commentRepository.findAllByAuthorId(authorId, pageable);
         List<CommentDataDto> commentDataDtos = commentMapper.listCommentEntityToListCommentDto(pageComment.getContent());
-        return pageableResponseUtil.buildPageableResponse(commentDataDtos, pageComment, new PageableCommentsResponse());
+        return pageableResponseUtil.buildPageableResponse(commentDataDtos, pageComment, new PageableResponse<>());
     }
 
     @Override
