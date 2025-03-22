@@ -246,7 +246,9 @@ public class AdminController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "`Задача не найдена по указанному ID`"
+                            description = "`Задача не найдена по указанному ID`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
                     )
             }
     )
@@ -256,6 +258,30 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Удаление комментария по ID.",
+            description = "`Необходимо в путь прописать ID комментария для его удаления.`",
+            parameters = {
+                    @Parameter(
+                            name = "commentId",
+                            description = "`ID комментария, который необходимо удалить.`",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "`Комментарий успешно удален`"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "`Комментарий не найден по указанному ID`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> removeCommentById(@PathVariable("commentId") Long commentId) {
         commentService.removeCommentById(commentId);
