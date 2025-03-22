@@ -44,11 +44,11 @@ public class CommentMapperImpl implements CommentMapper {
     public CommentDataDto entityCommentToCommentDto(Comment comment) {
         return CommentDataDto.builder()
                 .id(comment.getId())
-                .text(comment.getContent())
+                .content(comment.getContent())
                 .author(
                         UserAuthorDataDto.builder().authorId(comment.getAuthor().getId()).build()
                 )
-                .timeCreated(comment.getCreatedAt())
+                .createAt(comment.getCreatedAt())
                 .timeUpdated(comment.getUpdateAt())
                 .build();
     }

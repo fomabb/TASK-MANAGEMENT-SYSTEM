@@ -2,6 +2,7 @@ package org.fomabb.taskmanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
 @Schema(description = "Объект, представляющий данные задачи")
 public class TaskDataDto {
 

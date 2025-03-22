@@ -16,14 +16,14 @@ public class CommentDataDto {
     private Long id;
 
     @Schema(description = "Контент комментария")
-    private String text;
+    private String content;
 
     @Schema(description = "Автор комментария", example = "1")
     private UserAuthorDataDto author;
 
     @Schema(description = "Время создания комментария", example = "19-03-2025 19:22")
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime timeCreated;
+    private LocalDateTime createAt;
 
     @Schema(description = "Время обновления комментария", example = "19-03-2025 19:44")
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
