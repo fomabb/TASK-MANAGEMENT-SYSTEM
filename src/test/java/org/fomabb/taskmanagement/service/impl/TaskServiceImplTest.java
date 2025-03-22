@@ -66,14 +66,6 @@ public class TaskServiceImplTest {
     @InjectMocks
     TaskServiceImpl taskService;
 
-    @BeforeEach
-    public void setUp() {
-    }
-
-    @BeforeAll
-    public static void setUpBeforeAll() {
-    }
-
     @Test
     void createTask_ShouldReturnCreatedTaskResponse() {
 
@@ -219,10 +211,51 @@ public class TaskServiceImplTest {
     @Test
     void getTaskByAuthorId_ShouldReturnPageableTaskResponse() {
 
+        // Arrange
+        Long authorId = 1L;
+        List<Task> taskList = generateListTaskEntity();
+        List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
+        Pageable pageable = PageRequest.of(1, 10);
+        Page<Task> mockPage = new PageImpl<>(taskList, pageable, taskList.size());
+
+        PageableResponse<TaskDataDto> pageableResponse = generatePageTaskResponse(taskDataDtoList, taskList);
+
+
+        when(taskRepository.findAllByAuthorId(authorId, pageable)).thenReturn(mockPage);
+        when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
+        when(responseUtil.buildPageableResponse(any(), any(), any())).thenReturn(pageableResponse);
+
+
+        // Act
+        PageableResponse<TaskDataDto> allTasks = taskService.getTaskByAuthorId(authorId, pageable);
+
+        // Assert
+        assertEquals(taskDataDtoList.size(), allTasks.getContent().size());
+        assertEquals(1, allTasks.getPageNumber());
     }
 
     @Test
     void getTaskByAssigneeId_ShouldReturnPageableTaskResponse() {
+// Arrange
+        Long assignee = 1L;
+        List<Task> taskList = generateListTaskEntity();
+        List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
+        Pageable pageable = PageRequest.of(1, 10);
+        Page<Task> mockPage = new PageImpl<>(taskList, pageable, taskList.size());
 
+        PageableResponse<TaskDataDto> pageableResponse = generatePageTaskResponse(taskDataDtoList, taskList);
+
+
+        when(taskRepository.findAllByAssigneeId(assignee, pageable)).thenReturn(mockPage);
+        when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
+        when(responseUtil.buildPageableResponse(any(), any(), any())).thenReturn(pageableResponse);
+
+
+        // Act
+        PageableResponse<TaskDataDto> allTasks = taskService.getTaskByAssigneeId(assignee, pageable);
+
+        // Assert
+        assertEquals(taskDataDtoList.size(), allTasks.getContent().size());
+        assertEquals(1, allTasks.getPageNumber());
     }
 }

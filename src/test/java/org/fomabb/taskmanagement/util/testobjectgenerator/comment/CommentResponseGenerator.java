@@ -1,10 +1,12 @@
 package org.fomabb.taskmanagement.util.testobjectgenerator.comment;
 
 import lombok.experimental.UtilityClass;
+import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
+import org.fomabb.taskmanagement.security.entity.User;
 
-import java.time.LocalDateTime;
+import static java.time.LocalDateTime.now;
 
 @UtilityClass
 public class CommentResponseGenerator {
@@ -16,14 +18,32 @@ public class CommentResponseGenerator {
                 .content("Task content")
                 .authorFirstName("Ivan")
                 .authorLastName("Ivanov")
-                .updateComment(LocalDateTime.parse("20-03-2025 14:22"))
+                .updateComment(null)
                 .build();
     }
 
     public static UpdateCommentResponse generateUpdateCommentResponse() {
         return UpdateCommentResponse.builder()
                 .content("Update comment")
-                .updateAt(LocalDateTime.parse("2025-03-20T18:17:53.3362947"))
+                .updateAt(null)
+                .build();
+    }
+
+    public static CommentAddedResponse generateCommentAddedResponse(User userExist) {
+        return CommentAddedResponse.builder()
+                .commentId(1L)
+                .taskId(1L)
+                .content("New Comment")
+                .authorFirstName(userExist.getFirstName())
+                .authorLastName(userExist.getLastName())
+                .updateComment(now())
+                .build();
+    }
+
+    public static CommentAddToTaskDataDtoRequest generateAddCommentRequest(User userExist) {
+        return CommentAddToTaskDataDtoRequest.builder()
+                .taskId(userExist.getId())
+                .authorId(userExist.getId())
                 .build();
     }
 }

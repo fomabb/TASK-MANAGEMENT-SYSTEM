@@ -32,6 +32,16 @@ public class UserDataDTOGenerator {
                 .build();
     }
 
+    public static User generateUserEntityIdTwo() {
+        return User.builder()
+                .id(2L)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .createdAt(now())
+                .role(Role.ROLE_USER)
+                .build();
+    }
+
     public static List<UserDataDto> generateListUserDto() {
 
         UserDataDto user1 = UserDataDto.builder()
