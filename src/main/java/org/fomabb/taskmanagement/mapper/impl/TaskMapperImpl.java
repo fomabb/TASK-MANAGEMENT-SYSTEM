@@ -7,6 +7,7 @@ import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
@@ -19,7 +20,7 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 
 @Component
-public class TaskTaskMapperImpl implements TaskMapper {
+public class TaskMapperImpl implements TaskMapper {
 
     @Override
     public CreatedTaskResponse entityToCreateResponse(Task task) {
@@ -79,6 +80,16 @@ public class TaskTaskMapperImpl implements TaskMapper {
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .priority(task.getPriority())
+                .build();
+    }
+
+    @Override
+    public UpdateAssigneeResponse entityTaskToUpdateAssigneeDto(Task task) {
+        return UpdateAssigneeResponse.builder()
+                .taskId(task.getId())
+                .title(task.getTitle())
+                .updatedAt(task.getUpdatedAt())
+                .assigneeId(task.getAssignee().getId())
                 .build();
     }
 

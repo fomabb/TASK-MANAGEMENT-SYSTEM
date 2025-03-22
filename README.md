@@ -33,20 +33,29 @@
 
 Чтобы запустить приложение с помощью docker-compose, необходимо клонировать проект к себе на компьютер, после чего
 создать
-в корне проекта файл `.env` после чего в нем прописать:
+в корне проекта файл `.env`, заполнить своими данными и указать с какой среды запускать `local` или `dev`:
+
+[Генерация токена](https://openreplay.com/tools/token-generator/): длина token: `64`
 
 ```.dotenv
-JWT_SECRET_KEY="53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
-JWT_EXPIRATION_TIME="60m"
+SPRING_PROFILES_ACTIVE="local"
 
-POSTGRES_DB="Yor database"
-POSTGRES_USER="Yor username database"
-POSTGRES_PASSWORD="Yor password database"
+JWT_SECRET_KEY="Your secret key generate token"
+JWT_SECRET_KEY_LOCAL="Your secret key generate token"
+
+POSTGRES_DB="Your database"
+POSTGRES_USER="Your username"
+POSTGRES_PASSWORD="Your password"
 
 PORT="8080"
-POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/Yor database"
-POSTGRES_DB_USERNAME="Yor username database"
-POSTGRES_DB_PASSWORD="Yor password database"
+POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
+POSTGRES_DB_USERNAME="postgres"
+POSTGRES_DB_PASSWORD="postgres"
+
+PORT_LOCAL="8181"
+POSTGRES_DB_URL_LOCAL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
+POSTGRES_DB_USERNAME_LOCAL="Your username"
+POSTGRES_DB_PASSWORD_LOCAL="Your password"
 ```
 
 Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые
@@ -64,9 +73,29 @@ POSTGRES_DB_PASSWORD="Yor password database"
 docker compose up
 ```
 
+## Установка и настройка
+
+### Пользователь-администратор
+
+В процессе миграции базы данных был добавлен тестовый пользователь с правами администратора. Вы можете использовать следующие учетные данные для входа в систему:
+
+- **Логин:** `admin@gmail.com`
+- **Пароль:** `admin`
+
+### Как проверить
+
+1. Убедитесь, что база данных была успешно мигрирована.
+2. Запустите ваше приложение.
+3. Перейдите на страницу входа и введите указанные учетные данные.
+
+### Примечание
+
+- Эта учетная запись предназначена только для тестирования. Рекомендуется изменить пароль и настройки учетной записи после первого входа в систему.
+
 ### После запуска приложения, можно запустить ```Swagger```
 
 [![swagger](https://img.shields.io/badge/Открыть%20swagger-ui-green)](http://localhost:8080/swagger-ui/index.html)
+
 
 ### Мои запросы к приложению в Postman
 
@@ -117,11 +146,12 @@ docker compose up
 
 **4. Описание API общих методов для управления административными функциями**
 
-| METHOD | PATH                             | DESCRIPTION                         |
-|--------|----------------------------------|-------------------------------------|
-| POST   | /api/v1/admin/tasks/create-task  | Создать новую задачу                |
-| POST   | /api/v1/admin/comments/post      | Добавить комментарий к задаче по ID |
-| PATCH  | /api/v1/admin/comments/update    | Обновление содержимого комментария  |
-| PATCH  | /api/v1/admin/tasks/update       | Обновить задачу                     |
-| PATCH  | /api/v1/admin/assignee-by-taskId | Назначить исполнителя задачи по ID  |
-| DELETE | /api/v1/admin/{taskId}           | Удаление задачи по ID               |
+| METHOD | PATH                               | DESCRIPTION                         |
+|--------|------------------------------------|-------------------------------------|
+| POST   | /api/v1/admin/tasks/create-task    | Создать новую задачу                |
+| POST   | /api/v1/admin/comments/post        | Добавить комментарий к задаче по ID |
+| PATCH  | /api/v1/admin/comments/update      | Обновление содержимого комментария  |
+| PATCH  | /api/v1/admin/tasks/update         | Обновить задачу                     |
+| PATCH  | /api/v1/admin/assignee-by-taskId   | Назначить исполнителя задачи по ID  |
+| DELETE | /api/v1/admin/{taskId}             | Удаление задачи по ID               |
+| DELETE | /api/v1/admin/comments/{commentId} | Удаление комментария по ID          |

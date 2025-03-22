@@ -18,6 +18,7 @@ import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.request.UpdateCommentRequest;
 import org.fomabb.taskmanagement.dto.response.CommentAddedResponse;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateCommentResponse;
 import org.fomabb.taskmanagement.facade.TaskFacade;
 import org.fomabb.taskmanagement.service.CommentService;
@@ -157,37 +158,8 @@ public class AdminController {
             }
     )
     @PatchMapping("/assignee-by-taskId")
-    public ResponseEntity<Void> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
-        taskService.assignTaskPerformers(request);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-
-    @Operation(
-            summary = "Удаление задачи по ID.",
-            description = "`Необходимо в путь прописать ID задачи для ее удаления.`",
-            parameters = {
-                    @Parameter(
-                            name = "taskId",
-                            description = "`ID задачи, которую необходимо удалить.`",
-                            required = true,
-                            example = "1"
-                    )
-            },
-            responses = {
-                    @ApiResponse(
-                            responseCode = "204",
-                            description = "`Задача успешно удалена`"
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "`Задача не найдена по указанному ID`"
-                    )
-            }
-    )
-    @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> removeTaskById(@PathVariable("taskId") Long taskId) {
-        taskFacade.removeTaskById(taskId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<UpdateAssigneeResponse> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.assignTaskPerformers(request));
     }
 
     @Operation(
@@ -254,5 +226,65 @@ public class AdminController {
     @PatchMapping("/comments/update")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
+    }
+
+    @Operation(
+            summary = "Удаление задачи по ID.",
+            description = "`Необходимо в путь прописать ID задачи для ее удаления.`",
+            parameters = {
+                    @Parameter(
+                            name = "taskId",
+                            description = "`ID задачи, которую необходимо удалить.`",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "`Задача успешно удалена`"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "`Задача не найдена по указанному ID`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> removeTaskById(@PathVariable("taskId") Long taskId) {
+        taskFacade.removeTaskById(taskId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Удаление комментария по ID.",
+            description = "`Необходимо в путь прописать ID комментария для его удаления.`",
+            parameters = {
+                    @Parameter(
+                            name = "commentId",
+                            description = "`ID комментария, который необходимо удалить.`",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "`Комментарий успешно удален`"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "`Комментарий не найден по указанному ID`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> removeCommentById(@PathVariable("commentId") Long commentId) {
+        commentService.removeCommentById(commentId);
+        return ResponseEntity.noContent().build();
     }
 }

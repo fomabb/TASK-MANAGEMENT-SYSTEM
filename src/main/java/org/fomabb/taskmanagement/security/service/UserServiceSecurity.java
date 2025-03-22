@@ -50,7 +50,7 @@ public class UserServiceSecurity {
      */
     public User getByUsername(String username) {
         return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new UsernameNotFoundException("User with not found"));
     }
 
     /**
@@ -58,7 +58,7 @@ public class UserServiceSecurity {
      *
      * @return userId
      */
-    public static Long getCurrentUserId() {
+    public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof UserDetails userDetails) {
             return ((User) userDetails).getId();
@@ -66,7 +66,7 @@ public class UserServiceSecurity {
         throw new BusinessException("Authentication principal is not of type UserDetails");
     }
 
-    public static Role getCurrentUserRole() {
+    public Role getCurrentUserRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof UserDetails userDetails) {
             return ((User) userDetails).getRole();

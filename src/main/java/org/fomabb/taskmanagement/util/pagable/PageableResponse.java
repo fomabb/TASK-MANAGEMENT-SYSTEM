@@ -1,7 +1,8 @@
-package org.fomabb.taskmanagement.util.paging;
+package org.fomabb.taskmanagement.util.pagable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Schema(description = "Общий ответ с пагинацией")
 public class PageableResponse<T> {
 

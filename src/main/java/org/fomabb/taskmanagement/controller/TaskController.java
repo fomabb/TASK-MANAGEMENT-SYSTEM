@@ -9,12 +9,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.exception.CommonExceptionResponse;
-import org.fomabb.taskmanagement.dto.response.PageableCommentsResponse;
-import org.fomabb.taskmanagement.dto.response.PageableTaskResponse;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
+import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,7 +60,7 @@ public class TaskController {
             }
     )
     @GetMapping
-    public ResponseEntity<PageableTaskResponse> getAllTask(
+    public ResponseEntity<PageableResponse<TaskDataDto>> getAllTask(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -115,7 +115,7 @@ public class TaskController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "`Успешно получены задачи`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = PageableTaskResponse.class))
+                                    schema = @Schema(implementation = PageableResponse.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "`Автор не найден`",
                             content = @Content(mediaType = "application/json",
@@ -132,7 +132,7 @@ public class TaskController {
             }
     )
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<PageableTaskResponse> getTaskByAuthorId(
+    public ResponseEntity<PageableResponse<TaskDataDto>> getTaskByAuthorId(
             @PathVariable("authorId") Long authorId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
@@ -160,7 +160,7 @@ public class TaskController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "`Успешно получены комментарии`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = PageableCommentsResponse.class))
+                                    schema = @Schema(implementation = PageableResponse.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "`Автор не найден`",
                             content = @Content(mediaType = "application/json",
@@ -177,7 +177,7 @@ public class TaskController {
             }
     )
     @GetMapping("/comments/author/{authorId}")
-    public ResponseEntity<PageableCommentsResponse> getCommentsByAuthorId(
+    public ResponseEntity<PageableResponse<CommentDataDto>> getCommentsByAuthorId(
             @PathVariable("authorId") Long authorId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
@@ -206,7 +206,7 @@ public class TaskController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "`Успешно получены задачи`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = PageableTaskResponse.class))
+                                    schema = @Schema(implementation = PageableResponse.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "`Исполнитель не найден`",
                             content = @Content(mediaType = "application/json",
@@ -223,7 +223,7 @@ public class TaskController {
             }
     )
     @GetMapping("/assignee/{assigneeId}")
-    public ResponseEntity<PageableTaskResponse> getTaskByAssigneeId(
+    public ResponseEntity<PageableResponse<TaskDataDto>> getTaskByAssigneeId(
             @PathVariable("assigneeId") Long authorId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
@@ -249,7 +249,7 @@ public class TaskController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "`Комментарии успешно найдены`",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = PageableCommentsResponse.class))
+                                    schema = @Schema(implementation = PageableResponse.class))
                     ),
                     @ApiResponse(responseCode = "404", description = "`Задача не найдена`",
                             content = @Content(mediaType = "application/json",
@@ -262,7 +262,7 @@ public class TaskController {
             }
     )
     @GetMapping("/comments/by-taskId/{taskId}")
-    public ResponseEntity<PageableCommentsResponse> getCommentsById(
+    public ResponseEntity<PageableResponse<CommentDataDto>> getCommentsById(
             @PathVariable("taskId") Long taskId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size

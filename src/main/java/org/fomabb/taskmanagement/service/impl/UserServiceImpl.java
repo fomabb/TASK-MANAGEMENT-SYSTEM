@@ -10,6 +10,7 @@ import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.mapper.UserMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.fomabb.taskmanagement.security.service.UserServiceSecurity;
 import org.fomabb.taskmanagement.service.UserService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
-import static org.fomabb.taskmanagement.security.service.UserServiceSecurity.getCurrentUserId;
 import static org.fomabb.taskmanagement.util.ConstantProject.TASK_WITH_ID_S_NOT_FOUND_CONST;
 import static org.fomabb.taskmanagement.util.ConstantProject.USER_WITH_ID_S_NOT_FOUND_CONST;
 
@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final UserServiceSecurity userServiceSecurity;
 
     @Override
     public UserDataDto getUserById(Long userId) {
@@ -53,9 +54,8 @@ public class UserServiceImpl implements UserService {
                         String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
                 ));
 
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = userServiceSecurity.getCurrentUser().getId();
 
-        // Проверка, является ли текущий пользователь исполнителем задачи
         if (Objects.equals(taskToSave.getAssignee().getId(), currentUserId)) {
             taskToSave.setStatus(requestBody.getTaskStatus());
             taskToSave.setUpdatedAt(now());

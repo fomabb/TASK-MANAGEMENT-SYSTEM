@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Schema(description = "Ответ на обновление содержимого комментария")
 public class UpdateCommentResponse {
 
+    private Long commentId;
+
     @Schema(description = "Обновленное содержимое комментария", example = "Обновленный комментарий.")
     private String content;
 
