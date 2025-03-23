@@ -1,6 +1,6 @@
 services:
   task-management-system:
-    image: fomabb/task-management-system:0.0.2
+    image: fomabb/task-management-system:0.0.3
     ports:
       - "8080:8080"
     env_file:
