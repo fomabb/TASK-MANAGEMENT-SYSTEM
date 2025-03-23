@@ -140,7 +140,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .status(existingTask.getStatus())
                 .priority(existingTask.getPriority())
                 .createdAt(existingTask.getCreatedAt())
-                .updatedAt(now())
+                .updatedAt(existingTask.getUpdatedAt())
                 .author(existingTask.getAuthor())
                 .assignee(assigneeTask.getAssignee())
                 .build();

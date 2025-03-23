@@ -64,4 +64,9 @@ public class UserServiceImpl implements UserService {
             throw new AccessDeniedException("User does not have permission to update this task.");
         }
     }
+
+    @Override
+    public List<UserDataDto> getAllRegularUsers() {
+        return userMapper.listEntityUserToListUserDto(userRepository.findAllUserWithoutAdmin());
+    }
 }

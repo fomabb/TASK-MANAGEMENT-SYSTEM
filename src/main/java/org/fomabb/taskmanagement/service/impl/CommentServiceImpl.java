@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
         Long currencyUserId = userServiceSecurity.getCurrentUser().getId();
 
         if (Objects.equals(userExist.getId(), taskExist.getAssignee().getId()) || isAdmin) {
-            if (Objects.equals(userExist.getId(), currencyUserId)) {
+            if (Objects.equals(userExist.getId(), currencyUserId) || isAdmin) {
                 Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
                 return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
             } else {
