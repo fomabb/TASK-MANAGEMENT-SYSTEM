@@ -21,6 +21,7 @@ import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,9 +94,35 @@ public class UserController {
                     )
             }
     )
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserDataDto>> getAllUser() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @Operation(
+            summary = "Получить список пользователей без администраторов",
+            description = """
+                        `
+                        Возвращает список всех пользователей в системе, исключая администраторов.
+                        Используйте этот метод для получения информации о всех зарегистрированных пользователях,
+                        которые не обладают административными правами.
+                        `
+                    """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Список пользователей успешно получен`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = List.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @GetMapping("/show-user")
+    public ResponseEntity<List<UserDataDto>> getAllRegularUsers() {
+        return ResponseEntity.ok(userService.getAllRegularUsers());
     }
 
     @Operation(
