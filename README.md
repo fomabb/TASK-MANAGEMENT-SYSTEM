@@ -49,13 +49,13 @@ POSTGRES_PASSWORD="Your password"
 
 PORT="8080"
 POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
-POSTGRES_DB_USERNAME="postgres"
-POSTGRES_DB_PASSWORD="postgres"
+POSTGRES_DB_USERNAME="${POSTGRES_USER}"
+POSTGRES_DB_PASSWORD="${POSTGRES_PASSWORD}"
 
 PORT_LOCAL="8181"
 POSTGRES_DB_URL_LOCAL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
-POSTGRES_DB_USERNAME_LOCAL="Your username"
-POSTGRES_DB_PASSWORD_LOCAL="Your password"
+POSTGRES_DB_USERNAME_LOCAL=${POSTGRES_USER}"
+POSTGRES_DB_PASSWORD_LOCAL="${POSTGRES_PASSWORD}"
 ```
 
 Также для удобства вы можете скачать архив с файлами `.env` и `docker-compose.yml`, который содержит необходимые
