@@ -37,6 +37,11 @@
 
 [Генерация токена](https://openreplay.com/tools/token-generator/): длина token: `64`
 
+<a href="materials/db_diagram.png">
+    <img src="materials/TokenImage.png" alt="TokenImage" width="600"/>
+</a>
+
+
 ```.dotenv
 SPRING_PROFILES_ACTIVE="dev"
 
@@ -67,7 +72,7 @@ POSTGRES_DB_PASSWORD_LOCAL="${POSTGRES_PASSWORD}"
 
 ### 1. Запуск приложения с помощью Docker Compose
 
-После вышеуказанных действий прописанных в инструкции, в директории где находятся файлы прописать команду:
+После вышеуказанных действий прописанных в инструкции, в директории, где находятся файлы прописать команду:
 
 ```bash
 docker compose up
