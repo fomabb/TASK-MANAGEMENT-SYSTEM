@@ -44,8 +44,8 @@ JWT_SECRET_KEY="Your secret key generate token"
 JWT_SECRET_KEY_LOCAL="Your secret key generate token"
 
 POSTGRES_DB="Your database"
-POSTGRES_USER="Your username"
-POSTGRES_PASSWORD="Your password"
+POSTGRES_USER="Your username database"
+POSTGRES_PASSWORD="Your password database"
 
 PORT="8080"
 POSTGRES_DB_URL="jdbc:postgresql://db-task-management-system/${POSTGRES_DB}"
