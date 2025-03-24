@@ -35,7 +35,7 @@
 создать
 в корне проекта файл `.env`, заполнить своими данными и указать с какой среды запускать `local` или `dev`:
 
-[Генерация токена](https://openreplay.com/tools/token-generator/): длина token: `64`
+[Генерация секретного JWT ключа](https://openreplay.com/tools/token-generator/): длина ключа `64`
 
 <a href="materials/db_diagram.png">
     <img src="materials/TokenImage.png" alt="TokenImage" width="600"/>
