@@ -38,7 +38,7 @@
 [Генерация токена](https://openreplay.com/tools/token-generator/): длина token: `64`
 
 ```.dotenv
-SPRING_PROFILES_ACTIVE="local"
+SPRING_PROFILES_ACTIVE="dev"
 
 JWT_SECRET_KEY="Your secret key generate token"
 JWT_SECRET_KEY_LOCAL="Your secret key generate token"
