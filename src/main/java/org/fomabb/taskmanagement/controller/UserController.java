@@ -121,7 +121,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping
+    @GetMapping("/admin/show-all-users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDataDto>> getAllUser() {
         return ResponseEntity.ok(userService.getAllUsers());

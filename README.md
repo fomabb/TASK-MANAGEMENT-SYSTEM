@@ -41,7 +41,6 @@
     <img src="materials/TokenImage.png" alt="TokenImage" width="600"/>
 </a>
 
-
 ```.dotenv
 SPRING_PROFILES_ACTIVE="dev"
 
@@ -159,6 +158,6 @@ docker compose up
 | PATCH  | /api/v1/admin/comments/update      | Обновление содержимого комментария  |
 | PATCH  | /api/v1/admin/tasks/update         | Обновить задачу                     |
 | PATCH  | /api/v1/admin/assignee-by-taskId   | Назначить исполнителя задачи по ID  |
-| GET    | /api/v1/user                       | Получить список всех пользователей  |
+| GET    | /api/v1/user/admin/show-all-users  | Получить список всех пользователей  |
 | DELETE | /api/v1/admin/{taskId}             | Удаление задачи по ID               |
 | DELETE | /api/v1/admin/comments/{commentId} | Удаление комментария по ID          |
