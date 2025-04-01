@@ -25,6 +25,7 @@ import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,6 +80,7 @@ public class AdminController {
             }
     )
     @PostMapping("/tasks/create-task")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreatedTaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskFacade.createTask(request));
     }
@@ -121,6 +123,7 @@ public class AdminController {
             }
     )
     @PatchMapping("/tasks/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UpdateTaskDataDto> updateTask(@RequestBody UpdateTaskDataDto request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.updateTaskForAdmin(request));
     }
@@ -158,6 +161,7 @@ public class AdminController {
             }
     )
     @PatchMapping("/assignee-by-taskId")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UpdateAssigneeResponse> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.assignTaskPerformers(request));
     }
@@ -196,6 +200,7 @@ public class AdminController {
             }
     )
     @PostMapping("/comments/post")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CommentAddedResponse> addCommentToTaskById(
             @RequestBody CommentAddToTaskDataDtoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.addCommentToTaskById(request));
@@ -224,6 +229,7 @@ public class AdminController {
             }
     )
     @PatchMapping("/comments/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
     }
@@ -253,6 +259,7 @@ public class AdminController {
             }
     )
     @DeleteMapping("/tasks/{taskId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> removeTaskById(@PathVariable("taskId") Long taskId) {
         taskFacade.removeTaskById(taskId);
         return ResponseEntity.noContent().build();
@@ -283,6 +290,7 @@ public class AdminController {
             }
     )
     @DeleteMapping("/comments/{commentId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> removeCommentById(@PathVariable("commentId") Long commentId) {
         commentService.removeCommentById(commentId);
         return ResponseEntity.noContent().build();

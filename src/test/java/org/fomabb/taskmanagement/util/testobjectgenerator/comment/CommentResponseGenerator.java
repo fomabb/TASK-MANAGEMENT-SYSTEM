@@ -53,7 +53,7 @@ public class CommentResponseGenerator {
     public static CommentAddToTaskDataDtoRequest generateAddCommentRequest(User userExist) {
         return CommentAddToTaskDataDtoRequest.builder()
                 .taskId(userExist.getId())
-                .authorId(userExist.getId())
+                .authorCommentId(userExist.getId())
                 .build();
     }
 

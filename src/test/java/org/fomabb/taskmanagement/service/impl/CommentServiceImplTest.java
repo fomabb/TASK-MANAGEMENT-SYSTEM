@@ -68,7 +68,7 @@ public class CommentServiceImplTest {
         CommentAddToTaskDataDtoRequest commentAddToTaskDataDtoRequest = generateAddCommentRequest(userExist);
 
 
-        when(userRepository.findById(commentAddToTaskDataDtoRequest.getAuthorId())).thenReturn(Optional.of(userExist));
+        when(userRepository.findById(commentAddToTaskDataDtoRequest.getAuthorCommentId())).thenReturn(Optional.of(userExist));
         when(taskRepository.findById(commentAddToTaskDataDtoRequest.getTaskId())).thenReturn(Optional.of(taskExist));
         when(userServiceSecurity.getCurrentUser()).thenReturn(userExist);
         when(commentMapper.commentDtoToCommentEntity(userExist, taskExist, commentAddToTaskDataDtoRequest)).thenReturn(comment);
