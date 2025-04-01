@@ -131,7 +131,7 @@ class UserControllerTest {
     void addCommentToTaskById_CreateCommentAddToTaskDataDtoRequest() throws Exception {
         CommentAddToTaskDataDtoRequest request = CommentAddToTaskDataDtoRequest.builder()
                 .taskId(101L)
-                .authorId(1L)
+                .authorCommentId(1L)
                 .content("Это мой комментарий к задаче.")
                 .build();
 
@@ -149,8 +149,8 @@ class UserControllerTest {
 
         mockMvc.perform(post("/api/v1/user/comments/post")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"taskId\":101,\"authorId\":1,\"content\":\"Это мой комментарий к задаче.\"}"))
-                .andExpect(status().isCreated()) // Ожидаем статус 201 CREATED
+                        .content("{\"taskId\":101,\"authorCommentId\":1,\"content\":\"Это мой комментарий к задаче.\"}"))
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.commentId").value(1L))
                 .andExpect(jsonPath("$.taskId").value(101L))
@@ -163,7 +163,7 @@ class UserControllerTest {
 
         CommentAddToTaskDataDtoRequest capturedRequest = argumentCaptor.getValue();
         assertEquals(request.getTaskId(), capturedRequest.getTaskId());
-        assertEquals(request.getAuthorId(), capturedRequest.getAuthorId());
+        assertEquals(request.getAuthorCommentId(), capturedRequest.getAuthorCommentId());
         assertEquals(request.getContent(), capturedRequest.getContent());
     }
 

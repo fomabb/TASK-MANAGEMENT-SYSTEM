@@ -13,7 +13,7 @@ public class CommentAddToTaskDataDtoRequest {
     private Long taskId;
 
     @Schema(description = "ID автора комментария", example = "1")
-    private Long authorId;
+    private Long authorCommentId;
 
     @Schema(description = "Содержимое комментария", example = "Это мой комментарий к задаче.")
     private String content;

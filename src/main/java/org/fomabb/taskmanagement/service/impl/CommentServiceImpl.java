@@ -48,27 +48,22 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentAddedResponse addCommentToTaskById(CommentAddToTaskDataDtoRequest requestBody) {
-        User userExist = userRepository.findById(requestBody.getAuthorId())
+        User userExist = userRepository.findById(requestBody.getAuthorCommentId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format(USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAuthorId())
+                        String.format(USER_WITH_ID_S_NOT_FOUND_CONST, requestBody.getAuthorCommentId())
                 ));
         Task taskExist = taskRepository.findById(requestBody.getTaskId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
                 ));
         boolean isAdmin = userServiceSecurity.getCurrentUser().getRole().equals(Role.ROLE_ADMIN);
-        Long currencyUserId = userServiceSecurity.getCurrentUser().getId();
+        Long assigneeId = taskExist.getAssignee().getId();
 
-        if (Objects.equals(userExist.getId(), taskExist.getAssignee().getId()) || isAdmin) {
-            if (Objects.equals(userExist.getId(), currencyUserId) || isAdmin) {
-                Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
-                return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
-            } else {
-                throw new BusinessException(VALIDATION_REFERENCES_CONST);
-            }
+        if (Objects.equals(userExist.getId(), assigneeId) || isAdmin) {
+            Comment comment = commentMapper.commentDtoToCommentEntity(userExist, taskExist, requestBody);
+            return commentMapper.entityCommentToCommentAddedDto(commentRepository.save(comment));
         } else {
             throw new BusinessException(VALIDATION_REFERENCES_CONST);
-
         }
     }
 
@@ -102,10 +97,8 @@ public class CommentServiceImpl implements CommentService {
                         String.format(COMMENT_WITH_ID_S_NOT_FOUND_CONST, requestBody.getCommentId())
                 ));
 
-
         Long currentUserId = userServiceSecurity.getCurrentUser().getId();
         boolean isAdmin = userServiceSecurity.getCurrentUser().getRole().equals(Role.ROLE_ADMIN);
-
 
         if (Objects.equals(comment.getAuthor().getId(), currentUserId) || isAdmin) {
             comment.setContent(requestBody.getNewContent());

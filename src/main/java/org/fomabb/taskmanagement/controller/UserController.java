@@ -73,31 +73,9 @@ public class UserController {
             }
     )
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER'))")
     public ResponseEntity<UserDataDto> getUserById(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
-    }
-
-    @Operation(
-            summary = "Получить список всех пользователей",
-            description = """
-                        Возвращает список всех пользователей в системе.
-                        Используйте этот метод для получения информации о всех зарегистрированных пользователях.
-                    """,
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "`Список пользователей успешно получен`",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = List.class))
-                    ),
-                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommonExceptionResponse.class))
-                    )
-            }
-    )
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping
-    public ResponseEntity<List<UserDataDto>> getAllUser() {
-        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @Operation(
@@ -121,8 +99,32 @@ public class UserController {
             }
     )
     @GetMapping("/show-user")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER'))")
     public ResponseEntity<List<UserDataDto>> getAllRegularUsers() {
         return ResponseEntity.ok(userService.getAllRegularUsers());
+    }
+
+    @Operation(
+            summary = "Получить список всех пользователей",
+            description = """
+                        Возвращает список всех пользователей в системе.
+                        Используйте этот метод для получения информации о всех зарегистрированных пользователях.
+                    """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Список пользователей успешно получен`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = List.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @GetMapping("/admin/show-all-users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDataDto>> getAllUser() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @Operation(
@@ -158,6 +160,7 @@ public class UserController {
             }
     )
     @PatchMapping("/tasks/update-status")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER'))")
     public ResponseEntity<UpdateTaskDataDto> updateTaskStatus(@RequestBody UpdateTaskForUserDataRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.updateTaskStatusForUser(request));
     }
@@ -197,6 +200,7 @@ public class UserController {
             }
     )
     @PostMapping("/comments/post")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER'))")
     public ResponseEntity<CommentAddedResponse> addCommentToTaskById(@RequestBody CommentAddToTaskDataDtoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.addCommentToTaskById(request));
     }
@@ -224,6 +228,7 @@ public class UserController {
             }
     )
     @PatchMapping("/comments/update")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER'))")
     public ResponseEntity<UpdateCommentResponse> updateComment(@RequestBody UpdateCommentRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(commentService.updateComment(request));
     }
