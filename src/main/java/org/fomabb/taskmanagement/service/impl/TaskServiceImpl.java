@@ -53,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.findTasksByCreatedAtBetween(startDateTime, endDateTime)
         );
 
-        Map<String, List<TaskDataDto>> tasksByWeekday = new HashMap<>();
+        Map<String, List<TaskDataDto>> tasksByWeekday = new LinkedHashMap<>();
 
         for (DayOfWeek day : DayOfWeek.values()) {
             tasksByWeekday.put(day.toString(), new ArrayList<>());
