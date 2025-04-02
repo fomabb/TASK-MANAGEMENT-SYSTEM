@@ -69,6 +69,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .assignee(task.getAssignee() != null ?
                         UserAssigneeDataDto.builder().assigneeId(task.getAssignee().getId()).build() : null)
                 .author(UserAuthorDataDto.builder().authorId(task.getAuthor().getId()).build())
+                .timeLeadTask(task.getTimeLeadTask())
                 .build();
     }
 
@@ -110,6 +111,7 @@ public class TaskMapperImpl implements TaskMapper {
         return Task.builder()
                 .id(dto.getTaskId())
                 .assignee(User.builder().id(dto.getAssigneeId()).build())
+                .timeLeadTask(dto.getTimeLeadTask())
                 .build();
     }
 

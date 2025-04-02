@@ -44,4 +44,7 @@ public class TaskDataDto {
 
     @Schema(description = "Исполнитель", implementation = UserAssigneeDataDto.class)
     private UserAssigneeDataDto assignee;
+
+    @Schema(description = "Время выполнения задачи", example = "8")
+    private Integer timeLeadTask;
 }
