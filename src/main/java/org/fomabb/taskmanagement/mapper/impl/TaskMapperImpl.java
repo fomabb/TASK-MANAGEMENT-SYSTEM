@@ -91,6 +91,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .title(task.getTitle())
                 .updatedAt(task.getUpdatedAt())
                 .assigneeId(task.getAssignee().getId())
+                .timeLeadTask(task.getTimeLeadTask())
                 .build();
     }
 
@@ -145,6 +146,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .updatedAt(existingTask.getUpdatedAt())
                 .author(existingTask.getAuthor())
                 .assignee(assigneeTask.getAssignee())
+                .timeLeadTask(assigneeTask.getTimeLeadTask())
                 .build();
     }
 }

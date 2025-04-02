@@ -167,52 +167,6 @@ public class TaskController {
     }
 
     @Operation(
-            summary = "Получить комментарии по ID автора.",
-            description = """
-                    `
-                    Этот метод позволяет извлечь пагинированный список комментариев, созданных автором с указанным ID.
-                    Используйте его для получения всех комментариев, связанных с конкретным автором.
-                    Укажите номер страницы и размер страницы для управления результатами.
-                    `
-                    """,
-            parameters = {
-                    @Parameter(name = "authorId", description = "`ID автора, чьи комментарии необходимо получить`",
-                            required = true),
-                    @Parameter(name = "page", description = "`Номер страницы для извлечения (по умолчанию 1)`",
-                            example = "1"),
-                    @Parameter(name = "size", description = "`Количество комментариев на странице (по умолчанию 10)`",
-                            example = "10")
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "`Успешно получены комментарии`",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = PageableResponse.class))
-                    ),
-                    @ApiResponse(responseCode = "404", description = "`Автор не найден`",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommonExceptionResponse.class))
-                    ),
-                    @ApiResponse(responseCode = "400", description = "`Неверный номер страницы или размер`",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommonExceptionResponse.class))
-                    ),
-                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CommonExceptionResponse.class))
-                    )
-            }
-    )
-    @GetMapping("/comments/author/{authorId}")
-    public ResponseEntity<PageableResponse<CommentDataDto>> getCommentsByAuthorId(
-            @PathVariable("authorId") Long authorId,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        return ResponseEntity.ok(commentService.getCommentsByAuthorId(authorId, PageRequest.of(page - 1, size)));
-    }
-
-
-    @Operation(
             summary = "Получить задачи по ID исполнителя.",
             description = """
                     `
@@ -259,6 +213,50 @@ public class TaskController {
 
 //================================================SECTION~COMMENT=====================================================//
 
+    @Operation(
+            summary = "Получить комментарии по ID автора.",
+            description = """
+                    `
+                    Этот метод позволяет извлечь пагинированный список комментариев, созданных автором с указанным ID.
+                    Используйте его для получения всех комментариев, связанных с конкретным автором.
+                    Укажите номер страницы и размер страницы для управления результатами.
+                    `
+                    """,
+            parameters = {
+                    @Parameter(name = "authorId", description = "`ID автора, чьи комментарии необходимо получить`",
+                            required = true),
+                    @Parameter(name = "page", description = "`Номер страницы для извлечения (по умолчанию 1)`",
+                            example = "1"),
+                    @Parameter(name = "size", description = "`Количество комментариев на странице (по умолчанию 10)`",
+                            example = "10")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Успешно получены комментарии`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = PageableResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "`Автор не найден`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Неверный номер страницы или размер`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
+    @GetMapping("/comments/author/{authorId}")
+    public ResponseEntity<PageableResponse<CommentDataDto>> getCommentsByAuthorId(
+            @PathVariable("authorId") Long authorId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(commentService.getCommentsByAuthorId(authorId, PageRequest.of(page - 1, size)));
+    }
 
     @Operation(
             summary = "Получить комментарии по ID задачи.",
