@@ -7,8 +7,10 @@ import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.security.entity.User;
@@ -54,6 +56,22 @@ public class TaskMapperImpl implements TaskMapper {
             return Collections.emptyList();
         }
         return tasks.stream().map(this::entityTaskToTaskDto).toList();
+    }
+
+    @Override
+    public List<TrackTimeResponse> listEntityTrackWorkTimeToTrackDto(List<TrackWorkTime> track) {
+        if (track == null) {
+            return Collections.emptyList();
+        }
+
+        return track.stream()
+                .map(trackWorkTime -> TrackTimeResponse.builder()
+                        .taskId(trackWorkTime.getId())
+                        .dateTimeTrack(trackWorkTime.getDateTimeTrack())
+                        .timeTrack(trackWorkTime.getTimeTrack())
+                        .description(trackWorkTime.getDescription())
+                        .build())
+                .toList();
     }
 
     @Override

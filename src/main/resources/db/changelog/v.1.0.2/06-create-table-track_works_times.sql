@@ -1,4 +1,4 @@
-create table track_works_times
+create table if not exists track_works_times
 (
     id              bigserial primary key,
     description     text,

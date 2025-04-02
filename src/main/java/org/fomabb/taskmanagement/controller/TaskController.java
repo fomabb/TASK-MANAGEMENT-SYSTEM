@@ -12,13 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.exception.CommonExceptionResponse;
+import org.fomabb.taskmanagement.dto.request.TrackTimeRequest;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +48,21 @@ public class TaskController {
     private final CommentService commentService;
 
 //================================================SECTION~MANAGEMENT~Task=============================================//
+
+    @PutMapping("/users/track-time")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> trackTimeWorks(TrackTimeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.trackTimeWorks(request));
+    }
+
+    @GetMapping("/user/{userId}/show-time-tracking-board")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<Map<String, List<TrackTimeResponse>>> getTrackingBordByUserId(
+            @PathVariable("userId") Long userId,
+            @RequestParam("startDate") LocalDate startDate
+    ) {
+        return ResponseEntity.ok(taskService.getTrackingBordByUserId(userId, startDate));
+    }
 
     @Operation(
             summary = "Получить задачи за неделю",

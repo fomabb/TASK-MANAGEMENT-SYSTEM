@@ -7,11 +7,14 @@ import org.fomabb.taskmanagement.dto.TaskDataDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
+import org.fomabb.taskmanagement.dto.request.TrackTimeRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
+import org.fomabb.taskmanagement.repository.TrackWorkTimeRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.service.TaskService;
@@ -43,6 +46,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
+    private final TrackWorkTimeRepository trackWorkTimeRepository;
     private final UserRepository userRepository;
     private final PageableResponseUtil pageableResponseUtil;
 
@@ -69,6 +73,40 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return tasksByWeekday;
+    }
+
+    @Override
+    public Void trackTimeWorks(TrackTimeRequest dto) {
+
+        return null;
+    }
+
+    @Override
+    public Map<String, List<TrackTimeResponse>> getTrackingBordByUserId(Long userId, LocalDate inputDate) {
+        LocalDate startDate = inputDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = inputDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        User taskAssignee = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND_CONST, userId)));
+
+        List<TrackTimeResponse> trackTimeResponses = taskMapper.listEntityTrackWorkTimeToTrackDto(
+                trackWorkTimeRepository.findByDateTimeTrackBetweenAndTaskAssignee(startDateTime, endDateTime, taskAssignee)
+        );
+
+        Map<String, List<TrackTimeResponse>> trackByWeekDay = new LinkedHashMap<>();
+
+        for (DayOfWeek day : DayOfWeek.values()) {
+            trackByWeekDay.put(day.toString(), new ArrayList<>());
+        }
+
+        for (TrackTimeResponse track : trackTimeResponses) {
+            String day = track.getDateTimeTrack().getDayOfWeek().toString();
+            trackByWeekDay.get(day).add(track);
+        }
+
+        return trackByWeekDay;
     }
 
     @Override

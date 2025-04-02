@@ -26,10 +26,13 @@ public class TrackWorkTime {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "time_track")
     private Integer timeTrack;
 
+    @Column(name = "date_time_track")
     private LocalDateTime dateTimeTrack;
 
     @OneToOne(fetch = FetchType.LAZY)
