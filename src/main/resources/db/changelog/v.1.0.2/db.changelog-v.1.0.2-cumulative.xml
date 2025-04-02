@@ -11,4 +11,10 @@
 
     <include file="05-alter-table-tasks-add-column-time-lead-time-task.sql" relativeToChangelogFile="true"/>
 
+    <changeSet id="2025-04-03-create-table-track-works-times-06" author="Nikolay Kirilyuk">
+        <tagDatabase tag="management_db"/>
+    </changeSet>
+
+    <include file="06-create-table-track_works_times.sql" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
