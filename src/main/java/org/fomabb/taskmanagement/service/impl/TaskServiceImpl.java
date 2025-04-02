@@ -22,8 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 import static org.fomabb.taskmanagement.util.ConstantProject.TASK_WITH_ID_S_NOT_FOUND_CONST;
 import static org.fomabb.taskmanagement.util.ConstantProject.USER_WITH_ID_S_NOT_FOUND_CONST;
@@ -39,7 +42,30 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final PageableResponseUtil pageableResponseUtil;
 
-//==================================SECTION~ADMIN=======================================================================
+    @Override
+    public Map<String, List<TaskDataDto>> getTasksByWeekday(LocalDate inputDate) {
+        LocalDate startDate = inputDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = inputDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        List<TaskDataDto> taskDataDtos = taskMapper.listEntityToListDto(
+                taskRepository.findTasksByCreatedAtBetween(startDateTime, endDateTime)
+        );
+
+        Map<String, List<TaskDataDto>> tasksByWeekday = new HashMap<>();
+
+        for (DayOfWeek day : DayOfWeek.values()) {
+            tasksByWeekday.put(day.toString(), new ArrayList<>());
+        }
+
+        for (TaskDataDto taskDataDto : taskDataDtos) {
+            String day = taskDataDto.getCreatedAt().getDayOfWeek().toString();
+            tasksByWeekday.get(day).add(taskDataDto);
+        }
+
+        return tasksByWeekday;
+    }
 
     @Override
     @Transactional

@@ -17,11 +17,11 @@ import org.fomabb.taskmanagement.service.TaskService;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Контроллер для управления задачами.
@@ -39,6 +39,32 @@ public class TaskController {
     private final CommentService commentService;
 
 //================================================SECTION~MANAGEMENT~Task=============================================//
+
+    @Operation(
+            summary = "Получить задачи за неделю",
+            description = """
+                    `
+                    Возвращает список задач, сгруппированных по дням недели. Принимает дату, и определяет задачи,
+                    созданные с понедельника по воскресенье той недели.
+                    `
+                    """,
+            parameters = {
+                    @Parameter(name = "startDate", description = "`Дата, с которой начинается неделя (понедельник)`",
+                            required = true, example = "2025-04-07")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Список задач за неделю успешно получен`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TaskDataDto.class))),
+                    @ApiResponse(responseCode = "400", description = "`Неверный формат даты`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class)))
+            }
+    )
+    @GetMapping("/by-weekday")
+    public ResponseEntity<Map<String, List<TaskDataDto>>> getTasksByWeekday(@RequestParam LocalDate startDate) {
+        return ResponseEntity.ok(taskService.getTasksByWeekday(startDate));
+    }
 
     @Operation(
             summary = "Получить все задачи.",
