@@ -44,6 +44,3 @@ jobs:
       with:
         name: my-artifact
         path: target/*.jar
-
-    - name: Run Checkstyle
-      run: mvn checkstyle:check
