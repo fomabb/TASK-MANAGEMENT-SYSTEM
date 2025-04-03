@@ -84,7 +84,7 @@ class UserControllerTest {
 
         when(userService.getAllUsers()).thenReturn(userDataDtos);
 
-        mockMvc.perform(get("/api/v1/user")
+        mockMvc.perform(get("/api/v1/user/admin/show-all-users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -94,7 +94,6 @@ class UserControllerTest {
     @Test
     void updateTaskStatus_ShouldUpdateTaskDataDto() throws Exception {
         UpdateTaskForUserDataRequest request = UpdateTaskForUserDataRequest.builder()
-                .userId(1L)
                 .taskId(1L)
                 .taskStatus(TaskStatus.COMPLETED)
                 .build();
@@ -123,7 +122,6 @@ class UserControllerTest {
         verify(userService, times(1)).updateTaskStatusForUser(argumentCaptor.capture());
 
         UpdateTaskForUserDataRequest capturedRequest = argumentCaptor.getValue();
-        assertEquals(request.getUserId(), capturedRequest.getUserId());
         assertEquals(request.getTaskId(), capturedRequest.getTaskId());
     }
 

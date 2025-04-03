@@ -119,7 +119,6 @@ public class AdminControllerTest {
     @Test
     void assignTaskPerformersByIdTask_ShouldReturnUpdateAssigneeResponse() throws Exception {
         // Arrange
-
         Task task = generateTaskEntity();
 
         AssigneeTaskForUserRequest request = generateAssigneeTaskRequest(task);
@@ -135,7 +134,8 @@ public class AdminControllerTest {
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.taskId").value(expectedResponse.getTaskId()))
                 .andExpect(jsonPath("$.title").value(expectedResponse.getTitle()))
-                .andExpect(jsonPath("$.assigneeId").value(expectedResponse.getAssigneeId()));
+                .andExpect(jsonPath("$.assigneeId").value(expectedResponse.getAssigneeId()))
+                .andExpect(jsonPath("$.timeLeadTask").value(expectedResponse.getTimeLeadTask()));
 
         // Assert
         verify(taskService, times(1)).assignTaskPerformers(any(AssigneeTaskForUserRequest.class));

@@ -173,6 +173,7 @@ public class TaskResponseGenerator {
         return AssigneeTaskForUserRequest.builder()
                 .taskId(existingTask.getId())
                 .assigneeId(existingTask.getId())
+                .timeLeadTask(2)
                 .build();
     }
 
@@ -182,6 +183,7 @@ public class TaskResponseGenerator {
                 .title(existingTask.getTitle())
                 .updatedAt(existingTask.getUpdatedAt())
                 .assigneeId(existingTask.getId())
+                .timeLeadTask(existingTask.getExceedingTimeLimit())
                 .build();
     }
 }
