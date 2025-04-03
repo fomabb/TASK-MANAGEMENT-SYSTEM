@@ -66,8 +66,11 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     private User assignee;
 
-    @Column(name = "time_lead_task")
-    private Integer timeLeadTask;
+    @Column(name = "scheduled_task_time")
+    private Integer scheduledTaskTime;
+
+    @Column(name = "exceeding_time_limit")
+    private Integer exceedingTimeLimit;
 
     public Task(List<Comment> comments) {
         if (comments == null) {

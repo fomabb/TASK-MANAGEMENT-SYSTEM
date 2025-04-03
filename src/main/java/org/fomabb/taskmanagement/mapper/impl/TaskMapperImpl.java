@@ -93,7 +93,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .assignee(task.getAssignee() != null ?
                         UserAssigneeDataDto.builder().assigneeId(task.getAssignee().getId()).build() : null)
                 .author(UserAuthorDataDto.builder().authorId(task.getAuthor().getId()).build())
-                .timeLeadTask(task.getTimeLeadTask())
+                .scheduledTaskTime(task.getScheduledTaskTime())
                 .build();
     }
 
@@ -115,7 +115,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .title(task.getTitle())
                 .updatedAt(task.getUpdatedAt())
                 .assigneeId(task.getAssignee().getId())
-                .timeLeadTask(task.getTimeLeadTask())
+                .timeLeadTask(task.getScheduledTaskTime())
                 .build();
     }
 
@@ -136,7 +136,7 @@ public class TaskMapperImpl implements TaskMapper {
         return Task.builder()
                 .id(dto.getTaskId())
                 .assignee(User.builder().id(dto.getAssigneeId()).build())
-                .timeLeadTask(dto.getTimeLeadTask())
+                .scheduledTaskTime(dto.getTimeLeadTask())
                 .build();
     }
 
@@ -170,7 +170,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .updatedAt(existingTask.getUpdatedAt())
                 .author(existingTask.getAuthor())
                 .assignee(assigneeTask.getAssignee())
-                .timeLeadTask(assigneeTask.getTimeLeadTask())
+                .scheduledTaskTime(assigneeTask.getScheduledTaskTime())
                 .build();
     }
 

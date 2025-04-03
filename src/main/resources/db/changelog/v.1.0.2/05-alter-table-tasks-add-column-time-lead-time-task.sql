@@ -1,2 +1,2 @@
 alter table tasks
-    add column time_lead_task integer;
+    add column scheduled_task_time integer;

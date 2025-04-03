@@ -9,7 +9,6 @@ import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
@@ -46,11 +45,9 @@ public class TaskDataDto {
     @Schema(description = "Исполнитель", implementation = UserAssigneeDataDto.class)
     private UserAssigneeDataDto assignee;
 
-    @Schema(description = "Время выполнения задачи", example = "8")
-    private Integer timeLeadTask;
+    @Schema(description = "Запланированное время задачи", example = "8")
+    private Integer scheduledTaskTime;
 
-    public String getFormattedCreatedAt() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return createdAt.format(formatter);
-    }
+    @Schema(description = "Превышение времени")
+    private Integer exceedingTimeLimit;
 }
