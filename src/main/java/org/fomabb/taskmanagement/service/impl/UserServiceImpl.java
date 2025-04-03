@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(TASK_WITH_ID_S_NOT_FOUND_CONST, requestBody.getTaskId())
                 ));
-
         Long currentUserId = userServiceSecurity.getCurrentUser().getId();
 
         if (Objects.equals(taskToSave.getAssignee().getId(), currentUserId)) {

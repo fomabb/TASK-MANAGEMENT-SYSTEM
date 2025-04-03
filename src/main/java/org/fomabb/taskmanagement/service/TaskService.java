@@ -2,10 +2,12 @@ package org.fomabb.taskmanagement.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.springframework.data.domain.Pageable;
@@ -109,4 +111,8 @@ public interface TaskService {
      * создано задач, соответствующий ключ будет иметь пустой список.
      */
     Map<String, List<TaskDataDto>> getTasksByWeekday(LocalDate startDate);
+
+    TrackTimeDatDto trackTimeWorks(TrackTimeDatDto dto);
+
+    Map<String, List<TrackTimeResponse>> getTrackingBordByUserId(Long userId, LocalDate inputDate);
 }

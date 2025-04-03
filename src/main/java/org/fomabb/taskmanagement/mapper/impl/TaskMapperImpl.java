@@ -1,19 +1,27 @@
 package org.fomabb.taskmanagement.mapper.impl;
 
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.UserAssigneeDataDto;
 import org.fomabb.taskmanagement.dto.UserAuthorDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
+import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,6 +65,22 @@ public class TaskMapperImpl implements TaskMapper {
     }
 
     @Override
+    public List<TrackTimeResponse> listEntityTrackWorkTimeToTrackDto(List<TrackWorkTime> track) {
+        if (track == null) {
+            return Collections.emptyList();
+        }
+
+        return track.stream()
+                .map(trackWorkTime -> TrackTimeResponse.builder()
+                        .taskId(trackWorkTime.getId())
+                        .dateTimeTrack(trackWorkTime.getDateTimeTrack())
+                        .timeTrack(trackWorkTime.getTimeTrack())
+                        .description(trackWorkTime.getDescription())
+                        .build())
+                .toList();
+    }
+
+    @Override
     public TaskDataDto entityTaskToTaskDto(Task task) {
         return TaskDataDto.builder()
                 .id(task.getId())
@@ -69,6 +93,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .assignee(task.getAssignee() != null ?
                         UserAssigneeDataDto.builder().assigneeId(task.getAssignee().getId()).build() : null)
                 .author(UserAuthorDataDto.builder().authorId(task.getAuthor().getId()).build())
+                .timeLeadTask(task.getTimeLeadTask())
                 .build();
     }
 
@@ -90,6 +115,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .title(task.getTitle())
                 .updatedAt(task.getUpdatedAt())
                 .assigneeId(task.getAssignee().getId())
+                .timeLeadTask(task.getTimeLeadTask())
                 .build();
     }
 
@@ -110,6 +136,7 @@ public class TaskMapperImpl implements TaskMapper {
         return Task.builder()
                 .id(dto.getTaskId())
                 .assignee(User.builder().id(dto.getAssigneeId()).build())
+                .timeLeadTask(dto.getTimeLeadTask())
                 .build();
     }
 
@@ -143,6 +170,29 @@ public class TaskMapperImpl implements TaskMapper {
                 .updatedAt(existingTask.getUpdatedAt())
                 .author(existingTask.getAuthor())
                 .assignee(assigneeTask.getAssignee())
+                .timeLeadTask(assigneeTask.getTimeLeadTask())
+                .build();
+    }
+
+    @Override
+    public TrackWorkTime buildTrackTimeDataDtoToSave(Task task, TrackTimeDatDto dto) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDateTime dateTimeTrack;
+
+        try {
+            LocalDate date = LocalDate.parse(dto.getDateTimeTrack(), formatter);
+            dateTimeTrack = date.atStartOfDay();
+        } catch (DateTimeParseException e) {
+            System.err.println("Date parsing error: " + e.getMessage());
+            throw new BusinessException("Invalid date format. Please use dd.MM.yyyy.");
+        }
+
+        return TrackWorkTime.builder()
+                .task(Task.builder().id(dto.getTaskId()).build())
+                .dateTimeTrack(dateTimeTrack)
+                .description(dto.getDescription())
+                .timeTrack(dto.getTimeTrack())
                 .build();
     }
 }

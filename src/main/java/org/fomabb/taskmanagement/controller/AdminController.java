@@ -162,7 +162,8 @@ public class AdminController {
     )
     @PatchMapping("/assignee-by-taskId")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UpdateAssigneeResponse> assignTaskPerformersByIdTask(@RequestBody AssigneeTaskForUserRequest request) {
+    public ResponseEntity<UpdateAssigneeResponse> assignTaskPerformersByIdTask(
+            @RequestBody @Valid AssigneeTaskForUserRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.assignTaskPerformers(request));
     }
 

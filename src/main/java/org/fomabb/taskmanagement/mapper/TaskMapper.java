@@ -1,12 +1,15 @@
 package org.fomabb.taskmanagement.mapper;
 
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
 
 import java.util.List;
 
@@ -39,6 +42,8 @@ public interface TaskMapper {
      * @return список объектов {@link TaskDataDto}, содержащий данные задач
      */
     List<TaskDataDto> listEntityToListDto(List<Task> tasks);
+
+    List<TrackTimeResponse> listEntityTrackWorkTimeToTrackDto(List<TrackWorkTime> track);
 
     /**
      * Преобразует сущность задачи в DTO для отображения данных задачи.
@@ -91,4 +96,6 @@ public interface TaskMapper {
      * @return объект {@link Task}, обновленный с новым назначением
      */
     Task buildAssigneeToSave(Task existingTask, Task assigneeTask);
+
+    TrackWorkTime buildTrackTimeDataDtoToSave(Task task, TrackTimeDatDto dto);
 }

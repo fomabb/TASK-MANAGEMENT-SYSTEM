@@ -66,6 +66,9 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     private User assignee;
 
+    @Column(name = "time_lead_task")
+    private Integer timeLeadTask;
+
     public Task(List<Comment> comments) {
         if (comments == null) {
             this.comments = new ArrayList<>();

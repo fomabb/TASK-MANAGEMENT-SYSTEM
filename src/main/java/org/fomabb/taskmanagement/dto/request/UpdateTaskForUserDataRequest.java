@@ -16,9 +16,6 @@ import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 @Schema(description = "Запрос на обновление задачи для пользователя")
 public class UpdateTaskForUserDataRequest {
 
-    @Schema(description = "Уникальный идентификатор пользователя", example = "1")
-    private Long userId;
-
     @Schema(description = "Уникальный идентификатор задачи", example = "101")
     private Long taskId;
 

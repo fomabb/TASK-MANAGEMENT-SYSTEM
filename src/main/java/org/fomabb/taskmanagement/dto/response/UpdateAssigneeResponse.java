@@ -24,4 +24,7 @@ public class UpdateAssigneeResponse {
 
     @Schema(description = "ID исполнителя", example = "2")
     private Long assigneeId;
+
+    @Schema(description = "Время выполнения задачи", example = "8")
+    private Integer timeLeadTask;
 }
