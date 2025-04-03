@@ -17,4 +17,10 @@
 
     <include file="06-create-table-track_works_times.sql" relativeToChangelogFile="true"/>
 
+    <changeSet id="2025-03-04-exceeding_time_limit" author="Nikolay Kirilyuk">
+        <tagDatabase tag="management_db"/>
+    </changeSet>
+
+    <include file="07-alter-table-tasks-column-exceeding_time_limit.sql" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
