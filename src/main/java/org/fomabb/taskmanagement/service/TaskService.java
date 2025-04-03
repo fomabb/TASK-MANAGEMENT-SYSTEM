@@ -2,10 +2,10 @@ package org.fomabb.taskmanagement.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
-import org.fomabb.taskmanagement.dto.request.TrackTimeRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
 import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
@@ -112,7 +112,7 @@ public interface TaskService {
      */
     Map<String, List<TaskDataDto>> getTasksByWeekday(LocalDate startDate);
 
-    Void trackTimeWorks(TrackTimeRequest dto);
+    TrackTimeDatDto trackTimeWorks(TrackTimeDatDto dto);
 
     Map<String, List<TrackTimeResponse>> getTrackingBordByUserId(Long userId, LocalDate inputDate);
 }

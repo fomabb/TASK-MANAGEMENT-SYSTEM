@@ -1,6 +1,7 @@
 package org.fomabb.taskmanagement.mapper;
 
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
@@ -95,4 +96,6 @@ public interface TaskMapper {
      * @return объект {@link Task}, обновленный с новым назначением
      */
     Task buildAssigneeToSave(Task existingTask, Task assigneeTask);
+
+    TrackWorkTime buildTrackTimeDataDtoToSave(Task task, TrackTimeDatDto dto);
 }

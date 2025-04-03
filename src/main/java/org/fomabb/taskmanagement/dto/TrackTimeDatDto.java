@@ -1,4 +1,4 @@
-package org.fomabb.taskmanagement.dto.request;
+package org.fomabb.taskmanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,13 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Builder
 @Schema(description = "Запрос клиента на трек времени по задаче")
-public class TrackTimeRequest {
+public class TrackTimeDatDto {
 
     @Schema(description = "Идентификатор задачи", example = "1")
     private Long taskId;
@@ -25,5 +23,5 @@ public class TrackTimeRequest {
 
     @Schema(description = "Дата отчёта", example = "12.12.2025")
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDateTime dateTimeTrack;
+    private String dateTimeTrack;
 }

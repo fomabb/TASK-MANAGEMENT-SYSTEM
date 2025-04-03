@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fomabb.taskmanagement.dto.CommentDataDto;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.exception.CommonExceptionResponse;
-import org.fomabb.taskmanagement.dto.request.TrackTimeRequest;
 import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.service.CommentService;
 import org.fomabb.taskmanagement.service.TaskService;
@@ -51,7 +51,7 @@ public class TaskController {
 
     @PutMapping("/users/track-time")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> trackTimeWorks(TrackTimeRequest request) {
+    public ResponseEntity<TrackTimeDatDto> trackTimeWorks(TrackTimeDatDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.trackTimeWorks(request));
     }
 
