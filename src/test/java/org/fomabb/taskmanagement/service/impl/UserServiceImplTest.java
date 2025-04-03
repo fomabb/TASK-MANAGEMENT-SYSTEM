@@ -118,7 +118,7 @@ public class UserServiceImplTest {
         UpdateTaskDataDto expectedResponse = generateEntityTaskToUpdateTaskDto(existingTask);
 
         UpdateTaskForUserDataRequest requestBody = UpdateTaskForUserDataRequest
-                .builder().userId(currentUser.getId()).taskId(existingTask.getId())
+                .builder().taskId(existingTask.getId())
                 .taskStatus(TaskStatus.COMPLETED).build();
 
         when(taskRepository.findById(existingTask.getId())).thenReturn(Optional.of(existingTask));
