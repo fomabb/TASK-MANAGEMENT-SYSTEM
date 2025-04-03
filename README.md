@@ -127,13 +127,16 @@ docker compose up
 
 **2. Описание API общих методов для управления задачами**
 
-| METHOD | PATH                                      | DESCRIPTION                       |
-|--------|-------------------------------------------|-----------------------------------|
-| GET    | /api/v1/tasks                             | Получить все задачи               |
-| GET    | /api/v1/tasks/{taskId}                    | Получить задачу по ее ID          |
-| GET    | /api/v1/tasks/comments/by-taskId/{taskId} | Получить комментарии ее ID        |
-| GET    | /api/v1/tasks/comments/author/{authorId}  | Получить комментарии по ID автора |
-| GET    | /api/v1/tasks/assignee/{assigneeId}       | Получить задачи по ID исполнителя |
+| METHOD | PATH                                                 | DESCRIPTION                            |
+|--------|------------------------------------------------------|----------------------------------------|
+| PUT    | /api/v1/tasks/users/track-time                       | Затрекать время                        |
+| GET    | /api/v1/tasks                                        | Получить все задачи                    |
+| GET    | /api/v1/tasks/{taskId}                               | Получить задачу по ее ID               |
+| GET    | /api/v1/tasks/comments/by-taskId/{taskId}            | Получить комментарии ее ID             |
+| GET    | /api/v1/tasks/comments/author/{authorId}             | Получить комментарии по ID автора      |
+| GET    | /api/v1/tasks/assignee/{assigneeId}                  | Получить задачи по ID исполнителя      |
+| GET    | /api/v1/tasks/user/{userId}/show-time-tracking-board | По ID исполнителя доску дя трека задач |
+| GET    | /api/v1/tasks/by-weekday                             | Просмотр задач за неделю               |
 
 ###
 
