@@ -158,6 +158,16 @@ public class TaskMapperImpl implements TaskMapper {
     }
 
     @Override
+    public TrackTimeDatDto trackTimeWorkEntityToTrackTimeDto(TrackWorkTime entity) {
+        return TrackTimeDatDto.builder()
+                .taskId(entity.getId())
+                .description(entity.getDescription())
+                .timeTrack(entity.getTimeTrack())
+                .dateTimeTrack(entity.getDateTimeTrack().toString())
+                .build();
+    }
+
+    @Override
     public Task buildAssigneeToSave(Task existingTask, Task assigneeTask) {
         return Task.builder()
                 .id(existingTask.getId())
@@ -171,6 +181,7 @@ public class TaskMapperImpl implements TaskMapper {
                 .author(existingTask.getAuthor())
                 .assignee(assigneeTask.getAssignee())
                 .scheduledTaskTime(assigneeTask.getScheduledTaskTime())
+                .exceedingTimeLimit(0)
                 .build();
     }
 

@@ -92,18 +92,26 @@ public class TaskServiceImpl implements TaskService {
                         TASK_WITH_ID_S_NOT_FOUND_CONST, dto.getTaskId())));
         Long currentId = userServiceSecurity.getCurrentUser().getId();
 
+        int timeTracked = dto.getTimeTrack();
+
         if (Objects.equals(task.getAssignee().getId(), currentId)) {
-            trackWorkTimeRepository.save(taskMapper.buildTrackTimeDataDtoToSave(task, dto));
+            if (task.getScheduledTaskTime() > 0) {
+                if (timeTracked <= task.getScheduledTaskTime()) {
+                    task.setScheduledTaskTime(task.getScheduledTaskTime() - timeTracked);
+                } else {
+                    int excessTime = timeTracked - task.getScheduledTaskTime();
+                    task.setScheduledTaskTime(0);
+                    task.setExceedingTimeLimit(task.getExceedingTimeLimit() + excessTime);
+                }
+            } else {
+                task.setExceedingTimeLimit(task.getExceedingTimeLimit() + timeTracked);
+            }
         } else {
             throw new BusinessException(VALIDATION_REFERENCES_CONST);
         }
-
-        return TrackTimeDatDto.builder()
-                .taskId(dto.getTaskId())
-                .description(dto.getDescription())
-                .timeTrack(dto.getTimeTrack())
-                .dateTimeTrack(dto.getDateTimeTrack())
-                .build();
+        return taskMapper.trackTimeWorkEntityToTrackTimeDto(
+                trackWorkTimeRepository.save(
+                        taskMapper.buildTrackTimeDataDtoToSave(task, dto)));
     }
 
     @Override

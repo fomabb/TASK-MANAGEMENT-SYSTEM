@@ -98,4 +98,6 @@ public interface TaskMapper {
     Task buildAssigneeToSave(Task existingTask, Task assigneeTask);
 
     TrackWorkTime buildTrackTimeDataDtoToSave(Task task, TrackTimeDatDto dto);
+
+    TrackTimeDatDto trackTimeWorkEntityToTrackTimeDto(TrackWorkTime entity);
 }
