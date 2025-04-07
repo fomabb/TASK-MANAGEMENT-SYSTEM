@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +32,27 @@ public class TrackTaskResponseGenerator {
                 .dateTimeTrack(LocalDateTime.now())
                 .timeTrack(2)
                 .description("Description-1")
+                .build();
+    }
+
+    public static List<TrackTimeResponse> generateListTrackTimeResponse(Task task, LocalDate inputDate) {
+        TrackTimeResponse trackTimeResponse = TrackTimeResponse.builder()
+                .taskId(task.getId())
+                .dateTimeTrack(LocalDateTime.now())
+                .timeTrack(2)
+                .description("Description-1")
+                .dateTimeTrack(inputDate.atStartOfDay())
+                .build();
+
+        return List.of(trackTimeResponse);
+    }
+
+    public static TrackWorkTime generateTrackWorkTimeEntity(Task task) {
+        return TrackWorkTime.builder()
+                .id(1L)
+                .timeTrack(2)
+                .description("Time work track-1")
+                .task(Task.builder().id(task.getId()).build())
                 .build();
     }
 

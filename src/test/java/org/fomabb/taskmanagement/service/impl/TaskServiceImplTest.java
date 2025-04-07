@@ -6,12 +6,15 @@ import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
+import org.fomabb.taskmanagement.repository.TrackWorkTimeRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
 import org.fomabb.taskmanagement.security.service.UserServiceSecurity;
@@ -47,6 +50,8 @@ import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskRespon
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generatePageTaskResponse;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskDataDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskEntity;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateListTrackTimeResponse;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateTrackWorkTimeEntity;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.user.UserDataDTOGenerator.generateUserEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -72,6 +77,9 @@ public class TaskServiceImplTest {
 
     @Mock
     private UserServiceSecurity userServiceSecurity;
+
+    @Mock
+    TrackWorkTimeRepository trackWorkTimeRepository;
 
 
     @Mock
@@ -111,6 +119,42 @@ public class TaskServiceImplTest {
 
         verify(taskMapper, times(1)).listEntityToListDto(taskList);
         verify(taskRepository, times(1)).findTasksByCreatedAtBetween(startDateTime, endDateTime);
+    }
+
+    @Test
+    void getTrackingBordByUserId_ShouldMapStringTrackTimeResponse() {
+        // Arrange
+        Long userId = 1L;
+        LocalDate inputDate = LocalDate.of(2025, 12, 12);
+        LocalDate startDate = inputDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = inputDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        User userAssignee = generateUserEntity();
+        Task task = generateTaskEntity();
+        TrackWorkTime trackWorkTime = generateTrackWorkTimeEntity(task);
+        List<TrackTimeResponse> trackTimeResponses = generateListTrackTimeResponse(task, inputDate);
+
+        when(trackWorkTimeRepository.findByDateTimeTrackBetweenAndTaskAssignee(startDateTime, endDateTime, userAssignee))
+                .thenReturn(List.of(trackWorkTime));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userAssignee));
+        when(taskMapper.listEntityTrackWorkTimeToTrackDto(List.of(trackWorkTime))).thenReturn(trackTimeResponses);
+
+        // Assert
+        Map<String, List<TrackTimeResponse>> response = taskService.getTrackingBordByUserId(userAssignee.getId(), inputDate);
+
+        // Формируем ключ для проверки
+        String expectedKey = String.format("%s %s", inputDate.getDayOfWeek().name(), inputDate.format(
+                DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        assertTrue(response.containsKey(expectedKey), "Expected key not found in response: " + expectedKey);
+
+        List<TrackTimeResponse> returnTimeResponse  = response.get(expectedKey);
+        assertNotNull(returnTimeResponse);
+
+        verify(trackWorkTimeRepository, times(1)).findByDateTimeTrackBetweenAndTaskAssignee(startDateTime, endDateTime, userAssignee);
+        verify(userRepository, times(1)).findById(userId);
+        verify(taskMapper, times(1)).listEntityTrackWorkTimeToTrackDto(List.of(trackWorkTime));
     }
 
     @Test

@@ -124,13 +124,13 @@ public class TaskServiceImpl implements TaskService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
 
-        User taskAssignee = userRepository.findById(userId)
+        User userAssignee = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND_CONST, userId)));
 
         List<TrackTimeResponse> trackTimeResponses =
                 taskMapper.listEntityTrackWorkTimeToTrackDto(
                         trackWorkTimeRepository.findByDateTimeTrackBetweenAndTaskAssignee(
-                                startDateTime, endDateTime, taskAssignee)
+                                startDateTime, endDateTime, userAssignee)
                 );
 
         Map<String, List<TrackTimeResponse>> trackByWeekDay = new LinkedHashMap<>();

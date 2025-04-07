@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface TrackWorkTimeRepository extends JpaRepository<TrackWorkTime, Long> {
-    List<TrackWorkTime> findByDateTimeTrackBetweenAndTaskAssignee(LocalDateTime dateTimeTrack, LocalDateTime dateTimeTrack2, User taskAssignee);
+    List<TrackWorkTime> findByDateTimeTrackBetweenAndTaskAssignee(LocalDateTime startDateTime, LocalDateTime endDateTime, User taskAssignee);
 }
