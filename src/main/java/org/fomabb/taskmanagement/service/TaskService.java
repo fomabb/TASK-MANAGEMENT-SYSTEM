@@ -112,7 +112,27 @@ public interface TaskService {
      */
     Map<String, List<TaskDataDto>> getTasksByWeekday(LocalDate startDate);
 
+    /**
+     * Обновляет рабочее время на основе предоставленных данных.
+     *
+     * @param dto объект типа {@link TrackTimeDatDto}, содержащий данные для обновления рабочего времени,
+     *            включая информацию о задаче, времени и комментариях.
+     * @return обновленный объект типа {@link TrackTimeDatDto}, содержащий актуальные данные о рабочем времени.
+     * @throws IllegalArgumentException если предоставленные данные некорректны или недоступны.
+     * @throws RuntimeException если возникает ошибка при обработке данных.
+     */
     TrackTimeDatDto trackTimeWorks(TrackTimeDatDto dto);
 
+    /**
+     * Получает трекер рабочего времени для указанного пользователя на заданную дату.
+     *
+     * @param userId идентификатор пользователя, для которого запрашиваются данные о рабочем времени.
+     * @param inputDate дата, с которой начинается отслеживание рабочего времени.
+     * @return карта, где ключи представляют дни недели, а значения — списки объектов типа {@link TrackTimeResponse},
+     *         содержащих данные о рабочем времени для каждого дня.
+     * @throws IllegalArgumentException если идентификатор пользователя или дата некорректны.
+     * @throws EntityNotFoundException если пользователь с указанным идентификатором не найден.
+     * @throws RuntimeException если возникает ошибка при получении данных.
+     */
     Map<String, List<TrackTimeResponse>> getTrackingBordByUserId(Long userId, LocalDate inputDate);
 }
