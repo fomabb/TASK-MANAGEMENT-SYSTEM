@@ -14,6 +14,7 @@ import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.fomabb.taskmanagement.security.service.UserServiceSecurity;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -45,6 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -63,14 +71,50 @@ public class TaskServiceImplTest {
     private PageableResponseUtil responseUtil;
 
     @Mock
+    private UserServiceSecurity userServiceSecurity;
+
+
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
     TaskServiceImpl taskService;
 
     @Test
-    void createTask_ShouldReturnCreatedTaskResponse() {
+    void getTasksByWeekday_ShouldReturnMapStringTaskDataDto() {
+        // Arrange
+        LocalDate inputDate = LocalDate.of(2025, 12, 12);
+        LocalDate startDate = inputDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = inputDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
 
+        List<Task> taskList = generateListTaskEntity();
+        List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
+
+        when(taskRepository.findTasksByCreatedAtBetween(startDateTime, endDateTime)).thenReturn(taskList);
+        when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
+
+        // Act
+        Map<String, List<TaskDataDto>> response = taskService.getTasksByWeekday(inputDate);
+
+        // Assert
+        assertNotNull(response);
+
+        // Формируем ключ для проверки
+        String expectedKey = String.format("%s %s", inputDate.getDayOfWeek().name(), inputDate.format(
+                DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        assertTrue(response.containsKey(expectedKey), "Expected key not found in response: " + expectedKey);
+
+        List<TaskDataDto> returnedTaskData = response.get(expectedKey);
+        assertNotNull(returnedTaskData);
+
+        verify(taskMapper, times(1)).listEntityToListDto(taskList);
+        verify(taskRepository, times(1)).findTasksByCreatedAtBetween(startDateTime, endDateTime);
+    }
+
+    @Test
+    void createTask_ShouldReturnCreatedTaskResponse() {
         // Arrange
         CreateTaskRequest request = generateCreateTaskRequest();
 
