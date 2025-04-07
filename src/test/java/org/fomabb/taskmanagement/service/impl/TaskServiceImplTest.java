@@ -2,18 +2,23 @@ package org.fomabb.taskmanagement.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
 import org.fomabb.taskmanagement.dto.response.CreatedTaskResponse;
+import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.dto.response.UpdateAssigneeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
 import org.fomabb.taskmanagement.entity.enumeration.TaskPriority;
 import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.mapper.TaskMapper;
 import org.fomabb.taskmanagement.repository.TaskRepository;
+import org.fomabb.taskmanagement.repository.TrackWorkTimeRepository;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.security.repository.UserRepository;
+import org.fomabb.taskmanagement.security.service.UserServiceSecurity;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 import org.fomabb.taskmanagement.util.pagable.PageableResponseUtil;
 import org.junit.jupiter.api.Test;
@@ -26,7 +31,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
@@ -40,11 +51,15 @@ import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskRespon
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generatePageTaskResponse;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskDataDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskEntity;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateListTrackTimeResponse;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateTrackTimeDataDtoToSave;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateTrackWorkTimeEntity;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.user.UserDataDTOGenerator.generateUserEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -63,14 +78,123 @@ public class TaskServiceImplTest {
     private PageableResponseUtil responseUtil;
 
     @Mock
+    private UserServiceSecurity userServiceSecurity;
+
+    @Mock
+    TrackWorkTimeRepository trackWorkTimeRepository;
+
+
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
     TaskServiceImpl taskService;
 
     @Test
-    void createTask_ShouldReturnCreatedTaskResponse() {
+    void trackTimeWorks_ShouldReturnTrackTimeDatDto() {
+        // Arrange
+        User currentUser = generateUserEntity();
+        currentUser.setId(2L);
 
+        Task task = generateTaskEntity();
+        task.setScheduledTaskTime(5);
+        task.setAssignee(currentUser);
+
+        TrackTimeDatDto dto = TrackTimeDatDto.builder()
+                .taskId(task.getId())
+                .timeTrack(3)
+                .dateTimeTrack("2025-04-07T17:54:00.478167700") // ISO формат даты
+                .description("Tracking time test")
+                .build();
+
+        TrackWorkTime trackWorkTime = generateTrackTimeDataDtoToSave(dto);
+
+        when(taskRepository.findById(dto.getTaskId())).thenReturn(Optional.of(task));
+        when(userServiceSecurity.getCurrentUser()).thenReturn(currentUser);
+        when(taskMapper.trackTimeWorkEntityToTrackTimeDto(trackWorkTime)).thenReturn(dto);
+        when(taskMapper.buildTrackTimeDataDtoToSave(task, dto)).thenReturn(trackWorkTime);
+        when(trackWorkTimeRepository.save(any())).thenReturn(trackWorkTime);
+
+        // Act
+        TrackTimeDatDto response = taskService.trackTimeWorks(dto);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(dto.getDescription(), response.getDescription());
+        assertEquals(dto.getTimeTrack(), response.getTimeTrack());
+    }
+
+    @Test
+    void getTasksByWeekday_ShouldReturnMapStringTaskDataDto() {
+        // Arrange
+        LocalDate inputDate = LocalDate.of(2025, 12, 12);
+        LocalDate startDate = inputDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = inputDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        List<Task> taskList = generateListTaskEntity();
+        List<TaskDataDto> taskDataDtoList = generateListTaskDataDto();
+
+        when(taskRepository.findTasksByCreatedAtBetween(startDateTime, endDateTime)).thenReturn(taskList);
+        when(taskMapper.listEntityToListDto(taskList)).thenReturn(taskDataDtoList);
+
+        // Act
+        Map<String, List<TaskDataDto>> response = taskService.getTasksByWeekday(inputDate);
+
+        // Assert
+        assertNotNull(response);
+
+        // Формируем ключ для проверки
+        String expectedKey = String.format("%s %s", inputDate.getDayOfWeek().name(), inputDate.format(
+                DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        assertTrue(response.containsKey(expectedKey), "Expected key not found in response: " + expectedKey);
+
+        List<TaskDataDto> returnedTaskData = response.get(expectedKey);
+        assertNotNull(returnedTaskData);
+
+        verify(taskMapper, times(1)).listEntityToListDto(taskList);
+        verify(taskRepository, times(1)).findTasksByCreatedAtBetween(startDateTime, endDateTime);
+    }
+
+    @Test
+    void getTrackingBordByUserId_ShouldMapStringTrackTimeResponse() {
+        // Arrange
+        Long userId = 1L;
+        LocalDate inputDate = LocalDate.of(2025, 12, 12);
+        LocalDate startDate = inputDate.with(DayOfWeek.MONDAY);
+        LocalDate endDate = inputDate.with(DayOfWeek.SUNDAY);
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        User userAssignee = generateUserEntity();
+        Task task = generateTaskEntity();
+        TrackWorkTime trackWorkTime = generateTrackWorkTimeEntity(task);
+        List<TrackTimeResponse> trackTimeResponses = generateListTrackTimeResponse(task, inputDate);
+
+        when(trackWorkTimeRepository.findByDateTimeTrackBetweenAndTaskAssignee(startDateTime, endDateTime, userAssignee))
+                .thenReturn(List.of(trackWorkTime));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userAssignee));
+        when(taskMapper.listEntityTrackWorkTimeToTrackDto(List.of(trackWorkTime))).thenReturn(trackTimeResponses);
+
+        // Assert
+        Map<String, List<TrackTimeResponse>> response = taskService.getTrackingBordByUserId(userAssignee.getId(), inputDate);
+
+        // Формируем ключ для проверки
+        String expectedKey = String.format("%s %s", inputDate.getDayOfWeek().name(), inputDate.format(
+                DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        assertTrue(response.containsKey(expectedKey), "Expected key not found in response: " + expectedKey);
+
+        List<TrackTimeResponse> returnTimeResponse = response.get(expectedKey);
+        assertNotNull(returnTimeResponse);
+
+        verify(trackWorkTimeRepository, times(1)).findByDateTimeTrackBetweenAndTaskAssignee(startDateTime, endDateTime, userAssignee);
+        verify(userRepository, times(1)).findById(userId);
+        verify(taskMapper, times(1)).listEntityTrackWorkTimeToTrackDto(List.of(trackWorkTime));
+    }
+
+    @Test
+    void createTask_ShouldReturnCreatedTaskResponse() {
         // Arrange
         CreateTaskRequest request = generateCreateTaskRequest();
 

@@ -78,7 +78,10 @@ public class TaskServiceImpl implements TaskService {
         for (TaskDataDto taskDataDto : taskDataDtos) {
             LocalDate taskDate = taskDataDto.getCreatedAt().toLocalDate();
             String key = String.format("%s %s", taskDate.getDayOfWeek().name(), taskDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-            tasksByWeekday.get(key).add(taskDataDto);
+
+            if (tasksByWeekday.containsKey(key)) {
+                tasksByWeekday.get(key).add(taskDataDto);
+            }
         }
 
         return tasksByWeekday;
@@ -121,13 +124,13 @@ public class TaskServiceImpl implements TaskService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
 
-        User taskAssignee = userRepository.findById(userId)
+        User userAssignee = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(USER_WITH_ID_S_NOT_FOUND_CONST, userId)));
 
         List<TrackTimeResponse> trackTimeResponses =
                 taskMapper.listEntityTrackWorkTimeToTrackDto(
                         trackWorkTimeRepository.findByDateTimeTrackBetweenAndTaskAssignee(
-                                startDateTime, endDateTime, taskAssignee)
+                                startDateTime, endDateTime, userAssignee)
                 );
 
         Map<String, List<TrackTimeResponse>> trackByWeekDay = new LinkedHashMap<>();
@@ -141,7 +144,10 @@ public class TaskServiceImpl implements TaskService {
         for (TrackTimeResponse track : trackTimeResponses) {
             LocalDate taskDate = track.getDateTimeTrack().toLocalDate();
             String key = String.format("%s %s", taskDate.getDayOfWeek().name(), taskDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-            trackByWeekDay.get(key).add(track);
+
+            if (trackByWeekDay.containsKey(key)) {
+                trackByWeekDay.get(key).add(track);
+            }
         }
 
         return trackByWeekDay;

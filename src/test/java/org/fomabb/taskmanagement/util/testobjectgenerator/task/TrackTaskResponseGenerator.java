@@ -4,10 +4,13 @@ import lombok.experimental.UtilityClass;
 import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.response.TrackTimeResponse;
 import org.fomabb.taskmanagement.entity.Task;
+import org.fomabb.taskmanagement.entity.TrackWorkTime;
+import org.fomabb.taskmanagement.exceptionhandler.exeption.BusinessException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +34,46 @@ public class TrackTaskResponseGenerator {
                 .dateTimeTrack(LocalDateTime.now())
                 .timeTrack(2)
                 .description("Description-1")
+                .build();
+    }
+
+    public static List<TrackTimeResponse> generateListTrackTimeResponse(Task task, LocalDate inputDate) {
+        TrackTimeResponse trackTimeResponse = TrackTimeResponse.builder()
+                .taskId(task.getId())
+                .dateTimeTrack(LocalDateTime.now())
+                .timeTrack(2)
+                .description("Description-1")
+                .dateTimeTrack(inputDate.atStartOfDay())
+                .build();
+
+        return List.of(trackTimeResponse);
+    }
+
+    public static TrackWorkTime generateTrackWorkTimeEntity(Task task) {
+        return TrackWorkTime.builder()
+                .id(1L)
+                .timeTrack(2)
+                .description("Time work track-1")
+                .task(Task.builder().id(task.getId()).build())
+                .build();
+    }
+
+    public static TrackWorkTime generateTrackTimeDataDtoToSave(TrackTimeDatDto dto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime dateTimeTrack;
+
+        try {
+            dateTimeTrack = LocalDateTime.parse(dto.getDateTimeTrack(), formatter);
+        } catch (DateTimeParseException e) {
+            System.err.println("Date parsing error: " + e.getMessage());
+            throw new BusinessException("Invalid date format. Please use a valid date format.");
+        }
+
+        return TrackWorkTime.builder()
+                .task(Task.builder().id(dto.getTaskId()).build())
+                .dateTimeTrack(dateTimeTrack)
+                .description(dto.getDescription())
+                .timeTrack(dto.getTimeTrack())
                 .build();
     }
 
