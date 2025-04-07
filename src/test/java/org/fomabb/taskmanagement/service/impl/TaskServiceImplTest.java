@@ -2,6 +2,7 @@ package org.fomabb.taskmanagement.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.fomabb.taskmanagement.dto.TaskDataDto;
+import org.fomabb.taskmanagement.dto.TrackTimeDatDto;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.request.AssigneeTaskForUserRequest;
 import org.fomabb.taskmanagement.dto.request.CreateTaskRequest;
@@ -51,6 +52,7 @@ import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskRespon
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskDataDto;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TaskResponseGenerator.generateTaskEntity;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateListTrackTimeResponse;
+import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateTrackTimeDataDtoToSave;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.task.TrackTaskResponseGenerator.generateTrackWorkTimeEntity;
 import static org.fomabb.taskmanagement.util.testobjectgenerator.user.UserDataDTOGenerator.generateUserEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,6 +89,40 @@ public class TaskServiceImplTest {
 
     @InjectMocks
     TaskServiceImpl taskService;
+
+    @Test
+    void trackTimeWorks_ShouldReturnTrackTimeDatDto() {
+        // Arrange
+        User currentUser = generateUserEntity();
+        currentUser.setId(2L);
+
+        Task task = generateTaskEntity();
+        task.setScheduledTaskTime(5);
+        task.setAssignee(currentUser);
+
+        TrackTimeDatDto dto = TrackTimeDatDto.builder()
+                .taskId(task.getId())
+                .timeTrack(3)
+                .dateTimeTrack("2025-04-07T17:54:00.478167700") // ISO формат даты
+                .description("Tracking time test")
+                .build();
+
+        TrackWorkTime trackWorkTime = generateTrackTimeDataDtoToSave(dto);
+
+        when(taskRepository.findById(dto.getTaskId())).thenReturn(Optional.of(task));
+        when(userServiceSecurity.getCurrentUser()).thenReturn(currentUser);
+        when(taskMapper.trackTimeWorkEntityToTrackTimeDto(trackWorkTime)).thenReturn(dto);
+        when(taskMapper.buildTrackTimeDataDtoToSave(task, dto)).thenReturn(trackWorkTime);
+        when(trackWorkTimeRepository.save(any())).thenReturn(trackWorkTime);
+
+        // Act
+        TrackTimeDatDto response = taskService.trackTimeWorks(dto);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(dto.getDescription(), response.getDescription());
+        assertEquals(dto.getTimeTrack(), response.getTimeTrack());
+    }
 
     @Test
     void getTasksByWeekday_ShouldReturnMapStringTaskDataDto() {
@@ -149,7 +185,7 @@ public class TaskServiceImplTest {
                 DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         assertTrue(response.containsKey(expectedKey), "Expected key not found in response: " + expectedKey);
 
-        List<TrackTimeResponse> returnTimeResponse  = response.get(expectedKey);
+        List<TrackTimeResponse> returnTimeResponse = response.get(expectedKey);
         assertNotNull(returnTimeResponse);
 
         verify(trackWorkTimeRepository, times(1)).findByDateTimeTrackBetweenAndTaskAssignee(startDateTime, endDateTime, userAssignee);
