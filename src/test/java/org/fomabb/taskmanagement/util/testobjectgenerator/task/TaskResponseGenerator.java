@@ -15,8 +15,12 @@ import org.fomabb.taskmanagement.entity.enumeration.TaskStatus;
 import org.fomabb.taskmanagement.security.entity.User;
 import org.fomabb.taskmanagement.util.pagable.PageableResponse;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 
@@ -185,5 +189,22 @@ public class TaskResponseGenerator {
                 .assigneeId(existingTask.getId())
                 .timeLeadTask(existingTask.getExceedingTimeLimit())
                 .build();
+    }
+
+    public static Map<String, List<TaskDataDto>> generateTaskResponseMap(
+            TaskDataDto response,
+            LocalDate date
+    ) {
+        Map<String, List<TaskDataDto>> responseMap = new LinkedHashMap<>();
+
+        responseMap.put("MONDAY " + date.plusDays(0).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), new ArrayList<>());
+        responseMap.put("TUESDAY " + date.plusDays(1).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), new ArrayList<>());
+        responseMap.put("WEDNESDAY " + date.plusDays(2).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), new ArrayList<>());
+        responseMap.put("THURSDAY " + date.plusDays(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), new ArrayList<>());
+        responseMap.put("FRIDAY " + date.plusDays(4).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), new ArrayList<>());
+        responseMap.put("SATURDAY " + date.plusDays(5).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), new ArrayList<>());
+        responseMap.put("SUNDAY " + date.plusDays(6).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), List.of(response));
+
+        return responseMap;
     }
 }

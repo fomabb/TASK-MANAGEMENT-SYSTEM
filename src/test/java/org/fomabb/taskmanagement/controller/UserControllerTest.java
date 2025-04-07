@@ -1,5 +1,6 @@
 package org.fomabb.taskmanagement.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fomabb.taskmanagement.dto.UpdateTaskDataDto;
 import org.fomabb.taskmanagement.dto.UserDataDto;
 import org.fomabb.taskmanagement.dto.request.CommentAddToTaskDataDtoRequest;
@@ -52,10 +53,12 @@ class UserControllerTest {
     private UserController userController;
 
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -111,7 +114,7 @@ class UserControllerTest {
 
         mockMvc.perform(patch("/api/v1/user/tasks/update-status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"taskId\":1,\"status\":\"COMPLETED\",\"userId\":1}"))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.taskId").value(1L))

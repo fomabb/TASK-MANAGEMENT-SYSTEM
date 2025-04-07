@@ -49,12 +49,78 @@ public class TaskController {
 
 //================================================SECTION~MANAGEMENT~Task=============================================//
 
+    @Operation(
+            summary = "Отслеживание рабочего времени",
+            description = """
+                    `
+                    Обновляет рабочее время для указанного пользователя.
+                    Принимает данные для отслеживания рабочего времени и возвращает информацию о работе.
+                    Возвращает статус 201 Created при успешном отслеживании.
+                    `
+                    """,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TrackTimeDatDto.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "`Рабочее время успешно отслежено`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TrackTimeDatDto.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Некорректный запрос`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "403", description = "`Доступ запрещен`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
     @PutMapping("/users/track-time")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<TrackTimeDatDto> trackTimeWorks(TrackTimeDatDto request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.trackTimeWorks(request));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskService.trackTimeWorks(request));
     }
 
+    @Operation(
+            summary = "Получить трекер рабочего времени пользователя",
+            description = """
+                    `
+                    Возвращает трекер рабочего времени для указанного пользователя.
+                    Принимает ID пользователя и дату начала отслеживания.
+                    Возвращает статус 200 OK при успешном получении данных.
+                    `
+                    """,
+            parameters = {
+                    @Parameter(name = "userId", description = "`Идентификатор пользователя`",
+                            required = true, example = "2"),
+                    @Parameter(name = "startDate", description = "`Дата, с которой начинается неделя (понедельник)`",
+                            required = true, example = "2025-04-12")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "`Данные успешно получены`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TrackTimeResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "`Некорректный запрос`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "`Пользователь не найден`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "500", description = "`Ошибка сервера`",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommonExceptionResponse.class))
+                    )
+            }
+    )
     @GetMapping("/user/{userId}/show-time-tracking-board")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Map<String, List<TrackTimeResponse>>> getTrackingBordByUserId(
@@ -74,7 +140,7 @@ public class TaskController {
                     """,
             parameters = {
                     @Parameter(name = "startDate", description = "`Дата, с которой начинается неделя (понедельник)`",
-                            required = true, example = "2025-04-07")
+                            required = true, example = "2025-04-12")
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "`Список задач за неделю успешно получен`",

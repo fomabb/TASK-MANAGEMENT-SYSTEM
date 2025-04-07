@@ -136,6 +136,7 @@ docker compose up
 | GET    | /api/v1/tasks/comments/author/{authorId}             | Получить комментарии по ID автора      |
 | GET    | /api/v1/tasks/assignee/{assigneeId}                  | Получить задачи по ID исполнителя      |
 | GET    | /api/v1/tasks/user/{userId}/show-time-tracking-board | По ID исполнителя доску дя трека задач |
+| GET    | /api/v1//users/track-time                            | Затрекать время исполнения задачи      |
 | GET    | /api/v1/tasks/by-weekday                             | Просмотр задач за неделю               |
 
 ###
